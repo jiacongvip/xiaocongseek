@@ -1,0 +1,28 @@
+# 依赖与构建产物（克隆后按 README 重新构建）
+node_modules/
+lib/
+dist/
+.cache/
+.pnpm-store/
+*.tsbuildinfo
+*.log
+
+# 上游仓库的 .git（本仓库是拍平的工作快照）
+/deepseek-harness/.git/
+
+# 本地密钥 / 运行数据（绝不入库）
+harness-newapi-gateway/.env
+harness-newapi-gateway/.local-admin.txt
+harness-newapi-gateway/data/
+harness-newapi-gateway/logs/
+harness-newapi-gateway/vendor/
+deepseek-harness/.storages/
+deepseek-harness/.sessions/
+**/.dsh-report/
+**/.ui-review/
+
+# 杂物
+.tools/
+boot-check.png
+.DS_Store
+**/.DS_Store

@@ -1,0 +1,2114 @@
+diff --git a/apps/desktop/installer/locales/de_DE.json b/apps/desktop/installer/locales/de_DE.json
+index faf725b8..ff5b2a64 100644
+--- a/apps/desktop/installer/locales/de_DE.json
++++ b/apps/desktop/installer/locales/de_DE.json
+@@ -11,16 +11,16 @@
+     "INSTALLER_CHOOSE_PATH": "Standort wählen",
+     "INSTALLER_BROWSE": "Durchsuchen",
+     "INSTALLER_LAUNCH": "Jetzt starten",
+-    "INSTALLER_LAUNCH_FAILED": "DeepSeek Harness konnte nicht gestartet werden. Versuchen Sie es noch einmal oder deaktivieren Sie „Jetzt starten“ und schließen Sie das Installationsprogramm.",
++    "INSTALLER_LAUNCH_FAILED": "Xiaocongseek konnte nicht gestartet werden. Versuchen Sie es noch einmal oder deaktivieren Sie „Jetzt starten“ und schließen Sie das Installationsprogramm.",
+     "INSTALLER_UI_ERROR": "Das Installationsprogramm konnte sein Fenster nicht initialisieren. Schließen Sie es und versuchen Sie es erneut.",
+     "INSTALLER_THEME_ERROR": "Verwenden Sie /THEME=auto, /THEME=light oder /THEME=dark.",
+     "INSTALLER_FAILED": "Die Installation wurde nicht abgeschlossen. Schließen Sie dieses Installationsprogramm und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, laden Sie das Installationsprogramm erneut herunter.",
+-    "INSTALLER_RUNNING": "DeepSeek Harness läuft. Beenden Sie es über die Taskleiste und versuchen Sie es erneut.",
++    "INSTALLER_RUNNING": "Xiaocongseek läuft. Beenden Sie es über die Taskleiste und versuchen Sie es erneut.",
+     "INSTALLER_DIRECTORY_FAILED": "Das Installationsverzeichnis konnte nicht ersetzt werden.",
+     "INSTALLER_DIRECTORY_HINT": "Überprüfen Sie den Zugriff auf das Installationsverzeichnis und schließen Sie Programme mithilfe seiner Dateien. Führen Sie dann das Installationsprogramm erneut aus. Kopieren Sie die Fehlerdetails, wenn das Problem weiterhin besteht.",
+     "INSTALLER_DIRECTORY_RESTORE_HINT": "Die vorherige Installation konnte nicht wiederhergestellt werden. Behalten Sie das in den Fehlerdetails angezeigte Sicherungsverzeichnis bei und wenden Sie sich vor der erneuten Installation an den Support.",
+     "INSTALLER_PATH_INVALID": "Wählen Sie einen vollständigen lokalen Ordnerpfad. Laufwerksstämme, Systemordner, Links und Sonderzeichen werden nicht unterstützt.",
+-    "INSTALLER_PATH_OWNERSHIP": "Wählen Sie einen leeren Ordner oder den registrierten DeepSeek Harness-Installationsordner.",
++    "INSTALLER_PATH_OWNERSHIP": "Wählen Sie einen leeren Ordner oder den registrierten Xiaocongseek-Installationsordner.",
+     "INSTALLER_PATH_WRITABLE": "Dieser Ort ist nicht beschreibbar. Wählen Sie einen Ordner, der für den aktuellen Benutzer verfügbar ist.",
+     "INSTALLER_DISK_SPACE": "Es ist nicht genügend freier Speicherplatz vorhanden. Wählen Sie einen anderen Standort.",
+     "INSTALLER_PER_USER": "Dieses Installationsprogramm unterstützt nur den aktuellen Benutzer. Deinstallieren Sie zunächst die vorhandene All-User-Installation.",
+diff --git a/apps/desktop/installer/locales/en_US.json b/apps/desktop/installer/locales/en_US.json
+index f522ad9b..d93b9798 100644
+--- a/apps/desktop/installer/locales/en_US.json
++++ b/apps/desktop/installer/locales/en_US.json
+@@ -11,16 +11,16 @@
+     "INSTALLER_CHOOSE_PATH": "Choose location",
+     "INSTALLER_BROWSE": "Browse",
+     "INSTALLER_LAUNCH": "Launch now",
+-    "INSTALLER_LAUNCH_FAILED": "DeepSeek Harness could not be launched. Retry, or clear Launch now and close the installer.",
++    "INSTALLER_LAUNCH_FAILED": "Xiaocongseek could not be launched. Retry, or clear Launch now and close the installer.",
+     "INSTALLER_UI_ERROR": "The installer could not initialize its window. Close it and try again.",
+     "INSTALLER_THEME_ERROR": "Use /THEME=auto, /THEME=light or /THEME=dark.",
+     "INSTALLER_FAILED": "Installation did not finish. Close this installer and retry. If the problem persists, download the installer again.",
+-    "INSTALLER_RUNNING": "DeepSeek Harness is running. Quit it from the system tray and try again.",
++    "INSTALLER_RUNNING": "Xiaocongseek is running. Quit it from the system tray and try again.",
+     "INSTALLER_DIRECTORY_FAILED": "The installation directory could not be replaced.",
+     "INSTALLER_DIRECTORY_HINT": "Check access to the installation directory and close programs using its files, then run the installer again. Copy the error details if the problem persists.",
+     "INSTALLER_DIRECTORY_RESTORE_HINT": "The previous installation could not be restored. Keep the backup directory shown in the error details and contact support before installing again.",
+     "INSTALLER_PATH_INVALID": "Choose a full local folder path. Drive roots, system folders, links and special characters are not supported.",
+-    "INSTALLER_PATH_OWNERSHIP": "Choose an empty folder or the registered DeepSeek Harness installation folder.",
++    "INSTALLER_PATH_OWNERSHIP": "Choose an empty folder or the registered Xiaocongseek installation folder.",
+     "INSTALLER_PATH_WRITABLE": "This location is not writable. Choose a folder available to the current user.",
+     "INSTALLER_DISK_SPACE": "There is not enough free disk space. Choose another location.",
+     "INSTALLER_PER_USER": "This installer supports the current user only. Uninstall the existing all-users installation first.",
+diff --git a/apps/desktop/installer/locales/es_ES.json b/apps/desktop/installer/locales/es_ES.json
+index d4fbfd97..b38dca15 100644
+--- a/apps/desktop/installer/locales/es_ES.json
++++ b/apps/desktop/installer/locales/es_ES.json
+@@ -11,16 +11,16 @@
+     "INSTALLER_CHOOSE_PATH": "Elige ubicación",
+     "INSTALLER_BROWSE": "Examinar",
+     "INSTALLER_LAUNCH": "Lanzar ahora",
+-    "INSTALLER_LAUNCH_FAILED": "No se pudo iniciar DeepSeek Harness. Vuelva a intentarlo o desmarque Iniciar ahora y cierre el instalador.",
++    "INSTALLER_LAUNCH_FAILED": "No se pudo iniciar Xiaocongseek. Vuelva a intentarlo o desmarque Iniciar ahora y cierre el instalador.",
+     "INSTALLER_UI_ERROR": "El instalador no pudo inicializar su ventana. Ciérralo y vuelve a intentarlo.",
+     "INSTALLER_THEME_ERROR": "Utilice /THEME=auto, /THEME=light o /THEME=dark.",
+     "INSTALLER_FAILED": "La instalación no terminó. Cierre este instalador y vuelva a intentarlo. Si el problema persiste, descargue el instalador nuevamente.",
+-    "INSTALLER_RUNNING": "DeepSeek Harness se está ejecutando. Salga de la bandeja del sistema y vuelva a intentarlo.",
++    "INSTALLER_RUNNING": "Xiaocongseek se está ejecutando. Salga de la bandeja del sistema y vuelva a intentarlo.",
+     "INSTALLER_DIRECTORY_FAILED": "No se pudo reemplazar el directorio de instalación.",
+     "INSTALLER_DIRECTORY_HINT": "Verifique el acceso al directorio de instalación y cierre los programas usando sus archivos, luego ejecute el instalador nuevamente. Copie los detalles del error si el problema persiste.",
+     "INSTALLER_DIRECTORY_RESTORE_HINT": "No se pudo restaurar la instalación anterior. Mantenga el directorio de respaldo que se muestra en los detalles del error y comuníquese con el soporte antes de volver a instalar.",
+     "INSTALLER_PATH_INVALID": "Elija una ruta de carpeta local completa. No se admiten raíces de unidades, carpetas del sistema, enlaces ni caracteres especiales.",
+-    "INSTALLER_PATH_OWNERSHIP": "Elija una carpeta vacía o la carpeta de instalación registrada de DeepSeek Harness.",
++    "INSTALLER_PATH_OWNERSHIP": "Elija una carpeta vacía o la carpeta de instalación registrada de Xiaocongseek.",
+     "INSTALLER_PATH_WRITABLE": "Esta ubicación no se puede escribir. Elija una carpeta disponible para el usuario actual.",
+     "INSTALLER_DISK_SPACE": "No hay suficiente espacio libre en disco. Elija otra ubicación.",
+     "INSTALLER_PER_USER": "Este instalador solo admite el usuario actual. Primero desinstale la instalación existente para todos los usuarios.",
+diff --git a/apps/desktop/installer/locales/fr_FR.json b/apps/desktop/installer/locales/fr_FR.json
+index 326ead62..7e5115e0 100644
+--- a/apps/desktop/installer/locales/fr_FR.json
++++ b/apps/desktop/installer/locales/fr_FR.json
+@@ -11,16 +11,16 @@
+     "INSTALLER_CHOOSE_PATH": "Choisissez un emplacement",
+     "INSTALLER_BROWSE": "Parcourir",
+     "INSTALLER_LAUNCH": "Lancez-vous maintenant",
+-    "INSTALLER_LAUNCH_FAILED": "DeepSeek Harness n'a pas pu être lancé. Réessayez ou désactivez Lancer maintenant et fermez le programme d'installation.",
++    "INSTALLER_LAUNCH_FAILED": "Xiaocongseek n'a pas pu être lancé. Réessayez ou désactivez Lancer maintenant et fermez le programme d'installation.",
+     "INSTALLER_UI_ERROR": "Le programme d'installation n'a pas pu initialiser sa fenêtre. Fermez-le et réessayez.",
+     "INSTALLER_THEME_ERROR": "Utilisez /THEME=auto, /THEME=light ou /THEME=dark.",
+     "INSTALLER_FAILED": "L'installation n'est pas terminée. Fermez ce programme d'installation et réessayez. Si le problème persiste, téléchargez à nouveau le programme d'installation.",
+-    "INSTALLER_RUNNING": "DeepSeek Harness est en cours d'exécution. Quittez-le de la barre d'état système et réessayez.",
++    "INSTALLER_RUNNING": "Xiaocongseek est en cours d'exécution. Quittez-le de la barre d'état système et réessayez.",
+     "INSTALLER_DIRECTORY_FAILED": "Le répertoire d'installation n'a pas pu être remplacé.",
+     "INSTALLER_DIRECTORY_HINT": "Vérifiez l'accès au répertoire d'installation et fermez les programmes à l'aide de ses fichiers, puis réexécutez le programme d'installation. Copiez les détails de l'erreur si le problème persiste.",
+     "INSTALLER_DIRECTORY_RESTORE_HINT": "L'installation précédente n'a pas pu être restaurée. Conservez le répertoire de sauvegarde indiqué dans les détails de l'erreur et contactez l'assistance avant de procéder à une nouvelle installation.",
+     "INSTALLER_PATH_INVALID": "Choisissez un chemin de dossier local complet. Les racines du lecteur, les dossiers système, les liens et les caractères spéciaux ne sont pas pris en charge.",
+-    "INSTALLER_PATH_OWNERSHIP": "Choisissez un dossier vide ou le dossier d'installation DeepSeek Harness enregistré.",
++    "INSTALLER_PATH_OWNERSHIP": "Choisissez un dossier vide ou le dossier d'installation Xiaocongseek enregistré.",
+     "INSTALLER_PATH_WRITABLE": "Cet emplacement n'est pas accessible en écriture. Choisissez un dossier disponible pour l'utilisateur actuel.",
+     "INSTALLER_DISK_SPACE": "Il n'y a pas assez d'espace disque libre. Choisissez un autre emplacement.",
+     "INSTALLER_PER_USER": "Ce programme d'installation prend en charge uniquement l'utilisateur actuel. Désinstallez d’abord l’installation existante pour tous les utilisateurs.",
+diff --git a/apps/desktop/installer/locales/ja_JP.json b/apps/desktop/installer/locales/ja_JP.json
+index ee614789..cd593a5e 100644
+--- a/apps/desktop/installer/locales/ja_JP.json
++++ b/apps/desktop/installer/locales/ja_JP.json
+@@ -11,16 +11,16 @@
+     "INSTALLER_CHOOSE_PATH": "インストール先を選択",
+     "INSTALLER_BROWSE": "参照",
+     "INSTALLER_LAUNCH": "今すぐ起動",
+-    "INSTALLER_LAUNCH_FAILED": "DeepSeek Harness を起動できませんでした。再試行するか、「今すぐ起動」のチェックを外してインストーラーを閉じてください。",
++    "INSTALLER_LAUNCH_FAILED": "Xiaocongseek を起動できませんでした。再試行するか、「今すぐ起動」のチェックを外してインストーラーを閉じてください。",
+     "INSTALLER_UI_ERROR": "インストーラーのウィンドウを初期化できませんでした。閉じてから再試行してください。",
+     "INSTALLER_THEME_ERROR": "/THEME=auto、/THEME=light、/THEME=dark のいずれかを指定してください。",
+     "INSTALLER_FAILED": "インストールが完了しませんでした。インストーラーを閉じて再試行してください。問題が解決しない場合は、インストーラーを再度ダウンロードしてください。",
+-    "INSTALLER_RUNNING": "DeepSeek Harness が実行中です。システムトレイから終了して再試行してください。",
++    "INSTALLER_RUNNING": "Xiaocongseek が実行中です。システムトレイから終了して再試行してください。",
+     "INSTALLER_DIRECTORY_FAILED": "インストール先のディレクトリを置き換えられませんでした。",
+     "INSTALLER_DIRECTORY_HINT": "インストール先へのアクセス権限を確認し、そのファイルを使用しているプログラムを閉じてから、インストーラーを再実行してください。問題が続く場合はエラーの詳細をコピーしてください。",
+     "INSTALLER_DIRECTORY_RESTORE_HINT": "以前のインストールを復元できませんでした。エラーの詳細に表示されたバックアップディレクトリを保持し、再インストール前にサポートへお問い合わせください。",
+     "INSTALLER_PATH_INVALID": "ローカルフォルダーの完全なパスを選択してください。ドライブのルート、システムフォルダー、リンク、特殊文字を含むパスは使用できません。",
+-    "INSTALLER_PATH_OWNERSHIP": "空のフォルダー、または登録済みの DeepSeek Harness インストール先を選択してください。",
++    "INSTALLER_PATH_OWNERSHIP": "空のフォルダー、または登録済みの Xiaocongseek インストール先を選択してください。",
+     "INSTALLER_PATH_WRITABLE": "この場所には書き込めません。現在のユーザーが書き込めるフォルダーを選択してください。インストーラーは管理者権限を要求しません。",
+     "INSTALLER_DISK_SPACE": "ディスクの空き容量が不足しています。別の場所を選択してください。",
+     "INSTALLER_PER_USER": "このインストーラーは現在のユーザーのみを対象としています。先にすべてのユーザー向けの既存のインストールを削除してください。",
+diff --git a/apps/desktop/installer/locales/pt_BR.json b/apps/desktop/installer/locales/pt_BR.json
+index dda249e4..700ba1a1 100644
+--- a/apps/desktop/installer/locales/pt_BR.json
++++ b/apps/desktop/installer/locales/pt_BR.json
+@@ -11,16 +11,16 @@
+     "INSTALLER_CHOOSE_PATH": "Escolha o local",
+     "INSTALLER_BROWSE": "Procurar",
+     "INSTALLER_LAUNCH": "Lançar agora",
+-    "INSTALLER_LAUNCH_FAILED": "DeepSeek Harness não pôde ser iniciado. Tente novamente ou desmarque Iniciar agora e feche o instalador.",
++    "INSTALLER_LAUNCH_FAILED": "Xiaocongseek não pôde ser iniciado. Tente novamente ou desmarque Iniciar agora e feche o instalador.",
+     "INSTALLER_UI_ERROR": "O instalador não conseguiu inicializar sua janela. Feche-o e tente novamente.",
+     "INSTALLER_THEME_ERROR": "Use /THEME=auto, /THEME=light ou /THEME=dark.",
+     "INSTALLER_FAILED": "A instalação não foi concluída. Feche este instalador e tente novamente. Se o problema persistir, baixe o instalador novamente.",
+-    "INSTALLER_RUNNING": "DeepSeek Harness está em execução. Saia da bandeja do sistema e tente novamente.",
++    "INSTALLER_RUNNING": "Xiaocongseek está em execução. Saia da bandeja do sistema e tente novamente.",
+     "INSTALLER_DIRECTORY_FAILED": "O diretório de instalação não pôde ser substituído.",
+     "INSTALLER_DIRECTORY_HINT": "Verifique o acesso ao diretório de instalação e feche os programas usando seus arquivos e execute o instalador novamente. Copie os detalhes do erro se o problema persistir.",
+     "INSTALLER_DIRECTORY_RESTORE_HINT": "A instalação anterior não pôde ser restaurada. Mantenha o diretório de backup mostrado nos detalhes do erro e entre em contato com o suporte antes de instalar novamente.",
+     "INSTALLER_PATH_INVALID": "Escolha um caminho completo para a pasta local. Raízes de unidade, pastas de sistema, links e caracteres especiais não são suportados.",
+-    "INSTALLER_PATH_OWNERSHIP": "Escolha uma pasta vazia ou a pasta de instalação DeepSeek Harness registrada.",
++    "INSTALLER_PATH_OWNERSHIP": "Escolha uma pasta vazia ou a pasta de instalação Xiaocongseek registrada.",
+     "INSTALLER_PATH_WRITABLE": "Este local não é gravável. Escolha uma pasta disponível para o usuário atual.",
+     "INSTALLER_DISK_SPACE": "Não há espaço livre suficiente em disco. Escolha outro local.",
+     "INSTALLER_PER_USER": "Este instalador oferece suporte apenas ao usuário atual. Desinstale primeiro a instalação existente para todos os usuários.",
+diff --git a/apps/desktop/installer/locales/ru_RU.json b/apps/desktop/installer/locales/ru_RU.json
+index e5fec3f8..402b6be5 100644
+--- a/apps/desktop/installer/locales/ru_RU.json
++++ b/apps/desktop/installer/locales/ru_RU.json
+@@ -11,16 +11,16 @@
+     "INSTALLER_CHOOSE_PATH": "Выберите местоположение",
+     "INSTALLER_BROWSE": "Обзор",
+     "INSTALLER_LAUNCH": "Запустить сейчас",
+-    "INSTALLER_LAUNCH_FAILED": "DeepSeek Harness не удалось запустить. Повторите попытку или снимите флажок «Запустить сейчас» и закройте программу установки.",
++    "INSTALLER_LAUNCH_FAILED": "Xiaocongseek не удалось запустить. Повторите попытку или снимите флажок «Запустить сейчас» и закройте программу установки.",
+     "INSTALLER_UI_ERROR": "Установщику не удалось инициализировать свое окно. Закройте его и попробуйте еще раз.",
+     "INSTALLER_THEME_ERROR": "Используйте /THEME=auto, /THEME=light или /THEME=dark.",
+     "INSTALLER_FAILED": "Установка не завершена. Закройте этот установщик и повторите попытку. Если проблема не устранена, загрузите установщик еще раз.",
+-    "INSTALLER_RUNNING": "DeepSeek Harness работает. Закройте его из системного трея и повторите попытку.",
++    "INSTALLER_RUNNING": "Xiaocongseek работает. Закройте его из системного трея и повторите попытку.",
+     "INSTALLER_DIRECTORY_FAILED": "Не удалось заменить каталог установки.",
+     "INSTALLER_DIRECTORY_HINT": "Проверьте доступ к каталогу установки и закройте программы, использующие его файлы, затем снова запустите установщик. Скопируйте сведения об ошибке, если проблема не устранена.",
+     "INSTALLER_DIRECTORY_RESTORE_HINT": "Предыдущую установку восстановить не удалось. Сохраните каталог резервной копии, указанный в сведениях об ошибке, и обратитесь в службу поддержки перед повторной установкой.",
+     "INSTALLER_PATH_INVALID": "Выберите полный путь к локальной папке. Корни дисков, системные папки, ссылки и специальные символы не поддерживаются.",
+-    "INSTALLER_PATH_OWNERSHIP": "Выберите пустую папку или зарегистрированную папку установки DeepSeek Harness.",
++    "INSTALLER_PATH_OWNERSHIP": "Выберите пустую папку или зарегистрированную папку установки Xiaocongseek.",
+     "INSTALLER_PATH_WRITABLE": "Это местоположение недоступно для записи. Выберите папку, доступную текущему пользователю.",
+     "INSTALLER_DISK_SPACE": "Недостаточно свободного места на диске. Выберите другое место.",
+     "INSTALLER_PER_USER": "Этот установщик поддерживает только текущего пользователя. Сначала удалите существующую установку для всех пользователей.",
+diff --git a/apps/desktop/installer/locales/zh_CN.json b/apps/desktop/installer/locales/zh_CN.json
+index e3f40f13..d2188c0b 100644
+--- a/apps/desktop/installer/locales/zh_CN.json
++++ b/apps/desktop/installer/locales/zh_CN.json
+@@ -11,16 +11,16 @@
+     "INSTALLER_CHOOSE_PATH": "选择安装位置",
+     "INSTALLER_BROWSE": "选择",
+     "INSTALLER_LAUNCH": "立即启动",
+-    "INSTALLER_LAUNCH_FAILED": "无法启动 DeepSeek Harness。请重试，或取消勾选立即启动后关闭安装程序。",
++    "INSTALLER_LAUNCH_FAILED": "无法启动 Xiaocongseek。请重试，或取消勾选立即启动后关闭安装程序。",
+     "INSTALLER_UI_ERROR": "无法初始化安装窗口，请关闭后重试。",
+     "INSTALLER_THEME_ERROR": "主题参数须为 /THEME=auto、/THEME=light 或 /THEME=dark。",
+     "INSTALLER_FAILED": "安装未完成，请关闭安装程序后重试。如仍然失败，请重新下载安装包。",
+-    "INSTALLER_RUNNING": "DeepSeek Harness 正在运行，请先在系统托盘中退出应用后重试。",
++    "INSTALLER_RUNNING": "Xiaocongseek 正在运行，请先在系统托盘中退出应用后重试。",
+     "INSTALLER_DIRECTORY_FAILED": "无法替换安装目录。",
+     "INSTALLER_DIRECTORY_HINT": "请检查安装目录的访问权限，关闭占用其中内容的程序后重新运行安装器。如仍失败，请复制错误详情。",
+     "INSTALLER_DIRECTORY_RESTORE_HINT": "未能恢复原安装目录。请保留错误详情中列出的备份目录，联系支持人员后再安装。",
+     "INSTALLER_PATH_INVALID": "请选择本地磁盘上的完整文件夹路径，不能使用磁盘根目录、系统目录、链接目录或包含特殊字符的路径。",
+-    "INSTALLER_PATH_OWNERSHIP": "请选择空文件夹，或 DeepSeek Harness 原来的安装目录。",
++    "INSTALLER_PATH_OWNERSHIP": "请选择空文件夹，或 Xiaocongseek 原来的安装目录。",
+     "INSTALLER_PATH_WRITABLE": "无法写入此位置。请选择当前用户可写入的文件夹；安装程序不会申请管理员权限。",
+     "INSTALLER_DISK_SPACE": "此磁盘的可用空间不足，请选择其他位置。",
+     "INSTALLER_PER_USER": "此安装程序仅支持当前用户。请先卸载已有的所有用户安装版本。",
+diff --git a/apps/desktop/resources/icon-macos.png b/apps/desktop/resources/icon-macos.png
+index f96a4f3c..98444b5f 100644
+Binary files a/apps/desktop/resources/icon-macos.png and b/apps/desktop/resources/icon-macos.png differ
+diff --git a/apps/desktop/resources/icon-windows.png b/apps/desktop/resources/icon-windows.png
+index cc8a09e3..98444b5f 100644
+Binary files a/apps/desktop/resources/icon-windows.png and b/apps/desktop/resources/icon-windows.png differ
+diff --git a/apps/desktop/resources/icon.png b/apps/desktop/resources/icon.png
+index d7b136f2..73b820de 100644
+Binary files a/apps/desktop/resources/icon.png and b/apps/desktop/resources/icon.png differ
+diff --git a/apps/desktop/scripts/development-app.ts b/apps/desktop/scripts/development-app.ts
+index ff09b8b7..7fd8916e 100644
+--- a/apps/desktop/scripts/development-app.ts
++++ b/apps/desktop/scripts/development-app.ts
+@@ -40,7 +40,7 @@ export function prepareDevelopmentApp(options: DevelopmentAppOptions): string {
+       CFBundleName: 'Harness Dev',
+       CFBundleDisplayName: 'Harness Dev',
+       CFBundleExecutable: 'HarnessDev',
+-      CFBundleURLTypes: [{ CFBundleURLName: 'DeepSeek Harness', CFBundleURLSchemes: ['dsh'], CFBundleTypeRole: 'Viewer' }],
++      CFBundleURLTypes: [{ CFBundleURLName: 'Xiaocongseek', CFBundleURLSchemes: ['dsh'], CFBundleTypeRole: 'Viewer' }],
+     }
+     for (const [key, value] of Object.entries(values)) {
+       execFileSync('/usr/bin/plutil', ['-replace', key, '-json', JSON.stringify(value), plist])
+diff --git a/apps/desktop/src/locale.ts b/apps/desktop/src/locale.ts
+index 050548e8..4f0ffc6c 100644
+--- a/apps/desktop/src/locale.ts
++++ b/apps/desktop/src/locale.ts
+@@ -31,19 +31,19 @@ export const en = {
+   application: 'Application',
+   fileMenu: 'File',
+   closePage: 'Close Page or Window',
+-  aboutMenu: 'About DeepSeek Harness',
+-  aboutProduct: 'DeepSeek Harness',
++  aboutMenu: 'About Xiaocongseek',
++  aboutProduct: 'Xiaocongseek',
+   aboutVersion: 'Version V{version}',
+-  hideApplication: 'Hide DeepSeek Harness',
++  hideApplication: 'Hide Xiaocongseek',
+   hideOtherApplications: 'Hide Others',
+   showAllApplications: 'Show All',
+   substitutionsMenu: 'Substitutions',
+   speechMenu: 'Speech',
+-  quitApplication: 'Quit DeepSeek Harness',
+-  openApplication: 'Open DeepSeek Harness',
++  quitApplication: 'Quit Xiaocongseek',
++  openApplication: 'Open Xiaocongseek',
+   quit: 'Quit',
+   cancel: 'Cancel',
+-  quitTitle: 'Quit DeepSeek Harness?',
++  quitTitle: 'Quit Xiaocongseek?',
+   quitActiveTasks: 'Running tasks will be interrupted.',
+   quitScheduledTasks: 'Scheduled tasks will not run while the app is closed.',
+   quitActiveAndScheduledTasks: 'Running tasks will be interrupted, and scheduled tasks will not run while the app is closed.',
+@@ -58,7 +58,7 @@ export const en = {
+   copy: 'Copy',
+   paste: 'Paste',
+   selectAll: 'Select All',
+-  startupFailed: 'DeepSeek Harness is unavailable',
++  startupFailed: 'Xiaocongseek is unavailable',
+   fatalSummary: 'The application could not start or stopped unexpectedly.',
+   startupAddressInUse: 'Another DSH instance (such as dsh web or the desktop app) is running. They cannot start at the same time. Quit the other running DSH instance, then restart.',
+   diagnosticTruncated: '… Error details shortened.',
+@@ -73,10 +73,10 @@ export const en = {
+   restartApplication: 'Restart',
+   recoveryOperationFailed: 'The recovery operation failed',
+   disableThirdPartyPlugins: 'Disable third-party plugins, back up profile patch, and restart',
+-  welcomeTitle: 'DeepSeek Harness',
+-  welcomeBrand: 'DeepSeek Harness',
++  welcomeTitle: 'Xiaocongseek',
++  welcomeBrand: 'Xiaocongseek',
+   welcomeTaglineBefore: 'Welcome to ',
+-  welcomeTaglineBrand: 'DeepSeek Harness',
++  welcomeTaglineBrand: 'Xiaocongseek',
+   welcomeTaglineAfter: '',
+   welcomeDescription: 'Build potential. Explore intelligence.',
+   welcomeAuthStarting: 'Opening sign in…',
+@@ -150,7 +150,7 @@ export const en = {
+   updateFullscreenTimeout: 'Could not exit fullscreen. Exit fullscreen, then retry the update.',
+   updateStopFailed: 'Could not safely stop the tasks. The update has not been installed. Please try again later.',
+   updateTechnicalDetails: 'View technical details',
+-  updateTitle: 'DeepSeek Harness Update',
++  updateTitle: 'Xiaocongseek Update',
+   updateAvailable: 'New version available: {version}',
+   updateDetail: 'Once the download is complete, you can install the update and restart the app.',
+   installAndRestart: 'Install and Restart',
+@@ -224,19 +224,19 @@ export const zh = {
+   application: '应用',
+   fileMenu: '文件',
+   closePage: '关闭页面或窗口',
+-  aboutMenu: '关于 DeepSeek Harness',
+-  aboutProduct: 'DeepSeek Harness',
++  aboutMenu: '关于 Xiaocongseek',
++  aboutProduct: 'Xiaocongseek',
+   aboutVersion: '版本 V{version}',
+-  hideApplication: '隐藏 DeepSeek Harness',
++  hideApplication: '隐藏 Xiaocongseek',
+   hideOtherApplications: '隐藏其他',
+   showAllApplications: '显示全部',
+   substitutionsMenu: '替换',
+   speechMenu: '语音',
+-  quitApplication: '退出 DeepSeek Harness',
+-  openApplication: '打开 DeepSeek Harness',
++  quitApplication: '退出 Xiaocongseek',
++  openApplication: '打开 Xiaocongseek',
+   quit: '退出',
+   cancel: '取消',
+-  quitTitle: '退出 DeepSeek Harness？',
++  quitTitle: '退出 Xiaocongseek？',
+   quitActiveTasks: '当前正在运行的任务将会中断',
+   quitScheduledTasks: '应用关闭期间，定时任务不会运行',
+   quitActiveAndScheduledTasks: '当前正在运行的任务将会中断，且应用关闭期间，定时任务不会运行',
+@@ -251,7 +251,7 @@ export const zh = {
+   copy: '复制',
+   paste: '粘贴',
+   selectAll: '全选',
+-  startupFailed: 'DeepSeek Harness 无法使用',
++  startupFailed: 'Xiaocongseek 无法使用',
+   fatalSummary: '应用无法启动或已意外停止。',
+   startupAddressInUse: '有其他正在运行的 DSH（如其他 dsh web、桌面端），无法同时启动，请退出其他正在运行的 DSH 后重启。',
+   diagnosticTruncated: '… 错误详情已截短。',
+@@ -266,10 +266,10 @@ export const zh = {
+   restartApplication: '重启',
+   recoveryOperationFailed: '恢复操作失败',
+   disableThirdPartyPlugins: '禁用第三方插件、备份 profile patch 并重启',
+-  welcomeTitle: 'DeepSeek Harness',
+-  welcomeBrand: 'DeepSeek Harness',
++  welcomeTitle: 'Xiaocongseek',
++  welcomeBrand: 'Xiaocongseek',
+   welcomeTaglineBefore: '欢迎使用 ',
+-  welcomeTaglineBrand: 'DeepSeek Harness',
++  welcomeTaglineBrand: 'Xiaocongseek',
+   welcomeTaglineAfter: '',
+   welcomeDescription: '组装无限可能，共探智能上限',
+   welcomeAuthStarting: '正在打开登录…',
+@@ -343,7 +343,7 @@ export const zh = {
+   updateFullscreenTimeout: '无法退出全屏，请退出全屏后重试更新',
+   updateStopFailed: '未能安全停止任务，更新尚未安装，请稍后重试。',
+   updateTechnicalDetails: '查看技术详情',
+-  updateTitle: 'DeepSeek Harness 更新',
++  updateTitle: 'Xiaocongseek 更新',
+   updateAvailable: '发现新版本 {version}',
+   updateDetail: '下载完成后，可安装并重启应用。',
+   installAndRestart: '安装并重启',
+@@ -415,19 +415,19 @@ export const ja = {
+   application: 'アプリケーション',
+   fileMenu: 'ファイル',
+   closePage: 'ページまたはウィンドウを閉じる',
+-  aboutMenu: 'DeepSeek Harness について',
+-  aboutProduct: 'DeepSeek Harness',
++  aboutMenu: 'Xiaocongseek について',
++  aboutProduct: 'Xiaocongseek',
+   aboutVersion: 'バージョン V{version}',
+-  hideApplication: 'DeepSeek Harness を隠す',
++  hideApplication: 'Xiaocongseek を隠す',
+   hideOtherApplications: 'ほかを隠す',
+   showAllApplications: 'すべて表示',
+   substitutionsMenu: '自動置換',
+   speechMenu: 'スピーチ',
+-  quitApplication: 'DeepSeek Harness を終了',
+-  openApplication: 'DeepSeek Harness を開く',
++  quitApplication: 'Xiaocongseek を終了',
++  openApplication: 'Xiaocongseek を開く',
+   quit: '終了',
+   cancel: 'キャンセル',
+-  quitTitle: 'DeepSeek Harness を終了しますか？',
++  quitTitle: 'Xiaocongseek を終了しますか？',
+   quitActiveTasks: '実行中のタスクは中断されます。',
+   quitScheduledTasks: 'アプリの終了中はスケジュールされたタスクが実行されません。',
+   quitActiveAndScheduledTasks: '実行中のタスクは中断され、アプリの終了中はスケジュールされたタスクが実行されません。',
+@@ -442,7 +442,7 @@ export const ja = {
+   copy: 'コピー',
+   paste: '貼り付け',
+   selectAll: 'すべて選択',
+-  startupFailed: 'DeepSeek Harness を利用できません',
++  startupFailed: 'Xiaocongseek を利用できません',
+   fatalSummary: 'アプリケーションを起動できなかったか、予期せず停止しました。',
+   startupAddressInUse: '別の DSH インスタンス (dsh web やデスクトップアプリなど) が実行中です。同時に起動することはできません。実行中の他の DSH インスタンスを終了してから再起動してください。',
+   diagnosticTruncated: '… エラー詳細は省略されています。',
+@@ -457,10 +457,10 @@ export const ja = {
+   restartApplication: '再起動',
+   recoveryOperationFailed: '復旧操作に失敗しました',
+   disableThirdPartyPlugins: 'サードパーティのプラグインを無効化し、プロファイルパッチをバックアップして再起動',
+-  welcomeTitle: 'DeepSeek Harness',
+-  welcomeBrand: 'DeepSeek Harness',
++  welcomeTitle: 'Xiaocongseek',
++  welcomeBrand: 'Xiaocongseek',
+   welcomeTaglineBefore: 'ようこそ ',
+-  welcomeTaglineBrand: 'DeepSeek Harness',
++  welcomeTaglineBrand: 'Xiaocongseek',
+   welcomeTaglineAfter: '',
+   welcomeDescription: '可能性を築く。知能を探求する。',
+   welcomeAuthStarting: 'ログインを開いています…',
+@@ -534,7 +534,7 @@ export const ja = {
+   updateFullscreenTimeout: 'フルスクリーンを終了できませんでした。フルスクリーンを終了してからアップデートを再試行してください。',
+   updateStopFailed: 'タスクを安全に停止できませんでした。アップデートはインストールされていません。後でもう一度お試しください。',
+   updateTechnicalDetails: '技術的な詳細を表示',
+-  updateTitle: 'DeepSeek Harness アップデート',
++  updateTitle: 'Xiaocongseek アップデート',
+   updateAvailable: '新しいバージョンがあります: {version}',
+   updateDetail: 'ダウンロードが完了したら、アップデートをインストールしてアプリを再起動できます。',
+   installAndRestart: 'インストールして再起動',
+@@ -606,19 +606,19 @@ export const es = {
+   application: 'Solicitud',
+   fileMenu: 'Archivo',
+   closePage: 'Cerrar página o ventana',
+-  aboutMenu: 'Acerca de DeepSeek Harness',
+-  aboutProduct: 'DeepSeek Harness',
++  aboutMenu: 'Acerca de Xiaocongseek',
++  aboutProduct: 'Xiaocongseek',
+   aboutVersion: 'Versión V{version}',
+-  hideApplication: 'Ocultar DeepSeek Harness',
++  hideApplication: 'Ocultar Xiaocongseek',
+   hideOtherApplications: 'Ocultar otros',
+   showAllApplications: 'Mostrar todo',
+   substitutionsMenu: 'Sustituciones',
+   speechMenu: 'Voz',
+-  quitApplication: 'Salir de DeepSeek Harness',
+-  openApplication: 'Abrir DeepSeek Harness',
++  quitApplication: 'Salir de Xiaocongseek',
++  openApplication: 'Abrir Xiaocongseek',
+   quit: 'Salir',
+   cancel: 'Cancelar',
+-  quitTitle: '¿Salir de DeepSeek Harness?',
++  quitTitle: '¿Salir de Xiaocongseek?',
+   quitActiveTasks: 'Las tareas en ejecución se interrumpirán.',
+   quitScheduledTasks: 'Las tareas programadas no se ejecutarán mientras la aplicación esté cerrada.',
+   quitActiveAndScheduledTasks: 'Las tareas en ejecución se interrumpirán y las tareas programadas no se ejecutarán mientras la aplicación esté cerrada.',
+@@ -633,7 +633,7 @@ export const es = {
+   copy: 'Copiar',
+   paste: 'Pegar',
+   selectAll: 'Seleccionar todo',
+-  startupFailed: 'DeepSeek Harness no está disponible',
++  startupFailed: 'Xiaocongseek no está disponible',
+   fatalSummary: 'La aplicación no pudo iniciarse o se detuvo inesperadamente.',
+   startupAddressInUse: 'Se está ejecutando otra instancia de DSH (como la web de dsh o la aplicación de escritorio). No pueden empezar al mismo tiempo. Salga de la otra instancia DSH en ejecución y luego reinicie.',
+   diagnosticTruncated: '… Detalles del error acortados.',
+@@ -648,10 +648,10 @@ export const es = {
+   restartApplication: 'Reiniciar',
+   recoveryOperationFailed: 'La operación de recuperación falló',
+   disableThirdPartyPlugins: 'Deshabilite los complementos de terceros, haga una copia de seguridad del parche del perfil y reinicie',
+-  welcomeTitle: 'DeepSeek Harness',
+-  welcomeBrand: 'DeepSeek Harness',
++  welcomeTitle: 'Xiaocongseek',
++  welcomeBrand: 'Xiaocongseek',
+   welcomeTaglineBefore: 'Bienvenido a ',
+-  welcomeTaglineBrand: 'DeepSeek Harness',
++  welcomeTaglineBrand: 'Xiaocongseek',
+   welcomeTaglineAfter: '',
+   welcomeDescription: 'Desarrollar potencial. Explora la inteligencia.',
+   welcomeAuthStarting: 'Abriendo inicio de sesión…',
+@@ -725,7 +725,7 @@ export const es = {
+   updateFullscreenTimeout: 'No se pudo salir de la pantalla completa. Salga de la pantalla completa y luego vuelva a intentar la actualización.',
+   updateStopFailed: 'No se pudieron detener las tareas de forma segura. La actualización no se ha instalado. Inténtelo de nuevo más tarde.',
+   updateTechnicalDetails: 'Ver detalles técnicos',
+-  updateTitle: 'Actualización DeepSeek Harness',
++  updateTitle: 'Actualización Xiaocongseek',
+   updateAvailable: 'Nueva versión disponible: {version}',
+   updateDetail: 'Una vez que se completa la descarga, puede instalar la actualización y reiniciar la aplicación.',
+   installAndRestart: 'Instalar y reiniciar',
+@@ -797,19 +797,19 @@ export const fr = {
+   application: 'Application',
+   fileMenu: 'Fichier',
+   closePage: 'Fermer la page ou la fenêtre',
+-  aboutMenu: 'À propos de DeepSeek Harness',
+-  aboutProduct: 'DeepSeek Harness',
++  aboutMenu: 'À propos de Xiaocongseek',
++  aboutProduct: 'Xiaocongseek',
+   aboutVersion: 'VersionV{version}',
+-  hideApplication: 'Masquer DeepSeek Harness',
++  hideApplication: 'Masquer Xiaocongseek',
+   hideOtherApplications: 'Masquer les autres',
+   showAllApplications: 'Afficher tout',
+   substitutionsMenu: 'Substitutions',
+   speechMenu: 'Parole',
+-  quitApplication: 'Quitter DeepSeek Harness',
+-  openApplication: 'Ouvrir DeepSeek Harness',
++  quitApplication: 'Quitter Xiaocongseek',
++  openApplication: 'Ouvrir Xiaocongseek',
+   quit: 'Quitter',
+   cancel: 'Annuler',
+-  quitTitle: 'Quitter DeepSeek Harness ?',
++  quitTitle: 'Quitter Xiaocongseek ?',
+   quitActiveTasks: 'Les tâches en cours seront interrompues.',
+   quitScheduledTasks: "Les tâches planifiées ne s'exécuteront pas lorsque l'application est fermée.",
+   quitActiveAndScheduledTasks: "Les tâches en cours d'exécution seront interrompues et les tâches planifiées ne s'exécuteront pas tant que l'application sera fermée.",
+@@ -824,7 +824,7 @@ export const fr = {
+   copy: 'Copier',
+   paste: 'Coller',
+   selectAll: 'Sélectionner tout',
+-  startupFailed: "DeepSeek Harness n'est pas disponible",
++  startupFailed: "Xiaocongseek n'est pas disponible",
+   fatalSummary: "L'application n'a pas pu démarrer ou s'est arrêtée de manière inattendue.",
+   startupAddressInUse: "Une autre instance DSH (telle que le Web dsh ou l'application de bureau) est en cours d'exécution. Ils ne peuvent pas démarrer en même temps. Quittez l'autre instance DSH en cours d'exécution, puis redémarrez.",
+   diagnosticTruncated: '… Détails de l’erreur raccourcis.',
+@@ -839,10 +839,10 @@ export const fr = {
+   restartApplication: 'Redémarrer',
+   recoveryOperationFailed: "L'opération de récupération a échoué",
+   disableThirdPartyPlugins: 'Désactivez les plugins tiers, sauvegardez le correctif de profil et redémarrez',
+-  welcomeTitle: 'DeepSeek Harness',
+-  welcomeBrand: 'DeepSeek Harness',
++  welcomeTitle: 'Xiaocongseek',
++  welcomeBrand: 'Xiaocongseek',
+   welcomeTaglineBefore: 'Bienvenue à ',
+-  welcomeTaglineBrand: 'DeepSeek Harness',
++  welcomeTaglineBrand: 'Xiaocongseek',
+   welcomeTaglineAfter: '',
+   welcomeDescription: "Développer le potentiel. Explorez l'intelligence.",
+   welcomeAuthStarting: 'Ouverture de la connexion…',
+@@ -916,7 +916,7 @@ export const fr = {
+   updateFullscreenTimeout: 'Impossible de quitter le mode plein écran. Quittez le mode plein écran, puis réessayez la mise à jour.',
+   updateStopFailed: "Impossible d'arrêter les tâches en toute sécurité. La mise à jour n'a pas été installée. Veuillez réessayer plus tard.",
+   updateTechnicalDetails: 'Voir les détails techniques',
+-  updateTitle: 'Mise à jour DeepSeek Harness',
++  updateTitle: 'Mise à jour Xiaocongseek',
+   updateAvailable: 'Nouvelle version disponible : {version}',
+   updateDetail: "Une fois le téléchargement terminé, vous pouvez installer la mise à jour et redémarrer l'application.",
+   installAndRestart: 'Installer et redémarrer',
+@@ -988,19 +988,19 @@ export const de = {
+   application: 'Anwendung',
+   fileMenu: 'Datei',
+   closePage: 'Seite oder Fenster schließen',
+-  aboutMenu: 'Über DeepSeek Harness',
+-  aboutProduct: 'DeepSeek Harness',
++  aboutMenu: 'Über Xiaocongseek',
++  aboutProduct: 'Xiaocongseek',
+   aboutVersion: 'Version V{version}',
+-  hideApplication: 'DeepSeek Harness ausblenden',
++  hideApplication: 'Xiaocongseek ausblenden',
+   hideOtherApplications: 'Andere ausblenden',
+   showAllApplications: 'Alle einblenden',
+   substitutionsMenu: 'Ersetzungen',
+   speechMenu: 'Sprachausgabe',
+-  quitApplication: 'DeepSeek Harness beenden',
+-  openApplication: 'DeepSeek Harness öffnen',
++  quitApplication: 'Xiaocongseek beenden',
++  openApplication: 'Xiaocongseek öffnen',
+   quit: 'Beenden',
+   cancel: 'Abbrechen',
+-  quitTitle: 'DeepSeek Harness beenden?',
++  quitTitle: 'Xiaocongseek beenden?',
+   quitActiveTasks: 'Laufende Aufgaben werden unterbrochen.',
+   quitScheduledTasks: 'Geplante Aufgaben werden nicht ausgeführt, während die App geschlossen ist.',
+   quitActiveAndScheduledTasks: 'Laufende Aufgaben werden unterbrochen und geplante Aufgaben werden nicht ausgeführt, während die App geschlossen ist.',
+@@ -1015,7 +1015,7 @@ export const de = {
+   copy: 'Kopieren',
+   paste: 'Einfügen',
+   selectAll: 'Alles auswählen',
+-  startupFailed: 'DeepSeek Harness ist nicht verfügbar',
++  startupFailed: 'Xiaocongseek ist nicht verfügbar',
+   fatalSummary: 'Die Anwendung konnte nicht gestartet werden oder wurde unerwartet gestoppt.',
+   startupAddressInUse: 'Eine andere DSH-Instanz (z. B. dsh Web oder die Desktop-App) wird ausgeführt. Sie können nicht gleichzeitig starten. Beenden Sie die andere laufende DSH-Instanz und starten Sie sie neu.',
+   diagnosticTruncated: '… Fehlerdetails gekürzt.',
+@@ -1030,10 +1030,10 @@ export const de = {
+   restartApplication: 'Neustart',
+   recoveryOperationFailed: 'Der Wiederherstellungsvorgang ist fehlgeschlagen',
+   disableThirdPartyPlugins: 'Deaktivieren Sie Plugins von Drittanbietern, sichern Sie den Profil-Patch und starten Sie neu',
+-  welcomeTitle: 'DeepSeek Harness',
+-  welcomeBrand: 'DeepSeek Harness',
++  welcomeTitle: 'Xiaocongseek',
++  welcomeBrand: 'Xiaocongseek',
+   welcomeTaglineBefore: 'Willkommen bei ',
+-  welcomeTaglineBrand: 'DeepSeek Harness',
++  welcomeTaglineBrand: 'Xiaocongseek',
+   welcomeTaglineAfter: '',
+   welcomeDescription: 'Potenzial aufbauen. Entdecken Sie Intelligenz.',
+   welcomeAuthStarting: 'Anmeldung wird geöffnet…',
+@@ -1107,7 +1107,7 @@ export const de = {
+   updateFullscreenTimeout: 'Der Vollbildmodus konnte nicht beendet werden. Beenden Sie den Vollbildmodus und versuchen Sie dann erneut, das Update durchzuführen.',
+   updateStopFailed: 'Die Aufgaben konnten nicht sicher gestoppt werden. Das Update wurde nicht installiert. Bitte versuchen Sie es später noch einmal.',
+   updateTechnicalDetails: 'Technische Details anzeigen',
+-  updateTitle: 'DeepSeek Harness-Update',
++  updateTitle: 'Xiaocongseek-Update',
+   updateAvailable: 'Neue Version verfügbar: {version}',
+   updateDetail: 'Sobald der Download abgeschlossen ist, können Sie das Update installieren und die App neu starten.',
+   installAndRestart: 'Installieren und neu starten',
+@@ -1179,19 +1179,19 @@ export const ru = {
+   application: 'Приложение',
+   fileMenu: 'Файл',
+   closePage: 'Закрыть страницу или окно',
+-  aboutMenu: 'О DeepSeek Harness',
+-  aboutProduct: 'DeepSeek Harness',
++  aboutMenu: 'О Xiaocongseek',
++  aboutProduct: 'Xiaocongseek',
+   aboutVersion: 'Версия V{version}',
+-  hideApplication: 'Скрыть DeepSeek Harness',
++  hideApplication: 'Скрыть Xiaocongseek',
+   hideOtherApplications: 'Скрыть других',
+   showAllApplications: 'Показать все',
+   substitutionsMenu: 'Замены',
+   speechMenu: 'Речь',
+-  quitApplication: 'Выйти из DeepSeek Harness',
+-  openApplication: 'Открыть DeepSeek Harness',
++  quitApplication: 'Выйти из Xiaocongseek',
++  openApplication: 'Открыть Xiaocongseek',
+   quit: 'Выйти',
+   cancel: 'Отмена',
+-  quitTitle: 'Выйти из DeepSeek Harness?',
++  quitTitle: 'Выйти из Xiaocongseek?',
+   quitActiveTasks: 'Выполнение задач будет прервано.',
+   quitScheduledTasks: 'Запланированные задачи не будут выполняться, пока приложение закрыто.',
+   quitActiveAndScheduledTasks: 'Выполнение задач будет прервано, а запланированные задачи не будут выполняться, пока приложение закрыто.',
+@@ -1206,7 +1206,7 @@ export const ru = {
+   copy: 'Копировать',
+   paste: 'Вставить',
+   selectAll: 'Выбрать все',
+-  startupFailed: 'DeepSeek Harness недоступен.',
++  startupFailed: 'Xiaocongseek недоступен.',
+   fatalSummary: 'Приложение не могло запуститься или неожиданно остановилось.',
+   startupAddressInUse: 'Другой экземпляр DSH (например, веб-приложение dsh или настольное приложение) запущен. Они не могут начаться одновременно. Закройте другой работающий экземпляр DSH, а затем перезапустите.',
+   diagnosticTruncated: '… Подробности об ошибках сокращены.',
+@@ -1221,10 +1221,10 @@ export const ru = {
+   restartApplication: 'Перезапустить',
+   recoveryOperationFailed: 'Операция восстановления не удалась',
+   disableThirdPartyPlugins: 'Отключите сторонние плагины, создайте резервную копию патча профиля и перезапустите.',
+-  welcomeTitle: 'DeepSeek Harness',
+-  welcomeBrand: 'DeepSeek Harness',
++  welcomeTitle: 'Xiaocongseek',
++  welcomeBrand: 'Xiaocongseek',
+   welcomeTaglineBefore: 'Добро пожаловать в ',
+-  welcomeTaglineBrand: 'DeepSeek Harness',
++  welcomeTaglineBrand: 'Xiaocongseek',
+   welcomeTaglineAfter: '',
+   welcomeDescription: 'Развивайте потенциал. Исследуйте интеллект.',
+   welcomeAuthStarting: 'Открытие входа в систему…',
+@@ -1298,7 +1298,7 @@ export const ru = {
+   updateFullscreenTimeout: 'Не удалось выйти из полноэкранного режима. Выйдите из полноэкранного режима и повторите попытку обновления.',
+   updateStopFailed: 'Не удалось безопасно остановить задачи. Обновление не установлено. Пожалуйста, повторите попытку позже.',
+   updateTechnicalDetails: 'Посмотреть технические подробности',
+-  updateTitle: 'DeepSeek Harness Обновление',
++  updateTitle: 'Xiaocongseek Обновление',
+   updateAvailable: 'Доступна новая версия: {version}.',
+   updateDetail: 'После завершения загрузки вы можете установить обновление и перезапустить приложение.',
+   installAndRestart: 'Установить и перезапустить',
+@@ -1370,19 +1370,19 @@ export const pt = {
+   application: 'Aplicativo',
+   fileMenu: 'Arquivo',
+   closePage: 'Fechar página ou janela',
+-  aboutMenu: 'Sobre DeepSeek Harness',
+-  aboutProduct: 'DeepSeek Harness',
++  aboutMenu: 'Sobre Xiaocongseek',
++  aboutProduct: 'Xiaocongseek',
+   aboutVersion: 'Versão V{version}',
+-  hideApplication: 'Ocultar DeepSeek Harness',
++  hideApplication: 'Ocultar Xiaocongseek',
+   hideOtherApplications: 'Ocultar outros',
+   showAllApplications: 'Mostrar tudo',
+   substitutionsMenu: 'Substituições',
+   speechMenu: 'Fala',
+-  quitApplication: 'Sair de DeepSeek Harness',
+-  openApplication: 'Abra DeepSeek Harness',
++  quitApplication: 'Sair de Xiaocongseek',
++  openApplication: 'Abra Xiaocongseek',
+   quit: 'Sair',
+   cancel: 'Cancelar',
+-  quitTitle: 'Sair de DeepSeek Harness?',
++  quitTitle: 'Sair de Xiaocongseek?',
+   quitActiveTasks: 'As tarefas em execução serão interrompidas.',
+   quitScheduledTasks: 'As tarefas agendadas não serão executadas enquanto o aplicativo estiver fechado.',
+   quitActiveAndScheduledTasks: 'As tarefas em execução serão interrompidas e as tarefas agendadas não serão executadas enquanto o aplicativo estiver fechado.',
+@@ -1397,7 +1397,7 @@ export const pt = {
+   copy: 'Copiar',
+   paste: 'Colar',
+   selectAll: 'Selecionar tudo',
+-  startupFailed: 'DeepSeek Harness não está disponível',
++  startupFailed: 'Xiaocongseek não está disponível',
+   fatalSummary: 'O aplicativo não pôde ser iniciado ou parou inesperadamente.',
+   startupAddressInUse: 'Outra instância DSH (como dsh web ou aplicativo de desktop) está em execução. Eles não podem começar ao mesmo tempo. Saia da outra instância DSH em execução e reinicie.',
+   diagnosticTruncated: '… Detalhes do erro reduzidos.',
+@@ -1412,10 +1412,10 @@ export const pt = {
+   restartApplication: 'Reiniciar',
+   recoveryOperationFailed: 'A operação de recuperação falhou',
+   disableThirdPartyPlugins: 'Desative plug-ins de terceiros, faça backup do patch do perfil e reinicie',
+-  welcomeTitle: 'DeepSeek Harness',
+-  welcomeBrand: 'DeepSeek Harness',
++  welcomeTitle: 'Xiaocongseek',
++  welcomeBrand: 'Xiaocongseek',
+   welcomeTaglineBefore: 'Bem-vindo ao ',
+-  welcomeTaglineBrand: 'DeepSeek Harness',
++  welcomeTaglineBrand: 'Xiaocongseek',
+   welcomeTaglineAfter: '',
+   welcomeDescription: 'Construir potencial. Explore a inteligência.',
+   welcomeAuthStarting: 'Abrindo login…',
+@@ -1489,7 +1489,7 @@ export const pt = {
+   updateFullscreenTimeout: 'Não foi possível sair da tela cheia. Saia da tela inteira e tente atualizar novamente.',
+   updateStopFailed: 'Não foi possível interromper as tarefas com segurança. A atualização não foi instalada. Por favor, tente novamente mais tarde.',
+   updateTechnicalDetails: 'Ver detalhes técnicos',
+-  updateTitle: 'DeepSeek Harness Atualização',
++  updateTitle: 'Xiaocongseek Atualização',
+   updateAvailable: 'Nova versão disponível: {version}',
+   updateDetail: 'Assim que o download for concluído, você pode instalar a atualização e reiniciar o aplicativo.',
+   installAndRestart: 'Instalar e reiniciar',
+diff --git a/apps/desktop/src/main.ts b/apps/desktop/src/main.ts
+index dd314122..e96bb058 100644
+--- a/apps/desktop/src/main.ts
++++ b/apps/desktop/src/main.ts
+@@ -1131,7 +1131,7 @@ async function main(): Promise<void> {
+   const applicationIconPath = development ? join(app.getAppPath(), 'resources', 'icon-windows.png')
+     : join(process.resourcesPath, 'icon.png')
+   app.setAboutPanelOptions({
+-    applicationName: 'DeepSeek Harness',
++    applicationName: 'Xiaocongseek',
+     applicationVersion: app.getVersion(),
+     // The release has no separate build number; omit Electron's bundle version.
+     version: '',
+diff --git a/apps/web/public/apple-touch-icon.png b/apps/web/public/apple-touch-icon.png
+index 273d776a..f3494ea7 100644
+Binary files a/apps/web/public/apple-touch-icon.png and b/apps/web/public/apple-touch-icon.png differ
+diff --git a/apps/web/public/icon-192.png b/apps/web/public/icon-192.png
+index 35222baa..c3a6d7f8 100644
+Binary files a/apps/web/public/icon-192.png and b/apps/web/public/icon-192.png differ
+diff --git a/apps/web/public/icon-512.png b/apps/web/public/icon-512.png
+index 26c44db5..6580242d 100644
+Binary files a/apps/web/public/icon-512.png and b/apps/web/public/icon-512.png differ
+diff --git a/apps/web/public/icon-maskable-512.png b/apps/web/public/icon-maskable-512.png
+index 1278ff3a..6580242d 100644
+Binary files a/apps/web/public/icon-maskable-512.png and b/apps/web/public/icon-maskable-512.png differ
+diff --git a/apps/web/public/xiaocong-only.png b/apps/web/public/xiaocong-only.png
+new file mode 100644
+index 00000000..3632f02c
+Binary files /dev/null and b/apps/web/public/xiaocong-only.png differ
+diff --git a/packages/client/locale/src/locales/de.ts b/packages/client/locale/src/locales/de.ts
+index cb0bb455..4e85080e 100644
+--- a/packages/client/locale/src/locales/de.ts
++++ b/packages/client/locale/src/locales/de.ts
+@@ -36,7 +36,7 @@ export const de = {
+   'subtitle.expand': 'Beschreibung für {name} ausklappen',
+   'subtitle.collapse': 'Beschreibung für {name} einklappen',
+   'back': 'Zurück',
+-  'brand.localBuild': 'Lokaler DSH-Build',
++  'brand.localBuild': 'Xiaocongseek',
+   'workspace.defaultName': 'Standardarbeitsbereich',
+   'unknown': 'Unbekannt',
+   'none': 'Keine',
+diff --git a/packages/client/locale/src/locales/en.ts b/packages/client/locale/src/locales/en.ts
+index 47a03d69..91e1825d 100644
+--- a/packages/client/locale/src/locales/en.ts
++++ b/packages/client/locale/src/locales/en.ts
+@@ -35,7 +35,7 @@ export const en = {
+   'subtitle.expand': 'Expand description for {name}',
+   'subtitle.collapse': 'Collapse description for {name}',
+   'back': 'Back',
+-  'brand.localBuild': 'DSH Local Build',
++  'brand.localBuild': 'Xiaocongseek',
+   'workspace.defaultName': 'Default workspace',
+   'unknown': 'Unknown',
+   'none': 'None',
+diff --git a/packages/client/locale/src/locales/es.ts b/packages/client/locale/src/locales/es.ts
+index 4fba9848..5357c7aa 100644
+--- a/packages/client/locale/src/locales/es.ts
++++ b/packages/client/locale/src/locales/es.ts
+@@ -36,7 +36,7 @@ export const es = {
+   'subtitle.expand': 'Expandir la descripción de {name}',
+   'subtitle.collapse': 'Contraer la descripción de {name}',
+   'back': 'Atrás',
+-  'brand.localBuild': 'Compilación local de DSH',
++  'brand.localBuild': 'Xiaocongseek',
+   'workspace.defaultName': 'Espacio de trabajo predeterminado',
+   'unknown': 'Desconocido',
+   'none': 'Ninguno',
+diff --git a/packages/client/locale/src/locales/fr.ts b/packages/client/locale/src/locales/fr.ts
+index f0e5030f..e7a6a435 100644
+--- a/packages/client/locale/src/locales/fr.ts
++++ b/packages/client/locale/src/locales/fr.ts
+@@ -36,7 +36,7 @@ export const fr = {
+   'subtitle.expand': 'Développer la description de {name}',
+   'subtitle.collapse': 'Réduire la description de {name}',
+   'back': 'Retour',
+-  'brand.localBuild': 'Version locale de DSH',
++  'brand.localBuild': 'Xiaocongseek',
+   'workspace.defaultName': 'Espace de travail par défaut',
+   'unknown': 'Inconnu',
+   'none': 'Aucun',
+diff --git a/packages/client/locale/src/locales/ja.ts b/packages/client/locale/src/locales/ja.ts
+index 2b70cbb1..2133f94a 100644
+--- a/packages/client/locale/src/locales/ja.ts
++++ b/packages/client/locale/src/locales/ja.ts
+@@ -36,7 +36,7 @@ export const ja = {
+   'subtitle.expand': '{name} の説明を展開',
+   'subtitle.collapse': '{name} の説明を折りたたむ',
+   'back': '戻る',
+-  'brand.localBuild': 'DSHローカルビルド',
++  'brand.localBuild': 'Xiaocongseek',
+   'workspace.defaultName': 'デフォルトワークスペース',
+   'unknown': '不明',
+   'none': 'なし',
+diff --git a/packages/client/locale/src/locales/pt.ts b/packages/client/locale/src/locales/pt.ts
+index adf71115..7f3d11a1 100644
+--- a/packages/client/locale/src/locales/pt.ts
++++ b/packages/client/locale/src/locales/pt.ts
+@@ -36,7 +36,7 @@ export const pt = {
+   'subtitle.expand': 'Expandir descrição de {name}',
+   'subtitle.collapse': 'Recolher descrição de {name}',
+   'back': 'Voltar',
+-  'brand.localBuild': 'Versão local do DSH',
++  'brand.localBuild': 'Xiaocongseek',
+   'workspace.defaultName': 'Espaço de trabalho padrão',
+   'unknown': 'Desconhecido',
+   'none': 'Nenhum',
+diff --git a/packages/client/locale/src/locales/ru.ts b/packages/client/locale/src/locales/ru.ts
+index e75620fe..9be01abc 100644
+--- a/packages/client/locale/src/locales/ru.ts
++++ b/packages/client/locale/src/locales/ru.ts
+@@ -36,7 +36,7 @@ export const ru = {
+   'subtitle.expand': 'Развернуть описание {name}',
+   'subtitle.collapse': 'Свернуть описание {name}',
+   'back': 'Назад',
+-  'brand.localBuild': 'Локальная сборка DSH',
++  'brand.localBuild': 'Xiaocongseek',
+   'workspace.defaultName': 'Рабочая область по умолчанию',
+   'unknown': 'Неизвестно',
+   'none': 'Нет',
+diff --git a/packages/client/locale/src/locales/zh.ts b/packages/client/locale/src/locales/zh.ts
+index 6350caae..70f734b0 100644
+--- a/packages/client/locale/src/locales/zh.ts
++++ b/packages/client/locale/src/locales/zh.ts
+@@ -33,7 +33,7 @@ export const zh = {
+   'subtitle.expand': '展开{name}的描述',
+   'subtitle.collapse': '收起{name}的描述',
+   'back': '返回',
+-  'brand.localBuild': 'DSH 本地构建',
++  'brand.localBuild': 'Xiaocongseek',
+   'workspace.defaultName': '默认工作区',
+   'unknown': '未知',
+   'none': '无',
+diff --git a/packages/client/ui-brand-official/src/client/Brand.tsx b/packages/client/ui-brand-official/src/client/Brand.tsx
+index 9ac6dd7c..1676c8dd 100644
+--- a/packages/client/ui-brand-official/src/client/Brand.tsx
++++ b/packages/client/ui-brand-official/src/client/Brand.tsx
+@@ -2,17 +2,17 @@ import { BrandWordmark, FishLogo } from '@deepseek-ai/dsh-client-ui-primitives'
+ import type { SidebarBrandMarkOwnerProps } from '@deepseek-ai/dsh-client-ui-sidebar/client'
+ 
+ /**
+- * Render the official mark with the presentation requested by its host surface.
++ * Render the Xiaocongseek mark with the presentation requested by its host surface.
+  * @param props - Host-supplied mark presentation.
+- * @returns the official whale mark.
++ * @returns the 小葱 mark.
+  */
+ export function OfficialBrandMark({ size }: SidebarBrandMarkOwnerProps) {
+   return <FishLogo size={size} />
+ }
+ 
+ /**
+- * Render the official name artwork without its independently slotted mark.
+- * @returns the official name wordmark.
++ * Render the Xiaocongseek name artwork without its independently slotted mark.
++ * @returns the Xiaocongseek name wordmark.
+  */
+ export function OfficialBrandName() {
+   return <BrandWordmark includeMark={false} />
+diff --git a/packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx b/packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx
+index b46db926..c59a1d66 100644
+--- a/packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx
++++ b/packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx
+@@ -4,7 +4,7 @@
+ import { useState } from 'react'
+ import type { ReactNode, RefObject } from 'react'
+ import {
+-  FISH_LOGO_PATH, FISH_LOGO_VIEWBOX, IconChevronDownOutlineRegular, IconFolderCloseRegular, IconFolderOpenRegular,
++  FishLogo, IconChevronDownOutlineRegular, IconFolderCloseRegular, IconFolderOpenRegular,
+ } from '@deepseek-ai/dsh-client-ui-primitives'
+ import { workspaceTitleOf } from '@deepseek-ai/dsh-util-workspace-path'
+ import type { ConversationContentProps } from '../contract/slots.ts'
+@@ -71,57 +71,13 @@ export interface HeroShellProps {
+   children?: ReactNode
+ }
+ 
+-/* Hover swim morph targets: the resting FISH_LOGO_PATH with weighted
+-   regional deformation baked in (generated programmatically — parse the
+-   path's absolute M/C/L/Z commands, displace points with smoothstep falloff
+-   weights, emit the same command structure so SMIL can interpolate `d`
+-   between them). Tail: rotation about (15.6, 5.2) with weight growing toward
+-   the tail tip (x>15, y<8.5) — UP -7°, DOWN +6°. Mouth/fin swoosh: a bend,
+-   not a rotation — vertical lift with weight-squared falloff from the body
+-   anchor (14.1, 15.0), so the near end stays seated and the mouth corner
+-   sweeps most, a smile lift (UP -0.7 units at the tip, DOWN +0.5). The eye
+-   subpaths carry zero weight and stay fixed. */
+-const HERO_SWIM_UP_PATH =
+-  'M22.403 0.567C22.145 0.477 22.068 0.718 21.939 0.85C21.895 0.893 21.86 0.947 21.824 0.997C21.515 1.421 21.13 1.721 20.591 1.77C19.829 1.867 19.221 2.244 18.712 2.958C18.535 2.227 18.116 1.839 17.516 1.626C17.203 1.506 16.887 1.379 16.663 1.064C16.508 0.839 16.462 0.581 16.383 0.329C16.332 0.176 16.283 0.02 16.121 -0.002C15.944 -0.029 15.875 0.133 15.805 0.269C15.52 0.822 15.408 1.43 15.42 2.046C15.449 3.432 16.031 4.532 17.202 5.274C17.337 5.356 17.374 5.445 17.335 5.582C17.261 5.862 17.169 6.134 17.086 6.413C17.032 6.59 16.952 6.63 16.764 6.558C16.118 6.301 15.562 5.909 15.074 5.433C14.248 4.633 13.5 3.751 12.568 3.06C12.349 2.898 12.13 2.748 11.903 2.605C10.952 1.682 12.028 0.923 12.277 0.833C12.537 0.739 12.367 0.416 11.526 0.42C10.684 0.424 9.914 0.706 8.933 1.081C8.789 1.138 8.638 1.179 8.484 1.213C7.593 1.044 6.668 1.006 5.702 1.115C3.883 1.318 2.43 2.178 1.362 3.646C0.079 5.41 -0.223 7.415 0.147 9.506C0.535 11.71 1.66 13.535 3.389 14.962C5.181 16.441 7.246 17.166 9.601 17.027C11.032 16.944 12.624 16.753 14.421 15.232C14.874 15.458 15.35 15.548 16.138 15.615C16.746 15.672 17.331 15.585 17.784 15.491C18.493 15.341 18.444 14.684 18.188 14.564C16.108 13.595 16.565 13.989 16.15 13.67C17.206 12.42 18.82 10.198 19.363 7.086C19.421 6.709 19.484 6.171 19.469 5.866C19.458 5.681 19.493 5.604 19.681 5.556C20.199 5.412 20.691 5.172 21.125 4.806C22.366 3.824 22.758 2.554 22.708 1.1C22.7 0.878 22.649 0.654 22.403 0.567ZM11.175 14.451C9.159 12.726 8.182 12.088 7.778 12.067C7.401 12.047 7.469 12.505 7.552 12.807C7.639 13.103 7.752 13.313 7.91 13.581C8.02 13.758 8.095 14.01 7.801 14.16C7.152 14.487 6.023 13.806 5.97 13.772C4.657 12.85 3.559 11.766 2.785 10.369C2.037 9.025 1.603 7.583 1.532 6.044C1.513 5.672 1.622 5.541 1.992 5.473C2.479 5.383 2.981 5.364 3.468 5.436C5.525 5.736 7.276 6.675 8.744 8.323C9.582 9.299 10.216 10.425 10.869 11.496C11.563 12.592 12.31 13.603 13.262 14.414C13.598 14.696 13.866 14.91 14.123 15.068C13.349 15.154 12.058 15.167 11.175 14.452L11.175 14.451ZM12.141 8.26C12.141 8.095 12.273 7.963 12.439 7.963C12.476 7.963 12.511 7.971 12.541 7.982C12.582 7.997 12.62 8.019 12.65 8.053C12.704 8.106 12.733 8.181 12.733 8.26C12.733 8.425 12.601 8.556 12.435 8.556C12.27 8.556 12.141 8.425 12.141 8.26ZM15.142 9.799C14.949 9.878 14.757 9.945 14.572 9.953C14.284 9.968 13.972 9.851 13.802 9.709C13.537 9.487 13.348 9.363 13.27 8.977C13.236 8.812 13.255 8.556 13.284 8.41C13.352 8.094 13.277 7.892 13.055 7.708C12.873 7.558 12.643 7.516 12.39 7.516C12.296 7.516 12.209 7.475 12.145 7.441C12.039 7.389 11.952 7.257 12.035 7.096C12.062 7.043 12.19 6.916 12.22 6.893C12.563 6.698 12.96 6.762 13.326 6.908C13.665 7.047 13.922 7.302 14.292 7.663C14.669 8.098 14.738 8.218 14.953 8.545C15.123 8.801 15.277 9.063 15.383 9.364C15.447 9.551 15.364 9.705 15.142 9.799Z'
+-const HERO_SWIM_DOWN_PATH =
+-  'M23.271 2.216C23.039 2.071 22.91 2.287 22.755 2.388C22.703 2.42 22.656 2.464 22.61 2.505C22.214 2.848 21.771 3.054 21.225 2.956C20.412 2.784 19.68 2.919 19.005 3.435C18.92 2.663 18.493 2.157 17.808 1.798C17.446 1.621 17.08 1.449 16.83 1.111C16.656 0.872 16.611 0.612 16.524 0.354C16.469 0.198 16.414 0.039 16.223 0.009C16.017 -0.024 15.936 0.137 15.856 0.271C15.539 0.822 15.418 1.43 15.429 2.046C15.454 3.432 16.041 4.538 17.196 5.36C17.325 5.456 17.356 5.547 17.312 5.674C17.229 5.936 17.134 6.191 17.051 6.454C16.999 6.623 16.921 6.659 16.738 6.58C16.107 6.306 15.56 5.909 15.074 5.433C14.248 4.633 13.5 3.751 12.568 3.06C12.349 2.898 12.13 2.748 11.903 2.605C10.952 1.682 12.028 0.923 12.277 0.833C12.537 0.739 12.367 0.416 11.526 0.42C10.684 0.424 9.914 0.706 8.933 1.081C8.789 1.138 8.638 1.179 8.484 1.213C7.593 1.044 6.668 1.006 5.702 1.115C3.883 1.318 2.43 2.178 1.362 3.646C0.079 5.41 -0.223 7.415 0.147 9.506C0.535 11.71 1.66 13.535 3.389 14.962C5.181 16.441 7.246 17.166 9.601 17.027C11.032 16.944 12.624 16.753 14.421 15.232C14.874 15.458 15.35 15.548 16.138 15.615C16.746 15.672 17.331 15.585 17.784 15.491C18.493 15.341 18.444 14.684 18.188 14.564C16.108 13.595 16.565 13.989 16.15 13.67C17.206 12.42 18.82 10.198 19.278 7.246C19.318 6.948 19.375 6.534 19.371 6.293C19.371 6.145 19.411 6.092 19.597 6.098C20.113 6.109 20.619 6.051 21.096 5.891C22.503 5.375 23.169 4.232 23.448 2.804C23.49 2.586 23.491 2.356 23.271 2.216ZM11.175 14.49C9.159 13.005 8.182 12.567 7.778 12.621C7.401 12.673 7.469 13.087 7.552 13.354C7.639 13.619 7.752 13.797 7.91 14.024C8.02 14.175 8.095 14.406 7.801 14.609C7.152 15.063 6.023 14.63 5.97 14.609C4.657 13.941 3.559 12.965 2.785 11.569C2.037 10.225 1.603 8.783 1.532 7.244C1.513 6.872 1.622 6.741 1.992 6.673C2.479 6.583 2.981 6.564 3.468 6.636C5.525 6.936 7.276 7.843 8.744 9.163C9.582 9.888 10.216 10.783 10.869 11.679C11.563 12.659 12.31 13.617 13.262 14.415C13.598 14.696 13.866 14.91 14.123 15.068C13.349 15.155 12.058 15.177 11.175 14.491L11.175 14.49ZM12.141 8.26C12.141 8.095 12.273 7.963 12.439 7.963C12.476 7.963 12.511 7.971 12.541 7.982C12.582 7.997 12.62 8.019 12.65 8.053C12.704 8.106 12.733 8.181 12.733 8.26C12.733 8.425 12.601 8.556 12.435 8.556C12.27 8.556 12.141 8.425 12.141 8.26ZM15.142 9.799C14.949 9.878 14.757 9.945 14.572 9.953C14.284 9.968 13.972 9.851 13.802 9.709C13.537 9.487 13.348 9.363 13.27 8.977C13.236 8.812 13.255 8.556 13.284 8.41C13.352 8.094 13.277 7.892 13.055 7.708C12.873 7.558 12.643 7.516 12.39 7.516C12.296 7.516 12.209 7.475 12.145 7.441C12.039 7.389 11.952 7.257 12.035 7.096C12.062 7.043 12.19 6.916 12.22 6.893C12.563 6.698 12.96 6.762 13.326 6.908C13.665 7.047 13.922 7.302 14.292 7.663C14.669 8.098 14.738 8.218 14.953 8.545C15.123 8.801 15.277 9.063 15.383 9.364C15.447 9.551 15.364 9.705 15.142 9.799Z'
+-
+ /**
+- * The hero fish (34px wide), static at rest. Hovering swims the whale in
+- * place: a gentle head-up sway (CSS, on the hitbox hover) while the body
+- * itself morphs — SMIL interpolates `d` through the tail-up and tail-down
+- * targets on the same 1.6s period, so the tail wags and the fin flutters in
+- * real curve deformation. Decorative — hidden from the accessibility tree;
+- * reduced motion keeps the static filled logo on hover (sampled at
+- * mouseenter; a mid-hover preference change takes effect on the next enter).
+- * @param props.hovering - driven by the hitbox parent's pointer state.
+- * @returns the fish svg element.
++ * Hero brand mark (Xiaocongseek 小葱). Hover no longer morphs a whale path.
++ * @param props.hovering - kept for call-site compatibility; unused.
++ * @returns the onion mark img.
+  */
+-function HeroFish({ hovering }: { hovering: boolean }) {
+-  return (
+-    <svg
+-      className={css.fish}
+-      width={34}
+-      height={(34 * FISH_LOGO_VIEWBOX.height) / FISH_LOGO_VIEWBOX.width}
+-      viewBox={`0 0 ${FISH_LOGO_VIEWBOX.width} ${FISH_LOGO_VIEWBOX.height}`}
+-      fill="none"
+-      aria-hidden="true"
+-    >
+-      <path d={FISH_LOGO_PATH} fill="currentColor">
+-        {hovering && (
+-          <animate
+-            attributeName="d"
+-            values={`${FISH_LOGO_PATH};${HERO_SWIM_UP_PATH};${FISH_LOGO_PATH};${HERO_SWIM_DOWN_PATH};${FISH_LOGO_PATH}`}
+-            keyTimes="0;0.35;0.55;0.75;1"
+-            calcMode="spline"
+-            keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1"
+-            dur="1.6s"
+-            repeatCount="indefinite"
+-          />
+-        )}
+-      </path>
+-    </svg>
+-  )
++function HeroFish({ hovering: _hovering }: { hovering: boolean }) {
++  return <FishLogo size={34} className={css.fish} />
+ }
+ 
+ /**
+@@ -135,7 +91,7 @@ export function HeroShell({ t, renderSlot, children }: HeroShellProps) {
+     <div className={css.root}>
+       <div className={css.stack}>
+         <div className={css.headline}>
+-          {/* figma 34:10412: fish 34×25 leading the headline, gap 10. */}
++          {/* Xiaocongseek 小葱 mark leading the headline. */}
+           <span
+             className={css.fishHitbox}
+             onPointerEnter={(event) => {
+diff --git a/packages/client/ui-primitives/src/BrandWordmark.tsx b/packages/client/ui-primitives/src/BrandWordmark.tsx
+index a9df9921..684c8638 100644
+--- a/packages/client/ui-primitives/src/BrandWordmark.tsx
++++ b/packages/client/ui-primitives/src/BrandWordmark.tsx
+@@ -1,59 +1,48 @@
+ import type { IconProps } from './icons/props.ts'
++import { XIAOCONG_LOGO_SRC } from './FishLogo.tsx'
+ 
+-/** Display options for the official brand wordmark. */
++/** Display options for the Xiaocongseek brand wordmark. */
+ export interface BrandWordmarkProps extends IconProps {
+-  /** Whether to include the leading whale mark; defaults to true. */
++  /** Whether to include the leading 小葱 mark; defaults to true. */
+   includeMark?: boolean | undefined
+ }
+ 
+ /**
+- * Render the full brand wordmark.
+- * @param props.size - height in px (default 24; width follows the selected artwork).
++ * Render the Xiaocongseek brand wordmark (replaces DeepSeek whale + lettering).
++ * @param props.size - height in px (default 24).
+  * @param props.className - extra class for layout placement.
+- * @param props.includeMark - whether to include the leading whale mark.
+- * @returns the wordmark svg (aria-hidden decorative brand art).
++ * @param props.includeMark - whether to include the leading 小葱 mark.
++ * @returns the wordmark (aria-hidden decorative brand art).
+  */
+ export function BrandWordmark({ size = 24, className, includeMark = true }: BrandWordmarkProps) {
+-  const width = includeMark ? 182 : 156
+   return (
+-    <svg
+-      width={(size * width) / 24}
+-      height={size}
++    <span
+       className={className}
+-      viewBox={includeMark ? '0 0 182 24' : '26 0 156 24'}
+-      fill="none"
+       aria-hidden="true"
++      style={{
++        display: 'inline-flex',
++        alignItems: 'center',
++        gap: Math.max(6, Math.round(size * 0.35)),
++        height: size,
++        fontSize: Math.round(size * 0.72),
++        fontWeight: 700,
++        letterSpacing: '-0.02em',
++        lineHeight: 1,
++        whiteSpace: 'nowrap',
++        color: 'currentColor',
++      }}
+     >
+-      <path d="M68.416 18.2447H67.0501V16.1272H68.416C69.2619 16.1272 70.1166 15.9163 70.6671 15.3304C71.2181 14.7444 71.426 13.8455 71.426 12.9471C71.426 12.0487 71.2268 11.1498 70.6671 10.5643C70.1083 9.97831 69.2619 9.76744 68.416 9.76744C67.5701 9.76744 66.7154 9.97831 66.1639 10.5643C65.6129 11.1503 65.4049 12.0487 65.4049 12.9471V21.6435H63.009V7.6582H65.4049V8.54883H65.8442C65.8918 8.49393 65.9394 8.44728 65.9875 8.40064C66.5871 7.85353 67.5049 7.6582 68.4072 7.6582C69.8212 7.6582 71.2341 8.00998 72.1607 8.98662C73.0868 9.96325 73.4143 11.4632 73.4143 12.9558C73.4143 14.4485 73.0785 15.9406 72.1607 16.925C71.2424 17.9094 69.8212 18.2457 68.416 18.2457V18.2447Z" fill="currentColor"/>
+-      <path d="M31.9551 8.03497H33.3204V10.1525H31.9551C31.1087 10.1525 30.2545 10.3633 29.7035 10.9493C29.1525 11.5353 28.945 12.4342 28.945 13.3326C28.945 14.231 29.1447 15.1294 29.7035 15.7154C30.2623 16.3014 31.1087 16.5122 31.9551 16.5122C32.8015 16.5122 33.6562 16.3014 34.2072 15.7154C34.7582 15.1294 34.9657 14.231 34.9657 13.3326V4.62842H37.3611V18.6219H34.9657V17.7313H34.5264C34.4783 17.7857 34.4307 17.8329 34.3826 17.8795C33.7835 18.4261 32.8652 18.6219 31.9629 18.6219C30.5494 18.6219 29.136 18.2707 28.2099 17.294C27.2838 16.3174 26.9563 14.817 26.9563 13.3248C26.9563 11.8327 27.2916 10.34 28.2099 9.35561C29.136 8.37898 30.5494 8.03497 31.9551 8.03497Z" fill="currentColor"/>
+-      <path d="M49.3786 13.1431V13.9948H42.9984V12.2996H47.2305C47.1348 11.6825 46.9113 11.1043 46.5119 10.682C45.9371 10.0727 45.0503 9.85409 44.1723 9.85409C43.2943 9.85409 42.4076 10.0727 41.8328 10.682C41.258 11.2913 41.05 12.2213 41.05 13.1435C41.05 14.0658 41.2575 15.003 41.8328 15.6046C42.4076 16.2061 43.2939 16.433 44.1723 16.433C45.0508 16.433 45.9371 16.2143 46.5119 15.6046C46.5916 15.5186 46.6635 15.4248 46.7354 15.331H49.0992C48.8918 16.0657 48.5643 16.7299 48.0691 17.2454C47.111 18.2531 45.6339 18.6205 44.1723 18.6205C42.7108 18.6205 41.2337 18.2609 40.2755 17.2454C39.3174 16.2299 38.9661 14.6828 38.9661 13.1435C38.9661 11.6043 39.3096 10.0494 40.2755 9.04168C41.242 8.03396 42.7108 7.66663 44.1723 7.66663C45.6339 7.66663 47.111 8.02618 48.0691 9.04168C49.0351 10.0572 49.3786 11.6043 49.3786 13.1435V13.1431Z" fill="currentColor"/>
+-      <path d="M61.4045 13.1431V13.9948H55.0243V12.2996H59.2564C59.1602 11.6825 58.9372 11.1043 58.5378 10.682C57.963 10.0727 57.0762 9.85409 56.1982 9.85409C55.3202 9.85409 54.4335 10.0727 53.8587 10.682C53.2839 11.2913 53.0759 12.2213 53.0759 13.1435C53.0759 14.0658 53.2834 15.003 53.8587 15.6046C54.4335 16.2061 55.3202 16.433 56.1982 16.433C57.0762 16.433 57.963 16.2143 58.5378 15.6046C58.6179 15.5186 58.6894 15.4248 58.7608 15.331H61.1251C60.9171 16.0657 60.5897 16.7299 60.0945 17.2454C59.1364 18.2531 57.6593 18.6205 56.1982 18.6205C54.7372 18.6205 53.2596 18.2609 52.3014 17.2454C51.3432 16.2299 50.9919 14.6828 50.9919 13.1435C50.9919 11.6043 51.3355 10.0494 52.3014 9.04168C53.2678 8.03396 54.7367 7.66663 56.1982 7.66663C57.6598 7.66663 59.1364 8.02618 60.0945 9.04168C61.061 10.0572 61.4045 11.6043 61.4045 13.1435V13.1431Z" fill="currentColor"/>
+-      <path d="M80.242 18.6214C81.7035 18.6214 83.1801 18.4105 84.1383 17.809C85.0965 17.2075 85.4482 16.2931 85.4482 15.3869C85.4482 14.4807 85.1042 13.5585 84.1383 12.9647C83.1801 12.371 81.703 12.1518 80.242 12.1518C79.6186 12.1518 79.0438 12.0658 78.6366 11.8394C78.2294 11.6047 78.0778 11.2534 78.0778 10.9017C78.0778 10.5499 78.2216 10.1908 78.6366 9.9639C79.0438 9.72921 79.6749 9.65147 80.2973 9.65147C80.9198 9.65147 81.5509 9.73747 81.9591 9.9639C82.3663 10.1986 82.5179 10.5499 82.5179 10.9017H84.9531C84.9531 9.99499 84.6421 9.07327 83.7719 8.47951C82.9017 7.88576 81.5679 7.66663 80.2424 7.66663C78.9169 7.66663 77.5837 7.8775 76.713 8.47951C75.8427 9.08104 75.5308 9.99499 75.5308 10.9017C75.5308 11.8083 75.8423 12.73 76.713 13.3238C77.5832 13.9176 78.9165 14.1367 80.2424 14.1367C80.929 14.1367 81.688 14.2227 82.1428 14.4491C82.5985 14.676 82.7579 15.0351 82.7579 15.3869C82.7579 15.7387 82.5985 16.0977 82.1428 16.3246C81.688 16.5511 80.9931 16.6371 80.3066 16.6371C79.62 16.6371 78.9169 16.5511 78.4694 16.3246C78.0224 16.0982 77.8543 15.7387 77.8543 15.3869H75.0435C75.0435 16.2935 75.3865 17.2153 76.3534 17.809C77.3194 18.4028 78.7809 18.6214 80.2424 18.6214H80.242Z" fill="currentColor"/>
+-      <path d="M97.4733 13.1431V13.9948H91.0932V12.2996H95.3252C95.23 11.6825 95.006 11.1043 94.6071 10.682C94.0313 10.0727 93.1456 9.85409 92.2666 9.85409C91.3876 9.85409 90.5018 10.0727 89.927 10.682C89.3522 11.2913 89.1452 12.2213 89.1452 13.1435C89.1452 14.0658 89.3522 15.003 89.927 15.6046C90.5018 16.2061 91.3886 16.433 92.2666 16.433C93.1446 16.433 94.0313 16.2143 94.6071 15.6046C94.6863 15.5186 94.7587 15.4248 94.8301 15.331H97.1935C96.9855 16.0657 96.6585 16.7299 96.1639 17.2454C95.2057 18.2531 93.7281 18.6205 92.2666 18.6205C90.805 18.6205 89.3284 18.2609 88.3703 17.2454C87.4121 16.2299 87.0613 14.6828 87.0613 13.1435C87.0613 11.6043 87.4043 10.0494 88.3703 9.04168C89.3367 8.03396 90.806 7.66663 92.2666 7.66663C93.7272 7.66663 95.2057 8.02618 96.1639 9.04168C97.1298 10.0572 97.4729 11.6043 97.4729 13.1435L97.4733 13.1431Z" fill="currentColor"/>
+-      <path d="M109.499 13.1431V13.9948H103.119V12.2996H107.351C107.256 11.6825 107.032 11.1043 106.632 10.682C106.057 10.0727 105.172 9.85409 104.293 9.85409C103.414 9.85409 102.528 10.0727 101.953 10.682C101.378 11.2913 101.17 12.2213 101.17 13.1435C101.17 14.0658 101.378 15.003 101.953 15.6046C102.528 16.2061 103.415 16.433 104.293 16.433C105.171 16.433 106.057 16.2143 106.632 15.6046C106.712 15.5186 106.784 15.4248 106.856 15.331H109.22C109.012 16.0657 108.685 16.7299 108.19 17.2454C107.231 18.2531 105.754 18.6205 104.293 18.6205C102.831 18.6205 101.355 18.2609 100.396 17.2454C99.4382 16.2299 99.0864 14.6828 99.0864 13.1435C99.0864 11.6043 99.4295 10.0494 100.396 9.04168C101.362 8.03396 102.832 7.66663 104.293 7.66663C105.754 7.66663 107.231 8.02618 108.19 9.04168C109.156 10.0572 109.499 11.6043 109.499 13.1435V13.1431Z" fill="currentColor"/>
+-      <path d="M113.5 4.62817H111.104V18.6217H113.5V4.62817Z" fill="currentColor"/>
+-      <path d="M117.589 12.8154L121.517 18.6208H118.554L114.625 12.8154L118.554 8.15088H121.517L117.589 12.8154Z" fill="currentColor"/>
+-      <g clipPath="url(#dsh-wordmark-whale-clip)">
+-        <path d="M23.0584 4.95203C22.8129 4.83203 22.7074 5.06103 22.5639 5.17704C22.5149 5.21454 22.4734 5.26354 22.4319 5.30854C22.0734 5.69155 21.6543 5.94306 21.1073 5.91306C20.3073 5.86806 19.6243 6.11957 19.0203 6.73158C18.8918 5.97706 18.4652 5.52655 17.8162 5.23754C17.4767 5.08753 17.1332 4.93703 16.8952 4.61052C16.7292 4.37801 16.6837 4.11901 16.6007 3.8635C16.5477 3.70949 16.4952 3.55199 16.3177 3.52549C16.1252 3.49549 16.0497 3.65699 15.9742 3.792C15.6722 4.34401 15.5552 4.95203 15.5667 5.56805C15.5932 6.95359 16.1782 8.05712 17.3407 8.84215C17.4727 8.93215 17.5067 9.02215 17.4652 9.15366C17.3857 9.42416 17.2917 9.68667 17.2087 9.95718C17.1557 10.1297 17.0767 10.1677 16.8917 10.0922C16.2537 9.82568 15.7027 9.43117 15.2156 8.95465C14.3891 8.15513 13.6416 7.2726 12.7096 6.58158C12.4906 6.42007 12.2716 6.27007 12.045 6.12707C11.094 5.20354 12.1696 4.44502 12.4186 4.35501C12.6791 4.26101 12.5091 3.938 11.6675 3.942C10.826 3.9455 10.056 4.22751 9.07446 4.60302C8.93096 4.65952 8.77995 4.70052 8.62545 4.73452C7.73492 4.56552 6.80989 4.52802 5.84386 4.63702C4.02481 4.83953 2.57177 5.69955 1.50373 7.1676C0.220694 8.93215 -0.0813148 10.9372 0.288196 13.0283C0.676708 15.2323 1.80174 17.0569 3.53029 18.4834C5.32285 19.9625 7.38741 20.6875 9.74298 20.5485C11.1735 20.466 12.7661 20.2745 14.5626 18.7539C15.0156 18.9795 15.4912 19.0695 16.2797 19.137C16.8872 19.1935 17.4722 19.107 17.9252 19.013C18.6347 18.8629 18.5857 18.2059 18.3292 18.0854C16.2497 17.1169 16.7062 17.5109 16.2912 17.1919C17.3477 15.9419 18.9618 13.7198 19.4598 10.6942C19.5088 10.3602 19.5713 9.88968 19.5638 9.61917C19.5598 9.45417 19.5978 9.39016 19.7863 9.37116C20.3073 9.31116 20.8128 9.16866 21.2773 8.91315C22.6249 8.17713 23.1684 6.96809 23.2964 5.51905C23.3154 5.29754 23.2924 5.06853 23.0584 4.95203ZM11.3165 17.9954C9.30097 16.4109 8.32344 15.8894 7.91992 15.9119C7.54241 15.9344 7.61042 16.3664 7.69342 16.6479C7.78042 16.9259 7.89342 17.1174 8.05193 17.3614C8.16143 17.5229 8.23694 17.7629 7.94243 17.9434C7.29341 18.3449 6.16487 17.8084 6.11187 17.7819C4.79833 17.0084 3.7003 15.9874 2.92628 14.5908C2.17875 13.2468 1.74474 11.8047 1.67324 10.2657C1.65424 9.89418 1.76374 9.76267 2.13375 9.69517C2.62077 9.60517 3.12278 9.58617 3.6093 9.65767C5.66636 9.95818 7.41741 10.8777 8.88545 12.3348C9.72348 13.1643 10.3575 14.1558 11.0105 15.1243C11.705 16.1529 12.4521 17.1329 13.4036 17.9364C13.7396 18.2179 14.0076 18.4319 14.2641 18.5899C13.4906 18.6764 12.1996 18.6949 11.3165 17.9964V17.9954ZM12.2826 11.7817C12.2826 11.6167 12.4146 11.4852 12.5806 11.4852C12.6181 11.4852 12.6521 11.4927 12.6826 11.5037C12.7241 11.5187 12.7621 11.5412 12.7921 11.5752C12.8451 11.6277 12.8751 11.7027 12.8751 11.7817C12.8751 11.9467 12.7431 12.0782 12.5771 12.0782C12.4111 12.0782 12.2826 11.9467 12.2826 11.7817ZM15.2831 13.3208C15.0906 13.3998 14.8981 13.4673 14.7131 13.4748C14.4261 13.4898 14.1131 13.3733 13.9431 13.2308C13.6791 13.0093 13.4901 12.8853 13.4111 12.4988C13.3771 12.3338 13.3961 12.0782 13.4261 11.9317C13.4941 11.6162 13.4186 11.4137 13.1961 11.2297C13.0151 11.0797 12.7846 11.0382 12.5316 11.0382C12.4371 11.0382 12.3506 10.9967 12.2861 10.9632C12.1806 10.9107 12.0936 10.7792 12.1766 10.6177C12.2031 10.5652 12.3316 10.4377 12.3616 10.4152C12.7051 10.2197 13.1011 10.2837 13.4676 10.4302C13.8071 10.5692 14.0641 10.8242 14.4336 11.1847C14.8111 11.6202 14.8791 11.7402 15.0941 12.0672C15.2641 12.3228 15.4186 12.5853 15.5247 12.8858C15.5887 13.0733 15.5057 13.2268 15.2831 13.3208Z" fill="currentColor"/>
+-      </g>
+-      <rect x="129.348" y="5.5" width="52" height="14" rx="2" fill="currentColor"/>
+-      <g clipPath="url(#dsh-wordmark-badge-clip)">
+-        <path d="M132.848 8.93205H134.08V16.137H132.848V8.93205ZM136.5 8.93205H137.732V16.137H136.5V8.93205ZM133.365 13.024V11.99H137.193V13.024H133.365Z" fill="var(--dsw-alias-label-primary-inverted)"/>
+-        <path d="M140.397 14.432L140.672 13.453H143.202L143.532 14.432H140.397ZM140.287 16.137H139.055L141.277 8.93205H142.201L142.146 9.74605L140.947 13.915H140.969L140.287 16.137ZM145.039 16.137H143.741L143.07 13.948L143.081 13.937L141.871 9.74605L141.926 8.93205H142.817L145.039 16.137Z" fill="var(--dsw-alias-label-primary-inverted)"/>
+-        <path d="M146.846 8.93205H149.068C149.852 8.93205 150.443 9.11538 150.839 9.48205C151.235 9.84138 151.433 10.3327 151.433 10.956C151.433 11.22 151.396 11.4657 151.323 11.693C151.249 11.9204 151.125 12.1257 150.949 12.309C150.773 12.4924 150.531 12.65 150.223 12.782C149.922 12.9067 149.541 13.0057 149.079 13.079V13.321H146.846V12.639L148.023 12.485C148.631 12.4044 149.09 12.298 149.398 12.166C149.706 12.034 149.915 11.8764 150.025 11.693C150.135 11.5024 150.19 11.2934 150.19 11.066C150.19 10.6994 150.083 10.417 149.871 10.219C149.658 10.021 149.324 9.92205 148.87 9.92205H146.846V8.93205ZM146.395 8.93205H147.627V16.137H146.395V8.93205ZM151.917 16.093V16.137H150.366L149.024 14.322C148.87 14.1094 148.73 13.9407 148.606 13.816C148.481 13.684 148.345 13.5887 148.199 13.53C148.052 13.464 147.872 13.42 147.66 13.398C147.447 13.3687 147.176 13.3504 146.846 13.343V13.145H149.079C149.233 13.211 149.368 13.2844 149.486 13.365C149.61 13.4457 149.735 13.5447 149.86 13.662C149.992 13.7794 150.138 13.937 150.3 14.135L151.917 16.093Z" fill="var(--dsw-alias-label-primary-inverted)"/>
+-        <path d="M153.58 9.57005L153.591 8.93205H154.46L157.584 15.51V16.137H156.704L153.58 9.57005ZM158.024 16.137H156.968L156.88 8.93205H158.024V16.137ZM154.24 16.137H153.096V8.93205H154.152L154.24 16.137Z" fill="var(--dsw-alias-label-primary-inverted)"/>
+-        <path d="M159.963 8.93205H161.206V16.137H159.963V8.93205ZM160.095 9.96605V8.93205H164.858V9.96605H160.095ZM160.095 16.137V15.103H164.902V16.137H160.095ZM160.095 13.013V11.99H164.374V13.013H160.095Z" fill="var(--dsw-alias-label-primary-inverted)"/>
+-        <path d="M169.052 15.257C169.543 15.257 169.895 15.1654 170.108 14.982C170.328 14.7987 170.438 14.5457 170.438 14.223C170.438 14.047 170.405 13.8967 170.339 13.772C170.273 13.6474 170.152 13.5337 169.976 13.431C169.807 13.321 169.558 13.2147 169.228 13.112L168.491 12.881C167.846 12.6757 167.38 12.4044 167.094 12.067C166.808 11.7297 166.665 11.3007 166.665 10.78C166.665 10.428 166.76 10.1017 166.951 9.80105C167.142 9.50038 167.428 9.25838 167.809 9.07505C168.19 8.89172 168.663 8.80005 169.228 8.80005C169.631 8.80005 169.998 8.82938 170.328 8.88805C170.665 8.93938 171.039 9.01638 171.45 9.11905L171.274 10.175C170.834 10.0504 170.442 9.96238 170.097 9.91105C169.76 9.85238 169.463 9.82305 169.206 9.82305C168.737 9.82305 168.403 9.90738 168.205 10.076C168.007 10.2374 167.908 10.439 167.908 10.681C167.908 10.857 167.941 11.0147 168.007 11.154C168.073 11.286 168.19 11.407 168.359 11.517C168.535 11.627 168.784 11.7334 169.107 11.836L169.866 12.078C170.526 12.276 170.995 12.5327 171.274 12.848C171.553 13.156 171.692 13.585 171.692 14.135C171.692 14.5604 171.589 14.9344 171.384 15.257C171.179 15.5797 170.878 15.8327 170.482 16.016C170.093 16.1994 169.609 16.291 169.03 16.291C168.627 16.291 168.212 16.247 167.787 16.159C167.362 16.071 166.9 15.9427 166.401 15.774L166.665 14.718C167.156 14.894 167.6 15.0297 167.996 15.125C168.399 15.213 168.751 15.257 169.052 15.257Z" fill="var(--dsw-alias-label-primary-inverted)"/>
+-        <path d="M175.809 15.257C176.3 15.257 176.652 15.1654 176.865 14.982C177.085 14.7987 177.195 14.5457 177.195 14.223C177.195 14.047 177.162 13.8967 177.096 13.772C177.03 13.6474 176.909 13.5337 176.733 13.431C176.564 13.321 176.315 13.2147 175.985 13.112L175.248 12.881C174.603 12.6757 174.137 12.4044 173.851 12.067C173.565 11.7297 173.422 11.3007 173.422 10.78C173.422 10.428 173.517 10.1017 173.708 9.80105C173.899 9.50038 174.185 9.25838 174.566 9.07505C174.947 8.89172 175.42 8.80005 175.985 8.80005C176.388 8.80005 176.755 8.82938 177.085 8.88805C177.422 8.93938 177.796 9.01638 178.207 9.11905L178.031 10.175C177.591 10.0504 177.199 9.96238 176.854 9.91105C176.517 9.85238 176.22 9.82305 175.963 9.82305C175.494 9.82305 175.16 9.90738 174.962 10.076C174.764 10.2374 174.665 10.439 174.665 10.681C174.665 10.857 174.698 11.0147 174.764 11.154C174.83 11.286 174.947 11.407 175.116 11.517C175.292 11.627 175.541 11.7334 175.864 11.836L176.623 12.078C177.283 12.276 177.752 12.5327 178.031 12.848C178.31 13.156 178.449 13.585 178.449 14.135C178.449 14.5604 178.346 14.9344 178.141 15.257C177.936 15.5797 177.635 15.8327 177.239 16.016C176.85 16.1994 176.366 16.291 175.787 16.291C175.384 16.291 174.969 16.247 174.544 16.159C174.119 16.071 173.657 15.9427 173.158 15.774L173.422 14.718C173.913 14.894 174.357 15.0297 174.753 15.125C175.156 15.213 175.508 15.257 175.809 15.257Z" fill="var(--dsw-alias-label-primary-inverted)"/>
+-      </g>
+-      <defs>
+-        <clipPath id="dsh-wordmark-whale-clip">
+-          <rect width="23.16" height="17.0435" fill="white" transform="translate(0.141602 3.52185)"/>
+-        </clipPath>
+-        <clipPath id="dsh-wordmark-badge-clip">
+-          <rect width="46" height="14" fill="white" transform="translate(132.348 5.5)"/>
+-        </clipPath>
+-      </defs>
+-    </svg>
++      {includeMark ? (
++        <img
++          src={XIAOCONG_LOGO_SRC}
++          alt=""
++          width={size}
++          height={size}
++          draggable={false}
++          style={{ width: size, height: size, objectFit: 'contain', objectPosition: 'center bottom', display: 'block', flexShrink: 0 }}
++        />
++      ) : null}
++      <span>Xiaocongseek</span>
++    </span>
+   )
+ }
+diff --git a/packages/client/ui-primitives/src/FishLogo.tsx b/packages/client/ui-primitives/src/FishLogo.tsx
+index 8621f172..32f1d8ab 100644
+--- a/packages/client/ui-primitives/src/FishLogo.tsx
++++ b/packages/client/ui-primitives/src/FishLogo.tsx
+@@ -1,28 +1,34 @@
+ import type { IconProps } from './icons/props.ts'
+ 
+-/** Native viewBox of {@link FISH_LOGO_PATH} (width and height in user units). */
++/** Served by digital-human-studio (fork); also mirrored under web public as fallback. */
++export const XIAOCONG_LOGO_SRC = '/digital-human-studio/assets/xiaocong-only.png'
++
++/** Native viewBox of {@link FISH_LOGO_PATH} (width and height in user units). Kept for legacy consumers. */
+ export const FISH_LOGO_VIEWBOX = { width: 23.16, height: 17.04 }
+ 
+-/** The fish silhouette path data, exported for consumers that compose their own svg (entrance effects, masks) around the same geometry. */
++/**
++ * Legacy DeepSeek fish silhouette path — retained so older morph / mask callers keep compiling.
++ * New UI uses {@link FishLogo} which renders the Xiaocongseek spring-onion mark.
++ */
+ export const FISH_LOGO_PATH = 'M22.9168 1.43018C22.6713 1.31018 22.5658 1.53918 22.4223 1.65519C22.3733 1.69269 22.3318 1.74169 22.2903 1.78669C21.9317 2.1697 21.5127 2.42121 20.9657 2.39121C20.1657 2.34621 19.4827 2.59771 18.8787 3.20973C18.7502 2.45521 18.3236 2.0047 17.6746 1.71569C17.3351 1.56568 16.9916 1.41518 16.7536 1.08867C16.5876 0.856163 16.5421 0.597155 16.4591 0.341647C16.4061 0.187643 16.3536 0.0301382 16.1761 0.00363739C15.9836 -0.0263635 15.9081 0.135141 15.8326 0.270145C15.5306 0.822162 15.4136 1.43018 15.4251 2.0462C15.4516 3.43174 16.0366 4.53527 17.1991 5.3203C17.3311 5.4103 17.3651 5.5003 17.3236 5.63181C17.2441 5.90231 17.1501 6.16482 17.0671 6.43533C17.0141 6.60784 16.9351 6.64584 16.7501 6.57033C16.1121 6.30383 15.5611 5.90931 15.074 5.4328C14.2475 4.63328 13.5 3.75075 12.568 3.05973C12.349 2.89822 12.13 2.74822 11.9034 2.60522C10.9524 1.68169 12.028 0.923165 12.277 0.833162C12.5375 0.739159 12.3675 0.41615 11.5259 0.42015C10.6844 0.42365 9.91439 0.705658 8.93286 1.08117C8.78935 1.13767 8.63835 1.17867 8.48384 1.21267C7.59332 1.04367 6.66829 1.00617 5.70226 1.11517C3.88321 1.31768 2.43016 2.1777 1.36213 3.64575C0.0790928 5.4103 -0.222916 7.41536 0.146595 9.50642C0.535106 11.7105 1.66014 13.535 3.38869 14.9616C5.18125 16.4406 7.24581 17.1657 9.60138 17.0266C11.0319 16.9441 12.6245 16.7526 14.421 15.2321C14.874 15.4576 15.3496 15.5476 16.1381 15.6151C16.7456 15.6716 17.3306 15.5851 17.7836 15.4911C18.4931 15.3411 18.4441 14.6841 18.1876 14.5636C16.1081 13.595 16.5646 13.9891 16.1496 13.67C17.2061 12.42 18.8202 10.1979 19.3182 7.17235C19.3672 6.83834 19.4297 6.36783 19.4222 6.09732C19.4182 5.93231 19.4562 5.86831 19.6447 5.84931C20.1657 5.78931 20.6712 5.64681 21.1357 5.3913C22.4833 4.65528 23.0268 3.44624 23.1548 1.9972C23.1738 1.77569 23.1508 1.54668 22.9168 1.43018ZM11.1749 14.4736C9.15936 12.889 8.18184 12.3675 7.77832 12.39C7.40081 12.4125 7.46881 12.8445 7.55182 13.126C7.63882 13.404 7.75182 13.5955 7.91033 13.8396C8.01983 14.0011 8.09533 14.2411 7.80083 14.4216C7.15181 14.8231 6.02327 14.2866 5.97027 14.2601C4.65673 13.4865 3.5587 12.4655 2.78467 11.069C2.03715 9.72493 1.60314 8.28289 1.53164 6.74384C1.51264 6.37233 1.62214 6.24082 1.99215 6.17332C2.47916 6.08332 2.98118 6.06432 3.46769 6.13582C5.52476 6.43633 7.27581 7.35586 8.74385 8.8129C9.58188 9.64243 10.2159 10.634 10.8689 11.6025C11.5634 12.631 12.3105 13.611 13.262 14.4146C13.598 14.6961 13.866 14.9101 14.1225 15.0681C13.349 15.1546 12.058 15.1731 11.1749 14.4746L11.1749 14.4736ZM12.141 8.25988C12.141 8.09488 12.273 7.96338 12.439 7.96338C12.4765 7.96338 12.5105 7.97088 12.541 7.98188C12.5825 7.99688 12.6205 8.01938 12.6505 8.05338C12.7035 8.10588 12.7335 8.18088 12.7335 8.25988C12.7335 8.42489 12.6015 8.55639 12.4355 8.55639C12.2695 8.55639 12.141 8.42489 12.141 8.25988ZM15.1415 9.79893C14.949 9.87793 14.7565 9.94544 14.5715 9.95294C14.2845 9.96794 13.9715 9.85143 13.8015 9.70893C13.5375 9.48742 13.3485 9.36342 13.2695 8.97691C13.2355 8.8119 13.2545 8.55639 13.2845 8.40989C13.3525 8.09438 13.277 7.89187 13.0545 7.70787C12.8735 7.55786 12.643 7.51636 12.39 7.51636C12.2955 7.51636 12.209 7.47486 12.1445 7.44136C12.039 7.38886 11.9519 7.25735 12.035 7.09585C12.0615 7.04335 12.19 6.91584 12.22 6.89334C12.5635 6.69784 12.9595 6.76184 13.326 6.90834C13.6655 7.04735 13.9225 7.30236 14.292 7.66287C14.6695 8.09838 14.7375 8.21838 14.9525 8.54539C15.1225 8.8009 15.277 9.06341 15.3831 9.36392C15.4471 9.55142 15.3641 9.70493 15.1415 9.79893Z'
+ 
+ /**
+- * Render the fish logo.
+- * @param props.size - width in px (default 24; height keeps the 23.16:17.04 ratio).
++ * Render the Xiaocongseek spring-onion mark (replaces the DeepSeek fish).
++ * @param props.size - box size in px (default 24); onion fits via object-fit contain.
+  * @param props.className - extra class for layout placement.
+- * @returns the logo svg (aria-hidden; pair with the wordmark for accessibility).
++ * @returns the logo img (aria-hidden; pair with the wordmark for accessibility).
+  */
+ export function FishLogo({ size = 24, className }: IconProps) {
+   return (
+-    <svg
++    <img
++      src={XIAOCONG_LOGO_SRC}
++      alt=""
+       width={size}
+-      height={(size * FISH_LOGO_VIEWBOX.height) / FISH_LOGO_VIEWBOX.width}
++      height={size}
+       className={className}
+-      viewBox={`0 0 ${FISH_LOGO_VIEWBOX.width} ${FISH_LOGO_VIEWBOX.height}`}
+-      fill="none"
+       aria-hidden="true"
+-    >
+-      <path d={FISH_LOGO_PATH} fill="currentColor" />
+-    </svg>
++      draggable={false}
++      style={{ width: size, height: size, objectFit: 'contain', objectPosition: 'center bottom', display: 'block' }}
++    />
+   )
+ }
+diff --git a/packages/client/ui-primitives/src/index.ts b/packages/client/ui-primitives/src/index.ts
+index 4fb059f6..8a915e78 100644
+--- a/packages/client/ui-primitives/src/index.ts
++++ b/packages/client/ui-primitives/src/index.ts
+@@ -51,7 +51,7 @@ export { RiskConfirmation } from './RiskConfirmation.tsx'
+ export type { RiskConfirmationProps } from './RiskConfirmation.tsx'
+ export { ConnectionIndicator } from './ConnectionIndicator.tsx'
+ export type { ConnectionIndicatorState } from './ConnectionIndicator.tsx'
+-export { FishLogo, FISH_LOGO_PATH, FISH_LOGO_VIEWBOX } from './FishLogo.tsx'
++export { FishLogo, FISH_LOGO_PATH, FISH_LOGO_VIEWBOX, XIAOCONG_LOGO_SRC } from './FishLogo.tsx'
+ export { BrandWordmark } from './BrandWordmark.tsx'
+ export type { BrandWordmarkProps } from './BrandWordmark.tsx'
+ export {
+diff --git a/packages/client/ui-settings-account/src/client/AccountMenu.tsx b/packages/client/ui-settings-account/src/client/AccountMenu.tsx
+index 0b24f8ca..561f442e 100644
+--- a/packages/client/ui-settings-account/src/client/AccountMenu.tsx
++++ b/packages/client/ui-settings-account/src/client/AccountMenu.tsx
+@@ -7,6 +7,7 @@ import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-cli
+ import type { AccountSectionInjected } from './AccountSection.tsx'
+ import { SignOutDialog } from './SignOutDialog.tsx'
+ import { SignInDialog } from './SignInDialog.tsx'
++import { LoginSuccessDialog } from './LoginSuccessDialog.tsx'
+ import { LogoutIcon } from './LogoutIcon.tsx'
+ import { AccountAvatar } from './AccountAvatar.tsx'
+ import { AccountNoticeStack } from './AccountNotice.tsx'
+@@ -85,9 +86,13 @@ export function AccountMenu({
+         else if (id === 'signin') beginSignIn()
+         else void requestSignOut()
+       }} />
+-    {account.loginVisible && !account.onboarding && <SignInDialog account={account} colorScheme={colorScheme}
++    {account.loginVisible && !account.onboarding && !account.loginSuccessVisible && <SignInDialog account={account} colorScheme={colorScheme}
+       start={start} cancel={cancel} t={t}
+       close={() => { showLogin(false) }} useApiKey={() => { showLogin(false); openOnboarding('deepseek-official') }} />}
++    {account.loginSuccessVisible && <LoginSuccessDialog t={t} confirm={() => {
++      showLogin(false)
++      try { window.focus() } catch { /* ignore */ }
++    }} />}
+     {signedIn && signOutImpact !== undefined && <SignOutDialog running={signOutImpact} signOut={signOut}
+       close={() => { setSignOutImpact(undefined) }} t={t} />}
+   </div>
+diff --git a/packages/client/ui-settings-account/src/client/AccountSection.tsx b/packages/client/ui-settings-account/src/client/AccountSection.tsx
+index e6525299..6457f6bf 100644
+--- a/packages/client/ui-settings-account/src/client/AccountSection.tsx
++++ b/packages/client/ui-settings-account/src/client/AccountSection.tsx
+@@ -30,6 +30,8 @@ export interface AccountSnapshot {
+   loginVisible?: boolean
+   /** Latest explicit start request failed before a Host state was available. */
+   loginFailed?: boolean
++  /** Fork: New API claim succeeded; show 登录成功 until the user confirms. */
++  loginSuccessVisible?: boolean
+   /** Model credential onboarding owns the login dialog and delays bonus notices while mounted. */
+   onboarding?: boolean
+   /** Desktop introduction covers the workspace during loading, saving, and exit animation.
+diff --git a/packages/client/ui-settings-account/src/client/LoginSuccessDialog.tsx b/packages/client/ui-settings-account/src/client/LoginSuccessDialog.tsx
+new file mode 100644
+index 00000000..46421c52
+--- /dev/null
++++ b/packages/client/ui-settings-account/src/client/LoginSuccessDialog.tsx
+@@ -0,0 +1,22 @@
++/** Confirmation after New API claim; OK returns focus to the harness workbench. */
++import { Button, Modal } from '@deepseek-ai/dsh-client-ui-primitives'
++import type { AccountKey } from './locales.ts'
++import css from './SignInDialog.module.css'
++
++/** @param props - localized copy and dismiss action. @returns success dialog. */
++export function LoginSuccessDialog({ confirm, t }: {
++  confirm: () => void
++  t: (key: AccountKey) => string
++}) {
++  return <Modal open headless title={t('loginSuccessTitle')} onClose={confirm} className={css.dialog as string}>
++    <div className={css.content}>
++      <div className={css.header}>
++        <h2 className={css.title}>{t('loginSuccessTitle')}</h2>
++      </div>
++      <p className={css.description}>{t('loginSuccessDescription')}</p>
++    </div>
++    <div className={css.actions}>
++      <Button variant="primary" className={css.primaryButton} onClick={confirm}>{t('loginSuccessConfirm')}</Button>
++    </div>
++  </Modal>
++}
+diff --git a/packages/client/ui-settings-account/src/client/SignInDialog.tsx b/packages/client/ui-settings-account/src/client/SignInDialog.tsx
+index 77441cae..68658035 100644
+--- a/packages/client/ui-settings-account/src/client/SignInDialog.tsx
++++ b/packages/client/ui-settings-account/src/client/SignInDialog.tsx
+@@ -38,7 +38,10 @@ export function SignInDialog({ account, colorScheme, start, cancel, close, useAp
+     && phase === 'failed' && attempt?.errorCode === 'no-response' ? 'noResponse' : 'failed'
+   const waiting = active && !error
+   const committing = phase === 'committing'
+-  useEffect(() => { if (account.view?.status === 'credential-stored') close() }, [account.view?.status, close])
++  // Fork: claim success shows LoginSuccessDialog; do not auto-dismiss while that flag is set.
++  useEffect(() => {
++    if (account.view?.status === 'credential-stored' && !account.loginSuccessVisible) close()
++  }, [account.view?.status, account.loginSuccessVisible, close])
+   const run = async (action: () => Promise<void>) => {
+     setBusy(true)
+     setFailed(false)
+diff --git a/packages/client/ui-settings-account/src/client/index.ts b/packages/client/ui-settings-account/src/client/index.ts
+index 45f13a1b..bc70e797 100644
+--- a/packages/client/ui-settings-account/src/client/index.ts
++++ b/packages/client/ui-settings-account/src/client/index.ts
+@@ -10,7 +10,7 @@ import type {} from '@deepseek-ai/dsh-client-ui-chat/client'
+ import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
+ import type {} from '@deepseek-ai/dsh-api-remote-access/client'
+ import type {} from '@deepseek-ai/dsh-api-remotes/client'
+-import type { AccountView, AccountDetails } from '@deepseek-ai/dsh-deepseek-account/types'
++import type { AccountView, AccountDetails, SignInAttemptId } from '@deepseek-ai/dsh-deepseek-account/types'
+ import type { OnboardingChange } from './onboarding-contract.ts'
+ import type { PlatformBridge } from './PlatformOverlay.tsx'
+ import { ContactConfig, CONTACT_CONFIG_GLOBAL } from '../contact-config.ts'
+@@ -53,6 +53,9 @@ export function apply(ctx: Context): void {
+   let snapshot: AccountSnapshot = {
+     view: undefined, details: undefined, avatar: undefined, failed: false, loginVisible: false, desktopOnboardingVisible: desktop,
+   }
++  /** Fork: New API sk- claim overrides shell signed-in until DeepSeek account stream says otherwise. */
++  let newApiSignedIn: { username: string } | null = null
++
+   // Desktop main opens the authorization page natively; a plain browser opens it in a tab it owns.
+   const browser = new BrowserLogin(url => authorizeUrlWithTheme(url, ctx.theme.getTheme().active.colorScheme))
+   ctx.effect(() => () => { browser.dispose() }, 'account: pending browser window')
+@@ -151,8 +154,29 @@ export function apply(ctx: Context): void {
+         const initialize = frame.value.status === 'credential-stored' && frame.value.attempt?.phase === 'succeeded'
+           && snapshot.view?.attempt?.phase !== 'succeeded'
+         const { notices: previousNotices, ...previous } = snapshot
+-        publish({ ...previous, view: frame.value, details: undefined, avatar: undefined, failed: false,
+-          ...(frame.value.status === 'credential-stored' && previousNotices ? { notices: previousNotices } : {}) })
++        if (newApiSignedIn && frame.value.status !== 'credential-stored') {
++          publish({
++            ...previous,
++            view: {
++              status: 'credential-stored',
++              links: { usageUrl: 'http://127.0.0.1:3000/', topUpUrl: 'http://127.0.0.1:3000/' },
++              attempt: { id: 'newapi-local-claim' as SignInAttemptId, phase: 'succeeded' },
++            },
++            details: {
++              profile: {
++                status: 'ready',
++                value: { id: null, name: newApiSignedIn.username, contact: newApiSignedIn.username },
++              },
++              balance: { status: 'failed' },
++            },
++            avatar: undefined,
++            failed: false,
++            ...(previousNotices ? { notices: previousNotices } : {}),
++          })
++        } else {
++          publish({ ...previous, view: frame.value, details: undefined, avatar: undefined, failed: false,
++            ...(frame.value.status === 'credential-stored' && previousNotices ? { notices: previousNotices } : {}) })
++        }
+         browser.update(frame.value)
+         frame.accept()
+         if (frame.value.status === 'credential-stored') notices.begin()
+@@ -229,7 +253,9 @@ export function apply(ctx: Context): void {
+         openForm(deviceInfo)
+       })()
+     },
+-    showLogin(visible) { publish({ ...snapshot, loginVisible: visible }) },
++    showLogin(visible) {
++      publish({ ...snapshot, loginVisible: visible, ...(visible ? {} : { loginSuccessVisible: false }) })
++    },
+     setOnboarding(active) { publish({ ...snapshot, onboarding: active }) },
+     bonusNoticeShown(orderId) { notices.shown(orderId) },
+     bonusNoticeDismissed(orderId) { notices.dismiss(orderId) },
+@@ -244,23 +270,210 @@ export function apply(ctx: Context): void {
+       },
+     },
+     async start() {
+-      publish({ ...snapshot, loginVisible: true, loginFailed: false })
+-      const transport = (globalThis as typeof globalThis & {
+-        __DSH_TRANSPORT__?: { streamBaseUrl?: string }
+-      }).__DSH_TRANSPORT__
+-      const request = async () => {
+-        const result = await ctx.remote.account.startSignIn(client(),
+-          desktop && transport?.streamBaseUrl !== undefined ? new URL(transport.streamBaseUrl).origin : window.location.origin,
+-          desktop ? 'desktop' : 'web')
+-        if (!result.ok) throw new Error('account start failed')
+-        return result.value
++      // Fork: DeepSeek-like authorize confirm when New API session still exists after harness logout.
++      // - Session cookie present → open /auth/authorize (user clicks 登录 → claim → /auth/authorized).
++      // - No session → open New API /login; after login, claim + success quickly (no second confirm).
++      // refresh shares CT with /api/user/login — only edge-trigger one refresh after fresh login.
++      const base = 'http://127.0.0.1:3000'
++      const links = { usageUrl: `${base}/`, topUpUrl: `${base}/` }
++      const attemptId = 'newapi-local-claim' as SignInAttemptId
++      let newApiPopup: Window | null = null
++      let authorizedShown = false
++      let claimedFromPopup = false
++      let claimedUsername: string | undefined
++      const returnTarget = window.location.origin + '/'
++      const authorizedHref = () => {
++        const authorized = new URL('/digital-human-studio/auth/authorized', window.location.origin)
++        authorized.searchParams.set('return', returnTarget)
++        return authorized.toString()
++      }
++      const authorizeHref = () => {
++        const authorize = new URL('/digital-human-studio/auth/authorize', window.location.origin)
++        authorize.searchParams.set('return', returnTarget)
++        return authorize.toString()
++      }
++      const openPopup = (href: string) => {
++        try {
++          if (newApiPopup && !newApiPopup.closed) newApiPopup.location.replace(href)
++          else newApiPopup = window.open(href, 'dsh-newapi-login')
++        } catch {
++          try { newApiPopup = window.open(href, 'dsh-newapi-login') } catch { /* ignore */ }
++        }
++      }
++      const showAuthorizedPage = () => {
++        if (authorizedShown) return
++        authorizedShown = true
++        openPopup(authorizedHref())
++      }
++      const finishSuccess = (username?: string) => {
++        newApiSignedIn = { username: username || 'XiaocongAPI' }
++        showAuthorizedPage()
++        try { window.focus() } catch { /* ignore */ }
++        publish({
++          ...snapshot,
++          loginVisible: false,
++          loginFailed: false,
++          loginSuccessVisible: true,
++          view: {
++            status: 'credential-stored',
++            links,
++            attempt: { id: attemptId, phase: 'succeeded' },
++          },
++          details: {
++            profile: {
++              status: 'ready',
++              value: { id: null, name: newApiSignedIn.username, contact: username || null },
++            },
++            balance: { status: 'failed' },
++          },
++        })
+       }
++      const hasSessionCookie = () => {
++        try {
++          return /(?:^|;\s*)new_api_has_session=/.test(document.cookie)
++        } catch { return false }
++      }
++      const onClaimedMessage = (event: MessageEvent) => {
++        if (event.origin !== window.location.origin) return
++        if (!event.data || event.data.type !== 'dsh-newapi-claimed') return
++        claimedFromPopup = true
++        if (typeof event.data.username === 'string' && event.data.username) {
++          claimedUsername = event.data.username
++        }
++      }
++      window.addEventListener('message', onClaimedMessage)
+       try {
+-        if (desktop) await request()
+-        else await browser.start(request, () => snapshot.view)
+-      } catch (error) {
+-        publish({ ...snapshot, loginFailed: true })
+-        throw error
++        // Local sk- already present (rare after logout) → reuse without New API round-trip.
++        try {
++          const statusRes = await fetch('/digital-human-studio/auth/status')
++          const status = await statusRes.json().catch(() => null)
++          if (status?.hasToken) {
++            await fetch('/digital-human-studio/auth/claim', {
++              method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}',
++            })
++            finishSuccess(typeof status.username === 'string' ? status.username : undefined)
++            return
++          }
++        } catch { /* continue */ }
++
++        const hadSessionAtStart = hasSessionCookie()
++        const expiresAt = Date.now() + 180_000
++        const loginUrl = `${base}/login`
++        const waitingUrl = hadSessionAtStart ? authorizeHref() : loginUrl
++        publish({
++          ...snapshot,
++          loginVisible: true,
++          loginFailed: false,
++          view: {
++            status: snapshot.view?.status === 'credential-stored' ? 'credential-stored' : 'signed-out',
++            links: snapshot.view?.links ?? links,
++            attempt: { id: attemptId, phase: 'waiting-browser', authorizeUrl: waitingUrl, expiresAt },
++          },
++        })
++
++        try {
++          const open = (globalThis as typeof globalThis & { dshDesktop?: { openExternal?: (url: string) => Promise<void> } }).dshDesktop?.openExternal
++          if (open) await open(waitingUrl)
++          else openPopup(waitingUrl)
++        } catch (error) {
++          publish({ ...snapshot, loginVisible: true, loginFailed: true, loginSuccessVisible: false })
++          throw error
++        }
++
++        if (hadSessionAtStart) {
++          // Authorize page owns the single refresh + claim; harness only waits for result.
++          while (Date.now() < expiresAt) {
++            if (claimedFromPopup) {
++              finishSuccess(claimedUsername)
++              return
++            }
++            try {
++              const statusRes = await fetch('/digital-human-studio/auth/status')
++              const status = await statusRes.json().catch(() => null)
++              if (status?.hasToken) {
++                finishSuccess(typeof status.username === 'string' ? status.username : claimedUsername)
++                return
++              }
++            } catch { /* continue */ }
++            await new Promise(resolve => setTimeout(resolve, 400))
++          }
++        } else {
++          // Fresh login path: cookie poll local; one refresh+claim when session appears.
++          let refreshBackoffUntil = 0
++          let nextRefreshAt = 0
++          let sawSessionCookie = false
++          const REFRESH_IDLE_MS = 12_000
++          const tryClaimAfterLogin = async (forceRefresh: boolean): Promise<boolean> => {
++            try {
++              const statusRes = await fetch('/digital-human-studio/auth/status')
++              const status = await statusRes.json().catch(() => null)
++              if (status?.hasToken) {
++                finishSuccess(typeof status.username === 'string' ? status.username : undefined)
++                return true
++              }
++            } catch { /* continue */ }
++            if (Date.now() < refreshBackoffUntil) return false
++            if (!forceRefresh && Date.now() < nextRefreshAt) return false
++            nextRefreshAt = Date.now() + REFRESH_IDLE_MS
++            try {
++              const refresh = await fetch('/api/user/auth/refresh', {
++                method: 'POST', credentials: 'include',
++                headers: { 'content-type': 'application/json' },
++              })
++              if (refresh.status === 429) {
++                const retryAfter = Number(refresh.headers.get('retry-after') || 60)
++                refreshBackoffUntil = Date.now() + Math.max(30, retryAfter) * 1000
++                return false
++              }
++              if (!refresh.ok) return false
++              const payload = await refresh.json().catch(() => null)
++              const data = payload?.data || payload || {}
++              const access = data.access_token || data.token
++              const user = data.user || data
++              if (!access || !user?.id) return false
++              showAuthorizedPage()
++              const claimRes = await fetch('/digital-human-studio/auth/claim', {
++                method: 'POST',
++                headers: { 'content-type': 'application/json' },
++                body: JSON.stringify({
++                  accessToken: access,
++                  userId: user.id,
++                  username: user.username,
++                }),
++              })
++              const claimed = await claimRes.json().catch(() => null)
++              if (claimed?.success && claimed?.hasToken) {
++                finishSuccess(typeof claimed.username === 'string' ? claimed.username : user.username)
++                return true
++              }
++            } catch { /* continue */ }
++            return false
++          }
++          while (Date.now() < expiresAt) {
++            if (claimedFromPopup) {
++              finishSuccess(claimedUsername)
++              return
++            }
++            const cookieReady = hasSessionCookie()
++            const cookieEdge = cookieReady && !sawSessionCookie
++            if (cookieReady) sawSessionCookie = true
++            if (await tryClaimAfterLogin(cookieEdge)) return
++            await new Promise(resolve => setTimeout(resolve, 400))
++          }
++        }
++
++        publish({
++          ...snapshot,
++          loginVisible: true,
++          loginFailed: false,
++          view: {
++            status: 'signed-out',
++            links,
++            attempt: { id: attemptId, phase: 'expired', authorizeUrl: waitingUrl, expiresAt },
++          },
++        })
++      } finally {
++        window.removeEventListener('message', onClaimedMessage)
+       }
+     },
+     async cancel(id) { const result = await ctx.remote.account.cancelSignIn(id); if (!result.ok) throw new Error('account cancel failed') },
+@@ -270,11 +483,90 @@ export function apply(ctx: Context): void {
+       return result.value
+     },
+     async signOut() {
+-      const result = await ctx.remote.account.signOut(client())
+-      if (result.ok) return
+-      throw result.error
++      // New API overlay owns shell signed-in; must clear token + publish signed-out even if DeepSeek has no grant.
++      const links = { usageUrl: 'http://127.0.0.1:3000/', topUpUrl: 'http://127.0.0.1:3000/' }
++      newApiSignedIn = null
++      let studioOk = false
++      try {
++        const res = await fetch('/digital-human-studio/auth/logout', {
++          method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}',
++        })
++        const body = await res.json().catch(() => null)
++        studioOk = res.ok && body?.success !== false
++      } catch { studioOk = false }
++      // Keep New API session cookies so Sign-in can show /auth/authorize confirm
++      // (DeepSeek-like). Use authorize page「切换其他账号」to clear New API session.
++      publish({
++        ...snapshot,
++        loginVisible: false,
++        loginFailed: false,
++        view: { status: 'signed-out', links, attempt: null },
++        details: undefined,
++        avatar: undefined,
++        failed: false,
++      })
++      try {
++        const result = await ctx.remote.account.signOut(client())
++        if (result.ok) {
++          // Prefer Host signed-out; never keep credential-stored without newApiSignedIn.
++          const view = result.value?.status === 'credential-stored'
++            ? { status: 'signed-out' as const, links, attempt: null }
++            : (result.value ?? { status: 'signed-out' as const, links, attempt: null })
++          publish({ ...snapshot, view, details: undefined, avatar: undefined, failed: false, loginVisible: false })
++          if (!studioOk) throw new Error('XiaocongAPI 本地令牌清除失败')
++          return
++        }
++        if (!studioOk) throw result.error ?? new Error('account sign out failed')
++        // Studio cleared and UI signed-out; ignore DeepSeek failure when only New API was active.
++        return
++      } catch (error) {
++        if (studioOk) return
++        throw error
++      }
+     },
+   }
++  // Authorized page (popup) can ask the workbench to focus / dismiss the success dialog.
++  ctx.effect(() => {
++    const onMessage = (event: MessageEvent) => {
++      if (event.origin !== window.location.origin) return
++      if (!event.data || typeof event.data.type !== 'string') return
++      if (event.data.type === 'dsh-newapi-authorized') {
++        try { window.focus() } catch { /* ignore */ }
++        if (snapshot.loginSuccessVisible) publish({ ...snapshot, loginSuccessVisible: false })
++        return
++      }
++      // Claimed from /auth/authorize; start() also listens while waiting.
++      if (event.data.type === 'dsh-newapi-claimed') {
++        try { window.focus() } catch { /* ignore */ }
++      }
++    }
++    window.addEventListener('message', onMessage)
++    return () => { window.removeEventListener('message', onMessage) }
++  }, 'account: newapi authorized message')
++  // If studio already has NEW_API_TOKEN, surface signed-in without waiting for Sign-in click.
++  void (async () => {
++    try {
++      const status = await fetch('/digital-human-studio/auth/status').then(r => r.json())
++      if (status?.hasToken) {
++        newApiSignedIn = { username: typeof status.username === 'string' && status.username ? status.username : 'XiaocongAPI' }
++        publish({
++          ...snapshot,
++          view: {
++            status: 'credential-stored',
++            links: { usageUrl: 'http://127.0.0.1:3000/', topUpUrl: 'http://127.0.0.1:3000/' },
++            attempt: { id: 'newapi-local-claim' as SignInAttemptId, phase: 'succeeded' },
++          },
++          details: {
++            profile: {
++              status: 'ready',
++              value: { id: null, name: newApiSignedIn.username, contact: status.username || null },
++            },
++            balance: { status: 'failed' },
++          },
++        })
++      }
++    } catch { /* studio may not be loaded yet */ }
++  })()
+   if (desktop) {
+     const controller = new DesktopOnboardingController(
+       ctx.configForms.get<OnboardingSettings>(DESKTOP_ONBOARDING_NAMESPACE),
+diff --git a/packages/client/ui-settings-account/src/client/locales.ts b/packages/client/ui-settings-account/src/client/locales.ts
+index 43ed4d17..32c4911a 100644
+--- a/packages/client/ui-settings-account/src/client/locales.ts
++++ b/packages/client/ui-settings-account/src/client/locales.ts
+@@ -7,15 +7,15 @@ export const en = {
+   sessionExpired: 'You have signed out of your account, please log in again.',
+   ...onboardingEn,
+   close: 'Close', addApiKey: 'Add API Key', retry: 'Sign in again',
+-  loginTitle: 'Get started', loginDescription: 'Sign in to your DeepSeek account or add an API Key to get started. Your projects and files are stored locally.',
++  loginTitle: 'Get started', loginDescription: 'Sign in to XiaocongAPI (local gateway) or add an API Key to get started. Your projects and files are stored locally.',
+   browserTitle: 'Waiting for sign in', browserPrompt: 'Page did not open automatically? ', copyLink: 'Copy sign-in link', copiedLink: 'Link copied', copyFailed: 'Copy failed',
+   browserDescription: ', then open it in your browser to finish signing in.',
+   timeoutTitle: 'Sign in timed out', timeoutDescription: 'Sign in again to continue.',
+   failureTitle: 'Could not sign in',
+   platformFailed: 'Could not complete the operation. Try again.', platformRetry: 'Retry',
+-  loading: 'Loading…', backToHarness: 'Back to DeepSeek Harness',
++  loading: 'Loading…', backToHarness: 'Back to Xiaocongseek',
+   settings: 'Settings', contactUs: 'Feedback', menu: 'Account menu',
+-  nav: 'Account', signedIn: 'Signed in to DeepSeek', signedOut: 'Not signed in',
++  nav: 'Account', signedIn: 'Signed in to XiaocongAPI', signedOut: 'Not signed in',
+   signIn: 'Sign in', signOut: 'Sign out',
+   signOutUnknownDescription: 'Could not check running tasks. Signing out may interrupt tasks using this account. Sign out now?',
+   signOutDescription: 'Signing out will not delete any data. You can sign in to this account again.',
+@@ -24,16 +24,19 @@ export const en = {
+   completing: 'Completing sign in…', expired: 'Sign in expired. Try again.',
+   failed: 'Could not complete the operation. Try again.',
+   noResponse: 'Something went wrong. Please check your network connection and try again.',
+-  settingsSignedOutTitle: 'You are not signed in to DeepSeek Harness',
+-  settingsSignedOutDescription: 'Sign in to DeepSeek Harness to get your dedicated API Key',
+-  signInDescription: 'Use your DeepSeek account to get started.',
++  settingsSignedOutTitle: 'You are not signed in to XiaocongAPI',
++  settingsSignedOutDescription: 'Sign in to XiaocongAPI to get your dedicated API Key',
++  signInDescription: 'Use your XiaocongAPI account to get started.',
+   profileUnavailable: 'Account details are not available yet.',
+   balance: 'Topped-up balance', bonusBalance: 'Granted balance', balanceUnavailable: 'View on Platform', balanceSignedOut: 'Sign in to view',
+   accountInfo: 'More account information', more: 'More', usage: 'View usage', topUp: 'Top up',
+   quotaTitle: 'No balance available',
+-  quotaDescription: 'DeepSeek Harness cannot start a new task with this account when no balance is available. Would you like to top up? You can also top up later in Settings → Account.',
++  quotaDescription: 'Xiaocongseek cannot start a new task with this account when no balance is available. Would you like to top up? You can also top up later in Settings → Account.',
+   quotaTopUp: 'Top up',
+   bonusNoticeTitle: 'Bonus credited',
++  loginSuccessTitle: 'Signed in',
++  loginSuccessDescription: 'XiaocongAPI sign-in succeeded. Click OK to return to the workbench.',
++  loginSuccessConfirm: 'OK',
+ } as const
+ /** Account locale keys. */
+ export type AccountKey = keyof typeof en
+@@ -43,15 +46,15 @@ export const zh: Record<AccountKey, string> = {
+   sessionExpired: '登录信息已失效，请重新登录',
+   ...onboardingZh,
+   close: '关闭', addApiKey: '添加 API Key', retry: '重新登录',
+-  loginTitle: '开始使用', loginDescription: '登录 DeepSeek 账号，或添加 API Key，即可开始使用。你的项目和文件保存在本地。',
++  loginTitle: '开始使用', loginDescription: '登录 XiaocongAPI（本机网关）或添加 API Key，即可开始使用。你的项目和文件保存在本地。',
+   browserTitle: '等待登录', browserPrompt: '没有自动打开新页面？', copyLink: '复制登录链接', copiedLink: '链接已复制', copyFailed: '复制失败',
+   browserDescription: '，手动打开登录页完成登录。',
+   timeoutTitle: '登录已超时', timeoutDescription: '请重新登录后继续操作。',
+   failureTitle: '登录失败',
+   platformFailed: '操作未完成，请重试', platformRetry: '重试',
+-  loading: '加载中…', backToHarness: '返回 DeepSeek Harness',
++  loading: '加载中…', backToHarness: '返回 Xiaocongseek',
+   settings: '设置', contactUs: '意见反馈', menu: '账号菜单',
+-  nav: '账号与余额', signedIn: '已登录 DeepSeek', signedOut: '尚未登录',
++  nav: '账号与余额', signedIn: '已登录 XiaocongAPI', signedOut: '尚未登录',
+   signIn: '登录', signOut: '退出登录',
+   signOutUnknownDescription: '暂时无法确认任务状态。退出登录可能会中断使用此账号的任务，是否继续？',
+   signOutDescription: '退出登录不会丢失任何数据，你仍可以登录此账号。',
+@@ -60,16 +63,19 @@ export const zh: Record<AccountKey, string> = {
+   completing: '正在完成登录…', expired: '登录已过期，请重试。',
+   failed: '操作未完成，请重试。',
+   noResponse: '操作未完成，可能是网络异常，请检查你的网络状况后重试',
+-  settingsSignedOutTitle: '当前未登录 DeepSeek Harness 账号',
+-  settingsSignedOutDescription: '登录 DeepSeek Harness 账号获取专属 API Key',
+-  signInDescription: '登录 DeepSeek 账号以开始使用',
++  settingsSignedOutTitle: '当前未登录 XiaocongAPI 账号',
++  settingsSignedOutDescription: '登录 XiaocongAPI 获取专属 API Key',
++  signInDescription: '登录 XiaocongAPI 账号以开始使用',
+   profileUnavailable: '账号资料暂不可用',
+   balance: '充值余额', bonusBalance: '赠金余额', balanceUnavailable: '前往开放平台查看', balanceSignedOut: '登录后查看',
+   accountInfo: '更多账号信息', more: '更多', usage: '查询用量', topUp: '充值',
+   quotaTitle: '当前无可用余额',
+-  quotaDescription: '没有可用额度时，DeepSeek Harness 无法开始新的任务，是否前往充值？或者可以稍后前往 设置 → 账号与余额 进行充值。',
++  quotaDescription: '没有可用额度时，Xiaocongseek 无法开始新的任务，是否前往充值？或者可以稍后前往 设置 → 账号与余额 进行充值。',
+   quotaTopUp: '去充值',
+   bonusNoticeTitle: '赠金已到账',
++  loginSuccessTitle: '登录成功',
++  loginSuccessDescription: '已成功登录 XiaocongAPI。点击确定返回工作台。',
++  loginSuccessConfirm: '确定',
+ }
+ 
+ /** Japanese copy, checked against the English keys. */
+@@ -94,7 +100,7 @@ export const ja = {
+   'platformFailed': '操作を完了できませんでした。再試行してください。',
+   'platformRetry': '再試行',
+   'loading': '読み込み中…',
+-  'backToHarness': 'DeepSeek Harness に戻る',
++  'backToHarness': 'Xiaocongseek に戻る',
+   'settings': '設定',
+   'contactUs': 'フィードバック',
+   'menu': 'アカウントメニュー',
+@@ -114,8 +120,8 @@ export const ja = {
+   'expired': 'ログインの有効期限が切れました。もう一度お試しください。',
+   'failed': '操作を完了できませんでした。もう一度お試しください。',
+   'noResponse': '問題が発生しました。ネットワーク接続を確認して、もう一度お試しください。',
+-  'settingsSignedOutTitle': 'DeepSeek Harness にログインしていません',
+-  'settingsSignedOutDescription': 'DeepSeek Harness にログインして専用の API Key を取得してください',
++  'settingsSignedOutTitle': 'Xiaocongseek にログインしていません',
++  'settingsSignedOutDescription': 'Xiaocongseek にログインして専用の API Key を取得してください',
+   'signInDescription': 'DeepSeek アカウントで始めましょう。',
+   'profileUnavailable': 'アカウント情報はまだ利用できません。',
+   'balance': 'チャージ残高',
+@@ -127,8 +133,11 @@ export const ja = {
+   'usage': '利用状況を表示',
+   'topUp': 'チャージ',
+   'quotaTitle': '残高がありません',
+-  'quotaDescription': '残高がない場合、DeepSeek Harness はこのアカウントで新しいタスクを開始できません。チャージしますか？後から設定 → アカウントでチャージすることもできます。',
++  'quotaDescription': '残高がない場合、Xiaocongseek はこのアカウントで新しいタスクを開始できません。チャージしますか？後から設定 → アカウントでチャージすることもできます。',
+   'quotaTopUp': 'チャージ',
++  'loginSuccessTitle': 'ログイン成功',
++  'loginSuccessDescription': 'XiaocongAPI へのログインに成功しました。OK を押してワークベンチに戻ります。',
++  'loginSuccessConfirm': 'OK',
+   'bonusNoticeTitle': 'ボーナスが付与されました',
+ } satisfies Record<keyof typeof en, string>
+ 
+@@ -144,7 +153,7 @@ export const es = {
+   timeoutTitle: 'Se agotó el tiempo de inicio de sesión', timeoutDescription: 'Inicia sesión nuevamente para continuar.',
+   failureTitle: 'No se pudo iniciar sesión',
+   platformFailed: 'No se pudo completar la operación. Intentar otra vez.', platformRetry: 'Reintentar',
+-  loading: 'Cargando…', backToHarness: 'Volver a DeepSeek Harness',
++  loading: 'Cargando…', backToHarness: 'Volver a Xiaocongseek',
+   settings: 'Configuración', contactUs: 'Comentarios', menu: 'Menú de cuenta',
+   nav: 'Cuenta', signedIn: 'Iniciado sesión en DeepSeek', signedOut: 'No iniciado sesión',
+   signIn: 'Iniciar sesión', signOut: 'Cerrar sesión',
+@@ -155,15 +164,18 @@ export const es = {
+   completing: 'Completando el inicio de sesión…', expired: 'Iniciar sesión caducado. Intentar otra vez.',
+   failed: 'No se pudo completar la operación. Intentar otra vez.',
+   noResponse: 'Algo salió mal. Verifique su conexión de red e inténtelo nuevamente.',
+-  settingsSignedOutTitle: 'No has iniciado sesión en DeepSeek Harness',
+-  settingsSignedOutDescription: 'Inicie sesión en DeepSeek Harness para obtener su clave API dedicada',
++  settingsSignedOutTitle: 'No has iniciado sesión en Xiaocongseek',
++  settingsSignedOutDescription: 'Inicie sesión en Xiaocongseek para obtener su clave API dedicada',
+   signInDescription: 'Utilice su cuenta DeepSeek para comenzar.',
+   profileUnavailable: 'Los detalles de la cuenta aún no están disponibles.',
+   balance: 'Saldo recargado', bonusBalance: 'Saldo concedido', balanceUnavailable: 'Ver en plataforma', balanceSignedOut: 'Inicia sesión para ver',
+   accountInfo: 'Más información de la cuenta', more: 'Más', usage: 'Ver uso', topUp: 'Recargar',
+   quotaTitle: 'No hay saldo disponible',
+-  quotaDescription: 'DeepSeek Harness no puede iniciar una nueva tarea con esta cuenta cuando no hay saldo disponible. ¿Quieres recargar? También puedes recargar más tarde en Configuración → Cuenta.',
++  quotaDescription: 'Xiaocongseek no puede iniciar una nueva tarea con esta cuenta cuando no hay saldo disponible. ¿Quieres recargar? También puedes recargar más tarde en Configuración → Cuenta.',
+   quotaTopUp: 'Recargar',
++  loginSuccessTitle: 'Inicio de sesión correcto',
++  loginSuccessDescription: 'Se conectó a XiaocongAPI. Haga clic en Aceptar para volver al área de trabajo.',
++  loginSuccessConfirm: 'Aceptar',
+   bonusNoticeTitle: 'Bono acreditado',
+ } satisfies Record<keyof typeof en, string>
+ 
+@@ -179,7 +191,7 @@ export const fr = {
+   timeoutTitle: 'La connexion a expiré', timeoutDescription: 'Connectez-vous à nouveau pour continuer.',
+   failureTitle: 'Impossible de se connecter',
+   platformFailed: "Impossible de terminer l'opération. Essayer à nouveau.", platformRetry: 'Réessayer',
+-  loading: 'Chargement…', backToHarness: 'Retour à DeepSeek Harness',
++  loading: 'Chargement…', backToHarness: 'Retour à Xiaocongseek',
+   settings: 'Paramètres', contactUs: 'Commentaires', menu: 'Menu du compte',
+   nav: 'Compte', signedIn: 'Connecté à DeepSeek', signedOut: 'Non connecté',
+   signIn: 'Connectez-vous', signOut: 'Se déconnecter',
+@@ -190,15 +202,18 @@ export const fr = {
+   completing: 'Connexion terminée…', expired: 'Connexion expirée. Essayer à nouveau.',
+   failed: "Impossible de terminer l'opération. Essayer à nouveau.",
+   noResponse: "Quelque chose s'est mal passé. Veuillez vérifier votre connexion réseau et réessayer.",
+-  settingsSignedOutTitle: "Vous n'êtes pas connecté à DeepSeek Harness",
+-  settingsSignedOutDescription: 'Connectez-vous à DeepSeek Harness pour obtenir votre clé API dédiée',
++  settingsSignedOutTitle: "Vous n'êtes pas connecté à Xiaocongseek",
++  settingsSignedOutDescription: 'Connectez-vous à Xiaocongseek pour obtenir votre clé API dédiée',
+   signInDescription: 'Utilisez votre compte DeepSeek pour commencer.',
+   profileUnavailable: 'Les détails du compte ne sont pas encore disponibles.',
+   balance: 'Solde rechargé', bonusBalance: 'Solde accordé', balanceUnavailable: 'Afficher sur la plateforme', balanceSignedOut: 'Connectez-vous pour voir',
+   accountInfo: "Plus d'informations sur le compte", more: 'Plus', usage: "Afficher l'utilisation", topUp: 'Recharger',
+   quotaTitle: 'Aucun solde disponible',
+-  quotaDescription: "DeepSeek Harness ne peut pas démarrer une nouvelle tâche avec ce compte lorsqu'aucun solde n'est disponible. Souhaitez-vous recharger ? Vous pouvez également recharger plus tard dans Paramètres → Compte.",
++  quotaDescription: "Xiaocongseek ne peut pas démarrer une nouvelle tâche avec ce compte lorsqu'aucun solde n'est disponible. Souhaitez-vous recharger ? Vous pouvez également recharger plus tard dans Paramètres → Compte.",
+   quotaTopUp: 'Recharger',
++  loginSuccessTitle: 'Connexion réussie',
++  loginSuccessDescription: 'Connexion à XiaocongAPI réussie. Cliquez sur OK pour revenir au banc de travail.',
++  loginSuccessConfirm: 'OK',
+   bonusNoticeTitle: 'Bonus crédité',
+ } satisfies Record<keyof typeof en, string>
+ 
+@@ -214,7 +229,7 @@ export const de = {
+   timeoutTitle: 'Zeitüberschreitung bei der Anmeldung', timeoutDescription: 'Melden Sie sich erneut an, um fortzufahren.',
+   failureTitle: 'Konnte mich nicht anmelden',
+   platformFailed: 'Der Vorgang konnte nicht abgeschlossen werden. Versuchen Sie es erneut.', platformRetry: 'Erneut versuchen',
+-  loading: 'Laden…', backToHarness: 'Zurück zu DeepSeek Harness',
++  loading: 'Laden…', backToHarness: 'Zurück zu Xiaocongseek',
+   settings: 'Einstellungen', contactUs: 'Rückmeldung', menu: 'Kontomenü',
+   nav: 'Konto', signedIn: 'Angemeldet bei DeepSeek', signedOut: 'Nicht angemeldet',
+   signIn: 'Melden Sie sich an', signOut: 'Abmelden',
+@@ -225,15 +240,18 @@ export const de = {
+   completing: 'Anmeldung wird abgeschlossen…', expired: 'Anmeldung abgelaufen. Versuchen Sie es erneut.',
+   failed: 'Der Vorgang konnte nicht abgeschlossen werden. Versuchen Sie es erneut.',
+   noResponse: 'Etwas ist schief gelaufen. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es erneut.',
+-  settingsSignedOutTitle: 'Sie sind nicht bei DeepSeek Harness angemeldet',
+-  settingsSignedOutDescription: 'Melden Sie sich bei DeepSeek Harness an, um Ihren dedizierten API-Schlüssel zu erhalten',
++  settingsSignedOutTitle: 'Sie sind nicht bei Xiaocongseek angemeldet',
++  settingsSignedOutDescription: 'Melden Sie sich bei Xiaocongseek an, um Ihren dedizierten API-Schlüssel zu erhalten',
+   signInDescription: 'Verwenden Sie Ihr DeepSeek-Konto, um loszulegen.',
+   profileUnavailable: 'Kontodaten sind noch nicht verfügbar.',
+   balance: 'Aufgeladenes Guthaben', bonusBalance: 'Gewährte Balance', balanceUnavailable: 'Auf der Plattform ansehen', balanceSignedOut: 'Melden Sie sich an, um es anzuzeigen',
+   accountInfo: 'Weitere Kontoinformationen', more: 'Mehr', usage: 'Nutzung anzeigen', topUp: 'Auffüllen',
+   quotaTitle: 'Kein Guthaben verfügbar',
+-  quotaDescription: 'DeepSeek Harness kann mit diesem Konto keine neue Aufgabe starten, wenn kein Guthaben verfügbar ist. Möchten Sie aufladen? Sie können das Guthaben auch später unter Einstellungen → Konto aufladen.',
++  quotaDescription: 'Xiaocongseek kann mit diesem Konto keine neue Aufgabe starten, wenn kein Guthaben verfügbar ist. Möchten Sie aufladen? Sie können das Guthaben auch später unter Einstellungen → Konto aufladen.',
+   quotaTopUp: 'Auffüllen',
++  loginSuccessTitle: 'Anmeldung erfolgreich',
++  loginSuccessDescription: 'Bei XiaocongAPI angemeldet. Klicken Sie auf OK, um zur Werkbank zurückzukehren.',
++  loginSuccessConfirm: 'OK',
+   bonusNoticeTitle: 'Bonus gutgeschrieben',
+ } satisfies Record<keyof typeof en, string>
+ 
+@@ -249,7 +267,7 @@ export const ru = {
+   timeoutTitle: 'Время входа в систему истекло', timeoutDescription: 'Войдите еще раз, чтобы продолжить.',
+   failureTitle: 'Не удалось войти в систему',
+   platformFailed: 'Не удалось завершить операцию. Попробуйте еще раз.', platformRetry: 'Повторить',
+-  loading: 'Загрузка…', backToHarness: 'Вернуться к DeepSeek Harness',
++  loading: 'Загрузка…', backToHarness: 'Вернуться к Xiaocongseek',
+   settings: 'Настройки', contactUs: 'Обратная связь', menu: 'Меню аккаунта',
+   nav: 'Аккаунт', signedIn: 'Вошёл в DeepSeek', signedOut: 'Не авторизован',
+   signIn: 'Войти', signOut: 'Выйти',
+@@ -260,15 +278,18 @@ export const ru = {
+   completing: 'Завершение входа…', expired: 'Срок действия входа истек. Попробуйте еще раз.',
+   failed: 'Не удалось завершить операцию. Попробуйте еще раз.',
+   noResponse: 'Что-то пошло не так. Пожалуйста, проверьте сетевое соединение и повторите попытку.',
+-  settingsSignedOutTitle: 'Вы не вошли в DeepSeek Harness.',
+-  settingsSignedOutDescription: 'Войдите в DeepSeek Harness, чтобы получить специальный ключ API.',
++  settingsSignedOutTitle: 'Вы не вошли в Xiaocongseek.',
++  settingsSignedOutDescription: 'Войдите в Xiaocongseek, чтобы получить специальный ключ API.',
+   signInDescription: 'Используйте свою учетную запись DeepSeek, чтобы начать.',
+   profileUnavailable: 'Детали аккаунта пока недоступны.',
+   balance: 'Пополненный баланс', bonusBalance: 'Предоставленный баланс', balanceUnavailable: 'Посмотреть на платформе', balanceSignedOut: 'Войдите, чтобы просмотреть',
+   accountInfo: 'Дополнительная информация об аккаунте', more: 'Ещё', usage: 'Посмотреть использование', topUp: 'Пополнить',
+   quotaTitle: 'Нет доступного баланса',
+-  quotaDescription: 'DeepSeek Harness не может запустить новую задачу с этой учетной записью, если на ней нет баланса. Хотите пополнить счет? Вы также можете пополнить счет позже в «Настройки» → «Аккаунт».',
++  quotaDescription: 'Xiaocongseek не может запустить новую задачу с этой учетной записью, если на ней нет баланса. Хотите пополнить счет? Вы также можете пополнить счет позже в «Настройки» → «Аккаунт».',
+   quotaTopUp: 'Пополнить',
++  loginSuccessTitle: 'Вход выполнен',
++  loginSuccessDescription: 'Вход в XiaocongAPI выполнен. Нажмите OK, чтобы вернуться к рабочей среде.',
++  loginSuccessConfirm: 'OK',
+   bonusNoticeTitle: 'Бонус начислен',
+ } satisfies Record<keyof typeof en, string>
+ 
+@@ -284,7 +305,7 @@ export const pt = {
+   timeoutTitle: 'O tempo limite de login expirou', timeoutDescription: 'Faça login novamente para continuar.',
+   failureTitle: 'Não foi possível fazer login',
+   platformFailed: 'Não foi possível concluir a operação. Tente novamente.', platformRetry: 'Tentar novamente',
+-  loading: 'Carregando…', backToHarness: 'Voltar para DeepSeek Harness',
++  loading: 'Carregando…', backToHarness: 'Voltar para Xiaocongseek',
+   settings: 'Configurações', contactUs: 'Comentários', menu: 'Menu da conta',
+   nav: 'Conta', signedIn: 'Conectado em DeepSeek', signedOut: 'Não conectado',
+   signIn: 'Faça login', signOut: 'Sair',
+@@ -295,14 +316,17 @@ export const pt = {
+   completing: 'Concluindo login…', expired: 'O login expirou. Tente novamente.',
+   failed: 'Não foi possível concluir a operação. Tente novamente.',
+   noResponse: 'Algo deu errado. Verifique sua conexão de rede e tente novamente.',
+-  settingsSignedOutTitle: 'Você não está conectado a DeepSeek Harness',
+-  settingsSignedOutDescription: 'Faça login em DeepSeek Harness para obter sua chave API dedicada',
++  settingsSignedOutTitle: 'Você não está conectado a Xiaocongseek',
++  settingsSignedOutDescription: 'Faça login em Xiaocongseek para obter sua chave API dedicada',
+   signInDescription: 'Use sua conta DeepSeek para começar.',
+   profileUnavailable: 'Os detalhes da conta ainda não estão disponíveis.',
+   balance: 'Saldo reabastecido', bonusBalance: 'Saldo concedido', balanceUnavailable: 'Ver na plataforma', balanceSignedOut: 'Faça login para ver',
+   accountInfo: 'Mais informações da conta', more: 'Mais', usage: 'Ver uso', topUp: 'Recarregar',
+   quotaTitle: 'Nenhum saldo disponível',
+-  quotaDescription: 'DeepSeek Harness não pode iniciar uma nova tarefa com esta conta quando não houver saldo disponível. Você gostaria de recarregar? Você também pode recarregar mais tarde em Configurações → Conta.',
++  quotaDescription: 'Xiaocongseek não pode iniciar uma nova tarefa com esta conta quando não houver saldo disponível. Você gostaria de recarregar? Você também pode recarregar mais tarde em Configurações → Conta.',
+   quotaTopUp: 'Recarregar',
++  loginSuccessTitle: 'Login concluído',
++  loginSuccessDescription: 'Login no XiaocongAPI concluído. Clique em OK para voltar à área de trabalho.',
++  loginSuccessConfirm: 'OK',
+   bonusNoticeTitle: 'Bônus creditado',
+ } satisfies Record<keyof typeof en, string>
+diff --git a/packages/client/ui-settings-account/src/client/locales/onboarding.ts b/packages/client/ui-settings-account/src/client/locales/onboarding.ts
+index 2fbf063a..8a272601 100644
+--- a/packages/client/ui-settings-account/src/client/locales/onboarding.ts
++++ b/packages/client/ui-settings-account/src/client/locales/onboarding.ts
+@@ -2,11 +2,11 @@
+ export const onboardingZh = {
+   onboardingArtworkLocale: 'zh',
+   onboardingWelcome: '欢迎使用',
+-  onboardingBrand: 'DeepSeek Harness',
+-  onboardingIntroduction: 'DeepSeek Harness 会以本地文件夹作为工作区，通过调用各种工具，读写本机文件，完成搜索整理资料、制作文档表格、编写代码、排查问题等各种任务。',
++  onboardingBrand: 'Xiaocongseek',
++  onboardingIntroduction: 'Xiaocongseek 会以本地文件夹作为工作区，通过调用各种工具，读写本机文件，完成搜索整理资料、制作文档表格、编写代码、排查问题等各种任务。',
+   onboardingStart: '开始设置',
+   onboardingCredit: '准备可用额度',
+-  onboardingCreditDescription: 'DeepSeek Harness 执行任务时，会根据模型与工具使用的 token 量扣除额度。请提前添加额度，避免任务在执行过程中被迫中断。你的余额只会在 Agent 实际执行任务时消耗。',
++  onboardingCreditDescription: 'Xiaocongseek 执行任务时，会根据模型与工具使用的 token 量扣除额度。请提前添加额度，避免任务在执行过程中被迫中断。你的余额只会在 Agent 实际执行任务时消耗。',
+   onboardingTopUp: '去充值',
+   onboardingLater: '下一步',
+   onboardingFundedTopUp: '去充值',
+@@ -19,7 +19,7 @@ export const onboardingZh = {
+   onboardingDevelopmentDescription: '修改代码、调试问题、运行命令和管理项目文件等',
+   onboardingContinue: '继续',
+   onboardingProcess: '你希望看到多少工作过程？',
+-  onboardingProcessDescription: '这只会影响工作过程的展示方式，不会影响 DeepSeek Harness 的工作能力。',
++  onboardingProcessDescription: '这只会影响工作过程的展示方式，不会影响 Xiaocongseek 的工作能力。',
+   onboardingCompact: '聚焦结果',
+   onboardingCompactDescription: '只看结果，保持界面简洁明了',
+   onboardingStandard: '关键细节',
+@@ -33,7 +33,7 @@ export const onboardingZh = {
+   onboardingSkipDescription: '你可以随时前往 设置 → 通用设置 中调整工作过程、性能与用量展示方式或开启代码工作工具。',
+   onboardingKeepSetting: '继续设置',
+   onboardingNoCreditTitle: '暂时跳过充值？',
+-  onboardingNoCreditDescription: '没有可用额度时，DeepSeek Harness 将无法开始新的任务。你可以稍后前往 设置 → 账号与余额 进行充值。',
++  onboardingNoCreditDescription: '没有可用额度时，Xiaocongseek 将无法开始新的任务。你可以稍后前往 设置 → 账号与余额 进行充值。',
+   onboardingUnderstood: '我知道了',
+   onboardingGoTopUp: '前往充值',
+   onboardingSaveFailed: '未能保存设置，请重试。',
+@@ -45,11 +45,11 @@ export const onboardingZh = {
+ export const onboardingEn: Record<keyof typeof onboardingZh, string> = {
+   onboardingArtworkLocale: 'en',
+   onboardingWelcome: 'Welcome to',
+-  onboardingBrand: 'DeepSeek Harness',
+-  onboardingIntroduction: 'DeepSeek Harness works in a local folder and uses tools to read and write files on your computer. It can help you research and organize information, create documents and spreadsheets, write code, troubleshoot issues, and more.',
++  onboardingBrand: 'Xiaocongseek',
++  onboardingIntroduction: 'Xiaocongseek works in a local folder and uses tools to read and write files on your computer. It can help you research and organize information, create documents and spreadsheets, write code, troubleshoot issues, and more.',
+   onboardingStart: 'Get started',
+   onboardingCredit: 'Add credits',
+-  onboardingCreditDescription: 'DeepSeek Harness charges credits based on the tokens used by models and tools. Add credits in advance to keep your tasks running without interruption. Your balance is only used while the agent is working on a task.',
++  onboardingCreditDescription: 'Xiaocongseek charges credits based on the tokens used by models and tools. Add credits in advance to keep your tasks running without interruption. Your balance is only used while the agent is working on a task.',
+   onboardingTopUp: 'Add credits',
+   onboardingLater: 'Next',
+   onboardingFundedTopUp: 'Add credits',
+@@ -62,7 +62,7 @@ export const onboardingEn: Record<keyof typeof onboardingZh, string> = {
+   onboardingDevelopmentDescription: 'Edit code, debug issues, run commands, manage project files, and more',
+   onboardingContinue: 'Continue',
+   onboardingProcess: 'How much detail would you like to see?',
+-  onboardingProcessDescription: 'This only changes how progress is shown, not what DeepSeek Harness can do.',
++  onboardingProcessDescription: 'This only changes how progress is shown, not what Xiaocongseek can do.',
+   onboardingCompact: 'Results only',
+   onboardingCompactDescription: 'See just the results in a clean, simple interface',
+   onboardingStandard: 'Key details',
+@@ -76,7 +76,7 @@ export const onboardingEn: Record<keyof typeof onboardingZh, string> = {
+   onboardingSkipDescription: 'You can change how progress, performance, and usage are displayed, or enable Coding Tools, anytime in Settings → General.',
+   onboardingKeepSetting: 'Continue setup',
+   onboardingNoCreditTitle: 'Skip adding credits?',
+-  onboardingNoCreditDescription: 'DeepSeek Harness can’t start new tasks without credits. You can add them later in Settings → Account.',
++  onboardingNoCreditDescription: 'Xiaocongseek can’t start new tasks without credits. You can add them later in Settings → Account.',
+   onboardingUnderstood: 'Got it',
+   onboardingGoTopUp: 'Add credits',
+   onboardingSaveFailed: 'Could not save settings. Try again.',
+@@ -88,11 +88,11 @@ export const onboardingEn: Record<keyof typeof onboardingZh, string> = {
+ export const onboardingJa = {
+   'onboardingArtworkLocale': 'en',
+   'onboardingWelcome': 'ようこそ',
+-  'onboardingBrand': 'DeepSeek Harness',
+-  'onboardingIntroduction': 'DeepSeek Harness はローカルフォルダで動作し、ツールを使ってお使いのコンピューター上のファイルを読み書きします。情報の調査や整理、ドキュメントやスプレッドシートの作成、コードの作成、問題のトラブルシューティングなどに役立ちます。',
++  'onboardingBrand': 'Xiaocongseek',
++  'onboardingIntroduction': 'Xiaocongseek はローカルフォルダで動作し、ツールを使ってお使いのコンピューター上のファイルを読み書きします。情報の調査や整理、ドキュメントやスプレッドシートの作成、コードの作成、問題のトラブルシューティングなどに役立ちます。',
+   'onboardingStart': '始める',
+   'onboardingCredit': 'クレジットを追加',
+-  'onboardingCreditDescription': 'DeepSeek Harness は、モデルとツールが使用したトークンに基づいてクレジットを消費します。タスクを中断なく実行し続けるために、事前にクレジットを追加してください。残高はエージェントがタスクを実行している間のみ使用されます。',
++  'onboardingCreditDescription': 'Xiaocongseek は、モデルとツールが使用したトークンに基づいてクレジットを消費します。タスクを中断なく実行し続けるために、事前にクレジットを追加してください。残高はエージェントがタスクを実行している間のみ使用されます。',
+   'onboardingTopUp': 'クレジットを追加',
+   'onboardingLater': '次へ',
+   'onboardingFundedTopUp': 'クレジットを追加',
+@@ -105,7 +105,7 @@ export const onboardingJa = {
+   'onboardingDevelopmentDescription': 'コードの編集、デバッグ、コマンドの実行、プロジェクトファイルの管理など',
+   'onboardingContinue': '続ける',
+   'onboardingProcess': 'どの程度の詳細を表示しますか？',
+-  'onboardingProcessDescription': 'これは進捗の表示方法を変えるだけで、DeepSeek Harness の機能には影響しません。',
++  'onboardingProcessDescription': 'これは進捗の表示方法を変えるだけで、Xiaocongseek の機能には影響しません。',
+   'onboardingCompact': '結果のみ',
+   'onboardingCompactDescription': 'シンプルでクリーンなインターフェースで結果だけを表示します',
+   'onboardingStandard': '重要な詳細',
+@@ -119,7 +119,7 @@ export const onboardingJa = {
+   'onboardingSkipDescription': '進捗、パフォーマンス、利用状況の表示方法や Coding Tools の有効化は、設定 → 一般でいつでも変更できます。',
+   'onboardingKeepSetting': 'セットアップを続ける',
+   'onboardingNoCreditTitle': 'クレジットの追加をスキップしますか？',
+-  'onboardingNoCreditDescription': 'クレジットがないと DeepSeek Harness は新しいタスクを開始できません。後から設定 → アカウントで追加できます。',
++  'onboardingNoCreditDescription': 'クレジットがないと Xiaocongseek は新しいタスクを開始できません。後から設定 → アカウントで追加できます。',
+   'onboardingUnderstood': '了解',
+   'onboardingGoTopUp': 'クレジットを追加',
+   'onboardingSaveFailed': '設定を保存できませんでした。もう一度お試しください。',
+@@ -131,11 +131,11 @@ export const onboardingJa = {
+ export const onboardingEs = {
+   onboardingArtworkLocale: 'en',
+   onboardingWelcome: 'Bienvenido a',
+-  onboardingBrand: 'DeepSeek Harness',
+-  onboardingIntroduction: 'DeepSeek Harness funciona en una carpeta local y utiliza herramientas para leer y escribir archivos en su computadora. Puede ayudarle a investigar y organizar información, crear documentos y hojas de cálculo, escribir código, solucionar problemas y más.',
++  onboardingBrand: 'Xiaocongseek',
++  onboardingIntroduction: 'Xiaocongseek funciona en una carpeta local y utiliza herramientas para leer y escribir archivos en su computadora. Puede ayudarle a investigar y organizar información, crear documentos y hojas de cálculo, escribir código, solucionar problemas y más.',
+   onboardingStart: 'empezar',
+   onboardingCredit: 'Añadir créditos',
+-  onboardingCreditDescription: 'DeepSeek Harness cobra créditos en función de los tokens utilizados por los modelos y herramientas. Agregue créditos por adelantado para mantener sus tareas ejecutándose sin interrupciones. Su saldo solo se utiliza mientras el agente está trabajando en una tarea.',
++  onboardingCreditDescription: 'Xiaocongseek cobra créditos en función de los tokens utilizados por los modelos y herramientas. Agregue créditos por adelantado para mantener sus tareas ejecutándose sin interrupciones. Su saldo solo se utiliza mientras el agente está trabajando en una tarea.',
+   onboardingTopUp: 'Añadir créditos',
+   onboardingLater: 'Siguiente',
+   onboardingFundedTopUp: 'Añadir créditos',
+@@ -148,7 +148,7 @@ export const onboardingEs = {
+   onboardingDevelopmentDescription: 'Edite código, depure problemas, ejecute comandos, administre archivos de proyectos y más',
+   onboardingContinue: 'Continuar',
+   onboardingProcess: '¿Cuántos detalles te gustaría ver?',
+-  onboardingProcessDescription: 'Esto solo cambia cómo se muestra el progreso, no lo que puede hacer DeepSeek Harness.',
++  onboardingProcessDescription: 'Esto solo cambia cómo se muestra el progreso, no lo que puede hacer Xiaocongseek.',
+   onboardingCompact: 'Sólo resultados',
+   onboardingCompactDescription: 'Vea solo los resultados en una interfaz limpia y sencilla',
+   onboardingStandard: 'Detalles clave',
+@@ -162,7 +162,7 @@ export const onboardingEs = {
+   onboardingSkipDescription: 'Puede cambiar cómo se muestran el progreso, el rendimiento y el uso, o habilitar las herramientas de codificación, en cualquier momento en Configuración → General.',
+   onboardingKeepSetting: 'Continuar con la configuración',
+   onboardingNoCreditTitle: '¿Omitir agregar créditos?',
+-  onboardingNoCreditDescription: 'DeepSeek Harness no puede iniciar nuevas tareas sin créditos. Puede agregarlos más tarde en Configuración → Cuenta.',
++  onboardingNoCreditDescription: 'Xiaocongseek no puede iniciar nuevas tareas sin créditos. Puede agregarlos más tarde en Configuración → Cuenta.',
+   onboardingUnderstood: 'Lo tengo',
+   onboardingGoTopUp: 'Añadir créditos',
+   onboardingSaveFailed: 'No se pudo guardar la configuración. Intentar otra vez.',
+@@ -174,11 +174,11 @@ export const onboardingEs = {
+ export const onboardingFr = {
+   onboardingArtworkLocale: 'en',
+   onboardingWelcome: 'Bienvenue à',
+-  onboardingBrand: 'DeepSeek Harness',
+-  onboardingIntroduction: 'DeepSeek Harness fonctionne dans un dossier local et utilise des outils pour lire et écrire des fichiers sur votre ordinateur. Il peut vous aider à rechercher et à organiser des informations, à créer des documents et des feuilles de calcul, à écrire du code, à résoudre des problèmes, etc.',
++  onboardingBrand: 'Xiaocongseek',
++  onboardingIntroduction: 'Xiaocongseek fonctionne dans un dossier local et utilise des outils pour lire et écrire des fichiers sur votre ordinateur. Il peut vous aider à rechercher et à organiser des informations, à créer des documents et des feuilles de calcul, à écrire du code, à résoudre des problèmes, etc.',
+   onboardingStart: 'Commencez',
+   onboardingCredit: 'Ajouter des crédits',
+-  onboardingCreditDescription: "DeepSeek Harness facture des crédits en fonction des jetons utilisés par les modèles et les outils. Ajoutez des crédits à l'avance pour que vos tâches continuent de s'exécuter sans interruption. Votre solde n'est utilisé que lorsque l'agent travaille sur une tâche.",
++  onboardingCreditDescription: "Xiaocongseek facture des crédits en fonction des jetons utilisés par les modèles et les outils. Ajoutez des crédits à l'avance pour que vos tâches continuent de s'exécuter sans interruption. Votre solde n'est utilisé que lorsque l'agent travaille sur une tâche.",
+   onboardingTopUp: 'Ajouter des crédits',
+   onboardingLater: 'Suivant',
+   onboardingFundedTopUp: 'Ajouter des crédits',
+@@ -191,7 +191,7 @@ export const onboardingFr = {
+   onboardingDevelopmentDescription: 'Modifiez le code, déboguez les problèmes, exécutez des commandes, gérez les fichiers de projet, etc.',
+   onboardingContinue: 'Continuer',
+   onboardingProcess: 'Combien de détails aimeriez-vous voir ?',
+-  onboardingProcessDescription: 'Cela change uniquement la façon dont la progression est affichée, pas ce que DeepSeek Harness peut faire.',
++  onboardingProcessDescription: 'Cela change uniquement la façon dont la progression est affichée, pas ce que Xiaocongseek peut faire.',
+   onboardingCompact: 'Résultats uniquement',
+   onboardingCompactDescription: 'Visualisez uniquement les résultats dans une interface claire et simple',
+   onboardingStandard: 'Détails clés',
+@@ -205,7 +205,7 @@ export const onboardingFr = {
+   onboardingSkipDescription: "Vous pouvez modifier la façon dont la progression, les performances et l'utilisation sont affichées, ou activer les outils de codage, à tout moment dans Paramètres → Général.",
+   onboardingKeepSetting: 'Continuer la configuration',
+   onboardingNoCreditTitle: "Ignorer l'ajout de crédits ?",
+-  onboardingNoCreditDescription: 'DeepSeek Harness ne peut pas démarrer de nouvelles tâches sans crédits. Vous pourrez les ajouter plus tard dans Paramètres → Compte.',
++  onboardingNoCreditDescription: 'Xiaocongseek ne peut pas démarrer de nouvelles tâches sans crédits. Vous pourrez les ajouter plus tard dans Paramètres → Compte.',
+   onboardingUnderstood: "Je l'ai compris",
+   onboardingGoTopUp: 'Ajouter des crédits',
+   onboardingSaveFailed: "Impossible d'enregistrer les paramètres. Essayer à nouveau.",
+@@ -217,11 +217,11 @@ export const onboardingFr = {
+ export const onboardingDe = {
+   onboardingArtworkLocale: 'en',
+   onboardingWelcome: 'Willkommen bei',
+-  onboardingBrand: 'DeepSeek Harness',
+-  onboardingIntroduction: 'DeepSeek Harness arbeitet in einem lokalen Ordner und verwendet Tools zum Lesen und Schreiben von Dateien auf Ihrem Computer. Es kann Ihnen dabei helfen, Informationen zu recherchieren und zu organisieren, Dokumente und Tabellenkalkulationen zu erstellen, Code zu schreiben, Probleme zu beheben und vieles mehr.',
++  onboardingBrand: 'Xiaocongseek',
++  onboardingIntroduction: 'Xiaocongseek arbeitet in einem lokalen Ordner und verwendet Tools zum Lesen und Schreiben von Dateien auf Ihrem Computer. Es kann Ihnen dabei helfen, Informationen zu recherchieren und zu organisieren, Dokumente und Tabellenkalkulationen zu erstellen, Code zu schreiben, Probleme zu beheben und vieles mehr.',
+   onboardingStart: 'Fangen Sie an',
+   onboardingCredit: 'Credits hinzufügen',
+-  onboardingCreditDescription: 'DeepSeek Harness berechnet Credits basierend auf den von Modellen und Tools verwendeten Token. Fügen Sie Credits im Voraus hinzu, damit Ihre Aufgaben ohne Unterbrechung ausgeführt werden können. Ihr Guthaben wird nur verwendet, während der Agent an einer Aufgabe arbeitet.',
++  onboardingCreditDescription: 'Xiaocongseek berechnet Credits basierend auf den von Modellen und Tools verwendeten Token. Fügen Sie Credits im Voraus hinzu, damit Ihre Aufgaben ohne Unterbrechung ausgeführt werden können. Ihr Guthaben wird nur verwendet, während der Agent an einer Aufgabe arbeitet.',
+   onboardingTopUp: 'Credits hinzufügen',
+   onboardingLater: 'Weiter',
+   onboardingFundedTopUp: 'Credits hinzufügen',
+@@ -234,7 +234,7 @@ export const onboardingDe = {
+   onboardingDevelopmentDescription: 'Bearbeiten Sie Code, debuggen Sie Probleme, führen Sie Befehle aus, verwalten Sie Projektdateien und mehr',
+   onboardingContinue: 'Weiter',
+   onboardingProcess: 'Wie viele Details möchten Sie sehen?',
+-  onboardingProcessDescription: 'Dies ändert nur die Art und Weise, wie der Fortschritt angezeigt wird, nicht jedoch, was DeepSeek Harness tun kann.',
++  onboardingProcessDescription: 'Dies ändert nur die Art und Weise, wie der Fortschritt angezeigt wird, nicht jedoch, was Xiaocongseek tun kann.',
+   onboardingCompact: 'Nur Ergebnisse',
+   onboardingCompactDescription: 'Sehen Sie nur die Ergebnisse in einer übersichtlichen, einfachen Benutzeroberfläche',
+   onboardingStandard: 'Wichtige Details',
+@@ -248,7 +248,7 @@ export const onboardingDe = {
+   onboardingSkipDescription: 'Sie können jederzeit unter Einstellungen → Allgemein ändern, wie Fortschritt, Leistung und Nutzung angezeigt werden, oder Codierungstools aktivieren.',
+   onboardingKeepSetting: 'Setzen Sie die Einrichtung fort',
+   onboardingNoCreditTitle: 'Hinzufügen von Credits überspringen?',
+-  onboardingNoCreditDescription: 'DeepSeek Harness kann ohne Credits keine neuen Aufgaben starten. Sie können sie später unter Einstellungen → Konto hinzufügen.',
++  onboardingNoCreditDescription: 'Xiaocongseek kann ohne Credits keine neuen Aufgaben starten. Sie können sie später unter Einstellungen → Konto hinzufügen.',
+   onboardingUnderstood: 'Verstanden',
+   onboardingGoTopUp: 'Credits hinzufügen',
+   onboardingSaveFailed: 'Die Einstellungen konnten nicht gespeichert werden. Versuchen Sie es erneut.',
+@@ -260,11 +260,11 @@ export const onboardingDe = {
+ export const onboardingRu = {
+   onboardingArtworkLocale: 'en',
+   onboardingWelcome: 'Добро пожаловать в',
+-  onboardingBrand: 'DeepSeek Harness',
+-  onboardingIntroduction: 'DeepSeek Harness работает в локальной папке и использует инструменты для чтения и записи файлов на вашем компьютере. Он может помочь вам исследовать и систематизировать информацию, создавать документы и таблицы, писать код, устранять неполадки и многое другое.',
++  onboardingBrand: 'Xiaocongseek',
++  onboardingIntroduction: 'Xiaocongseek работает в локальной папке и использует инструменты для чтения и записи файлов на вашем компьютере. Он может помочь вам исследовать и систематизировать информацию, создавать документы и таблицы, писать код, устранять неполадки и многое другое.',
+   onboardingStart: 'Начать',
+   onboardingCredit: 'Добавить кредиты',
+-  onboardingCreditDescription: 'DeepSeek Harness взимает кредиты на основе токенов, используемых моделями и инструментами. Добавляйте кредиты заранее, чтобы ваши задачи выполнялись без перебоев. Ваш баланс используется только пока агент работает над задачей.',
++  onboardingCreditDescription: 'Xiaocongseek взимает кредиты на основе токенов, используемых моделями и инструментами. Добавляйте кредиты заранее, чтобы ваши задачи выполнялись без перебоев. Ваш баланс используется только пока агент работает над задачей.',
+   onboardingTopUp: 'Добавить кредиты',
+   onboardingLater: 'Далее',
+   onboardingFundedTopUp: 'Добавить кредиты',
+@@ -277,7 +277,7 @@ export const onboardingRu = {
+   onboardingDevelopmentDescription: 'Редактируйте код, устраняйте проблемы, запускайте команды, управляйте файлами проекта и многое другое.',
+   onboardingContinue: 'Продолжить',
+   onboardingProcess: 'Насколько подробно показывать процесс работы?',
+-  onboardingProcessDescription: 'Это меняет только способ отображения прогресса, а не возможности DeepSeek Harness.',
++  onboardingProcessDescription: 'Это меняет только способ отображения прогресса, а не возможности Xiaocongseek.',
+   onboardingCompact: 'Только результаты',
+   onboardingCompactDescription: 'Смотрите только результаты в понятном и простом интерфейсе',
+   onboardingStandard: 'Ключевые детали',
+@@ -291,7 +291,7 @@ export const onboardingRu = {
+   onboardingSkipDescription: 'Вы можете изменить способ отображения прогресса, производительности и использования или включить инструменты программирования в любое время в «Настройки» → «Основные».',
+   onboardingKeepSetting: 'Продолжить настройку',
+   onboardingNoCreditTitle: 'Пропустить добавление кредитов?',
+-  onboardingNoCreditDescription: 'DeepSeek Harness не может начинать новые задачи без кредитов. Вы можете добавить их позже в «Настройки» → «Аккаунт».',
++  onboardingNoCreditDescription: 'Xiaocongseek не может начинать новые задачи без кредитов. Вы можете добавить их позже в «Настройки» → «Аккаунт».',
+   onboardingUnderstood: 'понял',
+   onboardingGoTopUp: 'Добавить кредиты',
+   onboardingSaveFailed: 'Не удалось сохранить настройки. Попробуйте еще раз.',
+@@ -303,11 +303,11 @@ export const onboardingRu = {
+ export const onboardingPt = {
+   onboardingArtworkLocale: 'en',
+   onboardingWelcome: 'Bem-vindo ao',
+-  onboardingBrand: 'DeepSeek Harness',
+-  onboardingIntroduction: 'DeepSeek Harness funciona em uma pasta local e usa ferramentas para ler e gravar arquivos no seu computador. Ele pode ajudá-lo a pesquisar e organizar informações, criar documentos e planilhas, escrever códigos, solucionar problemas e muito mais.',
++  onboardingBrand: 'Xiaocongseek',
++  onboardingIntroduction: 'Xiaocongseek funciona em uma pasta local e usa ferramentas para ler e gravar arquivos no seu computador. Ele pode ajudá-lo a pesquisar e organizar informações, criar documentos e planilhas, escrever códigos, solucionar problemas e muito mais.',
+   onboardingStart: 'Comece',
+   onboardingCredit: 'Adicionar créditos',
+-  onboardingCreditDescription: 'DeepSeek Harness cobra créditos com base nos tokens usados pelos modelos e ferramentas. Adicione créditos antecipadamente para manter suas tarefas funcionando sem interrupção. Seu saldo só é usado enquanto o agente está trabalhando em uma tarefa.',
++  onboardingCreditDescription: 'Xiaocongseek cobra créditos com base nos tokens usados pelos modelos e ferramentas. Adicione créditos antecipadamente para manter suas tarefas funcionando sem interrupção. Seu saldo só é usado enquanto o agente está trabalhando em uma tarefa.',
+   onboardingTopUp: 'Adicionar créditos',
+   onboardingLater: 'Próximo',
+   onboardingFundedTopUp: 'Adicionar créditos',
+@@ -320,7 +320,7 @@ export const onboardingPt = {
+   onboardingDevelopmentDescription: 'Edite código, depure problemas, execute comandos, gerencie arquivos de projeto e muito mais',
+   onboardingContinue: 'Continuar',
+   onboardingProcess: 'Quantos detalhes você gostaria de ver?',
+-  onboardingProcessDescription: 'Isso altera apenas a forma como o progresso é mostrado, e não o que DeepSeek Harness pode fazer.',
++  onboardingProcessDescription: 'Isso altera apenas a forma como o progresso é mostrado, e não o que Xiaocongseek pode fazer.',
+   onboardingCompact: 'Somente resultados',
+   onboardingCompactDescription: 'Veja apenas os resultados em uma interface limpa e simples',
+   onboardingStandard: 'Detalhes principais',
+@@ -334,7 +334,7 @@ export const onboardingPt = {
+   onboardingSkipDescription: 'Você pode alterar a forma como o progresso, o desempenho e o uso são exibidos ou ativar as ferramentas de codificação a qualquer momento em Configurações → Geral.',
+   onboardingKeepSetting: 'Continuar configuração',
+   onboardingNoCreditTitle: 'Pular a adição de créditos?',
+-  onboardingNoCreditDescription: 'DeepSeek Harness não pode iniciar novas tarefas sem créditos. Você pode adicioná-los posteriormente em Configurações → Conta.',
++  onboardingNoCreditDescription: 'Xiaocongseek não pode iniciar novas tarefas sem créditos. Você pode adicioná-los posteriormente em Configurações → Conta.',
+   onboardingUnderstood: 'Entendi',
+   onboardingGoTopUp: 'Adicionar créditos',
+   onboardingSaveFailed: 'Não foi possível salvar as configurações. Tente novamente.',
+diff --git a/scripts/client-build-environment.ts b/scripts/client-build-environment.ts
+index 6eed371b..7aba1eef 100644
+--- a/scripts/client-build-environment.ts
++++ b/scripts/client-build-environment.ts
+@@ -19,7 +19,7 @@ export const CLIENT_BUILD_PROFILE_SELECTOR = 'DSH_BUILD_CLIENT_PROFILE'
+ /** Public client environment required by official DSH artifacts. */
+ const OFFICIAL_CLIENT_BUILD_ENVIRONMENT = {
+   DSH_CLIENT_BUILD_PROFILE: 'official',
+-  DSH_CLIENT_TITLE: 'DeepSeek Harness',
++  DSH_CLIENT_TITLE: 'Xiaocongseek',
+ } as const
+ 
+ /** Public variable carrying the source commit embedded in client artifacts. */

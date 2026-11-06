@@ -1,0 +1,54 @@
+{
+  "name": "digital-human-studio",
+  "version": "0.8.1",
+  "description": "digital-human-studio — VectCut mixcut console + Agent tools (MVP) for Xiaocongseek (DeepSeek Harness fork).",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "assets"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.1.0",
+    "@deepseek-ai/dsh-tools": "0.2.2-rc.1"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.1.0",
+    "@deepseek-ai/dsh-tools": "0.2.2-rc.1",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.6.0"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh-credentials": "0.2.2-rc.1",
+    "yaml": "^2.8.1"
+  }
+}

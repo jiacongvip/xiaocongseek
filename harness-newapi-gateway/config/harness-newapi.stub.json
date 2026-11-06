@@ -1,0 +1,11 @@
+{
+  "_comment": "Stub only. Do NOT overwrite ~/.dsh/digital-human-studio.json wholesale. Merge these keys when wiring TTS/LLM/image to New API.",
+  "newApiBaseUrl": "http://127.0.0.1:3000",
+  "newApiToken": "",
+  "newApiEnabled": false,
+  "notes": {
+    "vectcut": "Keep existing vectcutBaseUrl / vectcutRoot for local mixcut; New API is NOT used for VectCut.",
+    "auth": "User logs into New API console (or your site wrapping it), creates a personal API token, pastes into newApiToken (or future login flow).",
+    "calls": "OpenAI-compatible: POST {newApiBaseUrl}/v1/chat/completions with Authorization: Bearer {newApiToken}. Map TTS/image channels in New API admin after adding upstream keys."
+  }
+}
