@@ -58,9 +58,16 @@ apps\desktop\.desktop-build\targets\win-x64\unsigned-artifacts\<name>-0.2.2-rc.1
 双击安装即可。未签名包首次运行会被 SmartScreen 拦：点「更多信息」→「仍要运行」。
 阶段日志在 `apps\desktop\.desktop-build\packaging-runs\`，构建成功不等于安装包验收通过。
 
-## 配置（已预填）
+## 配置
 
-`apps\desktop\.env.windows` 已填好，关键字段：
+`apps\desktop\.env.windows` 被 `.gitignore` 排除，需要每台机器各自一份。仓库内附了示例
+（`apps\desktop\.env.windows.xiaocong-example`），首次打包前复制一份：
+
+```powershell
+Copy-Item apps\desktop\.env.windows.xiaocong-example apps\desktop\.env.windows
+```
+
+（`build-win.ps1` 检测到缺失时会自动复制并继续。）示例里的关键字段：
 
 ```
 DSH_DESKTOP_APP_ID=com.xiaocong.seek
