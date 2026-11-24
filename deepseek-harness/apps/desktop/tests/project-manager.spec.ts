@@ -1,9 +1,9 @@
-import { existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs'
+import { existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { resolveDesktopPaths } from '../src/paths.ts'
-import { DesktopProjectManager } from '../src/project-manager.ts'
+import { DesktopProjectManager, resolveXiaocongPluginSource } from '../src/project-manager.ts'
 import { readProfilePlugins } from '@deepseek-ai/dsh-app-boot'
 import { runtimeFixture } from './runtime-fixture.ts'
 
@@ -74,6 +74,35 @@ describe('desktop external plugin profile', () => {
     expect(files.map(file => readFileSync(join(profile, file), 'utf8'))).toEqual(before)
     expect(lstatSync(path).isDirectory()).toBe(true)
     expect(lstatSync(join(profile, 'node_modules/plugin')).isDirectory()).toBe(true)
+  })
+  it('links both Xiaocong plugins and keeps an existing developer link', async () => {
+    const { root, manager } = setup()
+    const source = join(root, 'plugins')
+    for (const name of ['digital-human-studio', 'publish-studio']) {
+      mkdirSync(join(source, name), { recursive: true })
+      writeFileSync(join(source, name, 'package.json'), JSON.stringify({ name, version: '1.0.0' }))
+    }
+    expect(resolveXiaocongPluginSource([join(root, 'missing'), source])).toBe(source)
+    expect(resolveXiaocongPluginSource([join(root, 'missing')])).toBeUndefined()
+    const seeded = new DesktopProjectManager(manager.paths, manager.runtime, source)
+    await seeded.applyRelease()
+    const profile = manager.paths.profile
+    const manifest = JSON.parse(readFileSync(join(profile, 'package.json'), 'utf8')) as {
+      dependencies: Record<string, string>
+      dsh: { profile: { bundles: string[] } }
+    }
+    expect(manifest.dsh.profile.bundles).toEqual(expect.arrayContaining(['digital-human-studio', 'publish-studio']))
+    expect(manifest.dependencies['publish-studio']).toBe(`link:${join(source, 'publish-studio')}`)
+    expect(realpathSync(join(profile, 'node_modules/publish-studio'))).toBe(realpathSync(join(source, 'publish-studio')))
+    const elsewhere = join(root, 'elsewhere')
+    mkdirSync(elsewhere, { recursive: true })
+    writeFileSync(join(elsewhere, 'package.json'), JSON.stringify({ name: 'digital-human-studio', version: '9.0.0' }))
+    unlinkSync(join(profile, 'node_modules/digital-human-studio'))
+    symlinkSync(elsewhere, join(profile, 'node_modules/digital-human-studio'))
+    const before = readFileSync(join(profile, 'package.json'), 'utf8')
+    await seeded.applyRelease()
+    expect(readFileSync(join(profile, 'package.json'), 'utf8')).toBe(before)
+    expect(realpathSync(join(profile, 'node_modules/digital-human-studio'))).toBe(realpathSync(elsewhere))
   })
   it('reuses plugin files without scanning manifests and can disable them', async () => {
     const { manager } = setup()

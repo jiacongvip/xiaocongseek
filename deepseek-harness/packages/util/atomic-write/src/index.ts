@@ -151,14 +151,7 @@ async function takeOverExitedLock(lockPath: string): Promise<boolean> {
   const record = await readLockRecord(lockPath)
   if (record === undefined || !holderExited(record)) return false
   const claim = `${lockPath}.takeover-${createHash('sha256').update(record).digest('hex').slice(0, 16)}`
-  try {
-    await writeFile(claim, `${process.pid}\n`, { mode: 0o600, flag: 'wx' })
-  } catch (error) {
-    // Another contender owns the claim for this record, or Windows still deletes the claim it released.
-    const code = (error as NodeJS.ErrnoException).code
-    if (code === 'EEXIST' || code === 'EPERM') return false
-    throw error
-  }
+  if (!await claimTakeover(claim)) return false
   try {
     if (await readLockRecord(lockPath) !== record || !holderExited(record)) return false
     try {
@@ -175,6 +168,38 @@ async function takeOverExitedLock(lockPath: string): Promise<boolean> {
       void error
     })
   }
+}
+
+/**
+ * Claim the takeover slot for one dead lock record. The claim is `wx`-created
+ * like the lock itself, so exactly one contender per record proceeds. A
+ * claimant that dies mid-takeover leaves its claim behind, and because the
+ * record it names is still the dead holder's, that orphan would otherwise
+ * block every later contender forever — the lock and its claim both outlive
+ * whoever died holding them. A claim whose recorded process exited is
+ * therefore removed and re-claimed; its holder cannot be mid-takeover, so
+ * removing it steals nothing a live contender is using.
+ * @returns Whether this process now owns the claim and may remove the lock.
+ */
+async function claimTakeover(claim: string): Promise<boolean> {
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      await writeFile(claim, `${process.pid}\n`, { mode: 0o600, flag: 'wx' })
+      return true
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException | null)?.code
+      // Another contender owns the claim for this record, or Windows still deletes the claim it released.
+      if (code === 'EPERM') return false
+      if (code !== 'EEXIST') throw error
+      const owner = await readLockRecord(claim)
+      if (owner === undefined || !holderExited(owner)) return false
+      await rm(claim, { force: true }).catch((error: unknown) => {
+        // The next attempt re-creates the claim; a failed removal just ends this one.
+        void error
+      })
+    }
+  }
+  return false
 }
 
 /**

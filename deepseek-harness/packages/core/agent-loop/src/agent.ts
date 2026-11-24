@@ -265,6 +265,28 @@ export class ReactLoopAgent implements Agent {
     throw error
   }
 
+  /**
+   * Xiaocongseek: older blank sessions still store `deepseek-account`. That
+   * adapter is disabled here, so remap to the live default before dispatch.
+   */
+  private resolveRoutableSelection(): ModelSelection | undefined {
+    const selection = this.model.current()
+    if (selection === undefined) return undefined
+    const providers = this.loopCtx.llm.listProviders()
+    if (providers.some(provider => provider.id === selection.provider)) return selection
+    const fallback = this.loopCtx.get('agentDefaultModel') as { currentSelection?: () => ModelSelection } | undefined
+    const next = fallback?.currentSelection?.()
+    if (next !== undefined && providers.some(provider => provider.id === next.provider)) {
+      this.model.select(next)
+      return next
+    }
+    const first = providers[0]
+    if (first === undefined) return selection
+    const remapped = { provider: first.id, model: selection.model }
+    this.model.select(remapped)
+    return remapped
+  }
+
   private async kick(): Promise<void> {
     try {
       while (await this.turn()) {}
@@ -285,7 +307,7 @@ export class ReactLoopAgent implements Agent {
     if (this.phase.kind !== 'running') throw new Error(`agent "${this.id}": pre-step outside running phase`)
     const signal = this.phase.abort.signal
     const claimed = this.inbox.claim(target, position.turn)
-    const selection = this.model.current()
+    const selection = this.resolveRoutableSelection()
     if (selection === undefined) {
       throw new Error(`agent "${this.id}" has no provider/model: set AgentOptions.provider and AgentOptions.model or record a model selection`)
     }

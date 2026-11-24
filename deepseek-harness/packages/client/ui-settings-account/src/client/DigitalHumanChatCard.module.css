@@ -1,0 +1,98 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 360px;
+  padding: 12px;
+  border: 1px solid var(--dsw-alias-border-l2, #e8e9f2);
+  border-radius: 16px;
+  background: var(--dsw-alias-bg-layer-2, #fff);
+  color: var(--dsw-alias-label-primary, #17181d);
+}
+
+.root[data-place='bubble'] {
+  max-width: 100%;
+  padding: 8px;
+  border-radius: 12px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.cover,
+.coverFallback {
+  flex: none;
+  width: 44px;
+  height: 58px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #111218;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.copy strong {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.copy span {
+  color: var(--dsw-alias-label-secondary, #5f6472);
+  font-size: 12px;
+}
+
+.copy em {
+  overflow: hidden;
+  color: var(--dsw-alias-label-tertiary, #8a8e9b);
+  font-size: 12px;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.progress {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, #7b61ff 16%, transparent);
+}
+
+.progress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #7b61ff;
+  transition: width 0.4s ease;
+}
+
+.error {
+  margin: 0;
+  color: var(--dsw-alias-state-error-primary, #c0392b);
+  font-size: 12px;
+}
+
+.player {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  border-radius: 12px;
+  background: #111218;
+  object-fit: contain;
+}
+
+.audio {
+  width: 100%;
+}
+
+.root[data-state='running'] .copy span {
+  color: #7b61ff;
+}

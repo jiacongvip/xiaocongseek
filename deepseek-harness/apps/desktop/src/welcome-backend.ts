@@ -67,6 +67,16 @@ export function connectDesktopWelcome(
     return envelope.result.value
   }
   const account = desktopAccountBackend(origin, invoke, cookie)
+  const xiaocongTokenStored = async (): Promise<boolean> => {
+    try {
+      const response = await send(new URL('/auth/xiaocong/status', origin).href, { headers: { cookie } })
+      if (!response.ok) return false
+      const status: unknown = await response.json()
+      return record(status) && status.success === true && status.hasToken === true
+    } catch {
+      return false
+    }
+  }
   const settingsAndReference = async () => {
     const settings = await invoke({ namespace: 'settings', method: 'describe', args: {} })
     if (!record(settings) || !Array.isArray(settings.namespaces)) throw new Error('desktop welcome: missing settings namespaces')
@@ -112,7 +122,7 @@ export function connectDesktopWelcome(
     }
     if (ref !== undefined && !record(states[ref])) throw new Error('desktop welcome: missing credential metadata')
     return {
-      loggedIn: (await account.state()).status === 'credential-stored',
+      loggedIn: (await account.state()).status === 'credential-stored' || await xiaocongTokenStored(),
       hasApiKey: Object.values(states).some(value => record(value) && value.configured === true),
       writable: ref !== undefined && record(states[ref]) && states[ref].writable === true,
       localePreference: localePreference(namespaces),

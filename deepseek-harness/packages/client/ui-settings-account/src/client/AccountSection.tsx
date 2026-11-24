@@ -1,16 +1,18 @@
 /** Account settings renders safe Host state and explicit login actions. */
 import { Big } from 'big.js'
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useState } from 'react'
 import { Button, IconRightUpOutlineRegular } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { AccountDetails, AccountView, SignInAttemptId } from '@deepseek-ai/dsh-deepseek-account/types'
 import type { PropsRuntime, PropsLocale, InjectFace, HostObservable } from '@deepseek-ai/dsh-client-ui-slots'
 import type { ThemeSnapshot } from '@deepseek-ai/dsh-client-ui-theme/client'
-import type { PlatformPage, PlatformPages } from './platform-pages.ts'
+import type { PlatformPages } from './platform-pages.ts'
 import { formatBalance } from './formatBalance.ts'
 import { AccountAvatar } from './AccountAvatar.tsx'
 import type { AccountAvatarSnapshot } from './account-avatar.ts'
 import { authorizeUrlWithTheme } from './authorize-url.ts'
 import type { BonusNotice } from './bonus-notices.ts'
+import { xiaocongApiAccountHref, xiaocongApiSiteLinks } from './xiaocong-api-site.ts'
+import { McpPanel } from './McpPanel.tsx'
 import css from './AccountSection.module.css'
 
 /** Safe account snapshot shared by the settings page and launcher. */
@@ -92,12 +94,9 @@ export interface AccountSectionInjected {
 export type AccountSectionProps =
   PropsRuntime<'settings.section'> & PropsLocale<'settings.account'> & InjectFace<AccountSectionInjected>
 /** @param props - localized actions, account subscription, and the shared Platform page channel. @returns account settings UI. */
-export function AccountSection({ t, useAccount, useTheme, start, cancel, openPlatformPage, avatarFailed }: AccountSectionProps) {
+export function AccountSection({ t, useAccount, useTheme, start, cancel, avatarFailed }: AccountSectionProps) {
   const { view: state, details, avatar, failed: streamFailed } = useAccount(value => value)
   const colorScheme = useTheme(snapshot => snapshot.active.colorScheme)
-  // The shared host owns the native view; this page holds only its own request,
-  // and only while it is the latest owner.
-  const releasePage = useRef<(() => void) | undefined>(undefined)
   const [failed, setFailed] = useState(false)
   const [busy, setBusy] = useState(false)
   const profile = details?.profile?.status === 'ready' ? details.profile.value : undefined
@@ -109,40 +108,22 @@ export function AccountSection({ t, useAccount, useTheme, start, cancel, openPla
   const active = attempt !== null && attempt !== undefined
     && ['initializing', 'waiting-browser', 'exchanging', 'committing'].includes(attempt.phase)
   const signedIn = state?.status === 'credential-stored'
-  useEffect(() => () => { releasePage.current?.(); releasePage.current = undefined }, [])
-  useEffect(() => {
-    if (signedIn) return
-    releasePage.current?.()
-    releasePage.current = undefined
-  }, [signedIn])
-  const showPage = (open: PlatformPages['open'], page: PlatformPage) => {
-    releasePage.current?.()
-    releasePage.current = open(page, () => { releasePage.current = undefined })
-  }
+  const site = xiaocongApiSiteLinks(state?.links.usageUrl)
   const run = async (action: () => Promise<void>) => {
     setBusy(true)
     setFailed(false)
     try { await action() } catch { setFailed(true) } finally { setBusy(false) }
   }
   /**
-   * @param event - click on a Platform destination link.
-   * @returns nothing; on Desktop the embedded page replaces the pending navigation.
-   */
-  const openUsage = (event: MouseEvent<HTMLAnchorElement>): void => {
-    if (openPlatformPage !== undefined && signedIn) { event.preventDefault(); showPage(openPlatformPage, 'usage') }
-  }
-  /**
-   * The Platform entry the balance rows share with the Usage action: an embedded page on
-   * Desktop, a new tab elsewhere. A wallet read that failed still reaches the same
-   * destination, so the user can inspect the balance the Harness could not load; the
-   * destination comes from the account links, not from the wallet response.
+   * XiaocongAPI console links. DeepSeek Platform URLs from the account stream are
+   * rewritten to the local console so 查询用量 / 充值 / 更多账号信息 never leave the site.
    * @param label - localized link copy.
    * @param className - link treatment for the row that renders it, absent when the sheet has no such rule.
-   * @returns the Platform anchor.
+   * @returns the console anchor.
    */
   const platformLink = (label: string, className: string | undefined) => (
-    <a className={className} href={state?.links.usageUrl} aria-disabled={state === undefined}
-      target="_blank" rel="noreferrer" onClick={openUsage}>{label}</a>
+    <a className={className} href={site.usageUrl} aria-disabled={state === undefined}
+      target="_blank" rel="noopener noreferrer">{label}</a>
   )
   const status = failed || streamFailed || attempt?.phase === 'failed' ? t('failed')
     : attempt?.phase === 'expired' ? t('expired')
@@ -174,7 +155,7 @@ export function AccountSection({ t, useAccount, useTheme, start, cancel, openPla
             <span className={css.status} role="status">{status}</span>
           </div>
         </div>
-        {signedIn && <a className={css.accountInfo} href={new URL('/', state.links.usageUrl).href} target="_blank" rel="noopener noreferrer">
+        {signedIn && <a className={css.accountInfo} href={xiaocongApiAccountHref(state.links.usageUrl)} target="_blank" rel="noopener noreferrer">
           {t('accountInfo')}<IconRightUpOutlineRegular size={12} />
         </a>}
       </div>
@@ -217,11 +198,12 @@ export function AccountSection({ t, useAccount, useTheme, start, cancel, openPla
           <span className={css.secondary}>{t('more')}</span>
           <div className={css.links}>
             {platformLink(t('usage'), css.linkButton)}
-            <a className={`${css.linkButton} ${css.primary}`} href={state?.links.topUpUrl} aria-disabled={state === undefined}
-              target="_blank" rel="noreferrer"
-              onClick={(event) => { if (openPlatformPage !== undefined && signedIn) { event.preventDefault(); showPage(openPlatformPage, 'top-up') } }}>{t('topUp')}</a>
+            <a className={`${css.linkButton} ${css.primary}`} href={site.topUpUrl} aria-disabled={state === undefined}
+              target="_blank" rel="noopener noreferrer">{t('topUp')}</a>
           </div>
         </div>
+        <div className={css.divider} />
+        <McpPanel t={t} />
       </div>
     </section>
   )

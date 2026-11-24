@@ -1,7 +1,11 @@
 import type { IconProps } from './icons/props.ts'
 
-/** Served by digital-human-studio (fork); also mirrored under web public as fallback. */
-export const XIAOCONG_LOGO_SRC = '/digital-human-studio/assets/xiaocong-only.png'
+/**
+ * Shell-owned copy of the mark (apps/web/public/xiaocong-only.png), served by
+ * frontend-static. Must not point at a workspace plugin: the brand has to render
+ * even when digital-human-studio is absent, disabled or failed to boot.
+ */
+export const XIAOCONG_LOGO_SRC = '/xiaocong-only.png'
 
 /** Native viewBox of {@link FISH_LOGO_PATH} (width and height in user units). Kept for legacy consumers. */
 export const FISH_LOGO_VIEWBOX = { width: 23.16, height: 17.04 }

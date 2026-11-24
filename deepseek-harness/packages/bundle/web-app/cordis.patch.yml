@@ -77,6 +77,21 @@
         iconTimeoutMs: 10000
         launchWatchMs: 1000
 
+    # Shell-owned XiaocongAPI sign-in. Registered unconditionally so 登录 works
+    # even when no workspace plugin is installed, activated or booting.
+    - id: xiaocong-auth
+      name: '@deepseek-ai/dsh-host-xiaocong-auth'
+
+    # Shell-owned local MCP server for external AI agents (WorkBuddy / Claude
+    # Code / Cursor / Codex / OpenCode). Binds a fixed loopback port at boot.
+    - id: xiaocong-mcp
+      name: '@deepseek-ai/dsh-host-xiaocong-mcp'
+
+    # Shell-owned update checker: polls the Xiaocongseek release feed, downloads
+    # the DMG with progress, and opens it for install (unsigned builds).
+    - id: xiaocong-updater
+      name: '@deepseek-ai/dsh-host-xiaocong-updater'
+
     - id: ui-file-actions
       name: '@deepseek-ai/dsh-client-ui-file-actions'
     - id: ui-context-menu

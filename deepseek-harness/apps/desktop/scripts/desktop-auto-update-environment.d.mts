@@ -19,7 +19,7 @@ export function desktopLatestInstallerFilename(target: DesktopAutoUpdateTarget):
  * @param target Supported Desktop target.
  * @returns Fixed production download URL.
  */
-export function desktopWebsiteInstallerUrl(target: DesktopAutoUpdateTarget): string
+export function desktopWebsiteInstallerUrl(target: DesktopAutoUpdateTarget, env?: Record<string, string | undefined>): string
 
 /** Public updater URL and object prefixes for one release target. */
 export interface DesktopAutoUpdateConfig {

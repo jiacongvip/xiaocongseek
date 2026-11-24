@@ -26,6 +26,7 @@ import { ConversationViewRegistry } from './view-registry.ts'
 import { ConversationGroupRegistry } from './group-registry.ts'
 import { ConversationInteractionRegistry } from './interaction-registry.ts'
 import { UserTextRegistry } from './user-text-registry.ts'
+import { registerComposerSubmitHook, type ComposerSubmitHook } from '../input/submit-hooks.ts'
 
 /** Observable faces published for one Session's Conversation assembly. */
 export interface ConversationBinding {
@@ -249,6 +250,15 @@ export class UiConversation extends Service {
         for (const record of [...this.bindings.values]) this.drop(record, true)
       }
     }, 'ui-conversation assembly')
+  }
+
+  /**
+   * Transform the composer draft at the real send snapshot (click or Enter).
+   * @param hook - receives the current draft and session id; return the text to send.
+   * @returns disposer that unregisters the hook.
+   */
+  registerSubmitHook(hook: ComposerSubmitHook): () => void {
+    return registerComposerSubmitHook(hook)
   }
 
   /**

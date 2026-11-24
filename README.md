@@ -158,3 +158,15 @@ XiaocongAPI 的 `login?redirect=` 只允许同域（:3000），无法直接跳�
 
 ## Sign out（0.7.2）
 退出登录会清 studio 令牌、`NEW_API_TOKEN`、壳 overlay，并代理 `POST /api/user/auth/logout` 清 XiaocongAPI cookie；立即显示未登录。
+
+## 桌面端（Xiaocongseek）更新与 Windows 打包
+
+桌面壳的更新检测与下载进度条在 `deepseek-harness/packages/host/xiaocong-updater`，设置页面板在
+`packages/client/ui-settings-general/src/client/UpdatePanel.tsx`。
+
+- macOS：`pnpm run package:desktop:mac:arm64:unsigned`（本机即可，产物为 DMG）
+- Windows：**必须在 Windows x64 机器上**跑 `build-win.ps1`（详见 `deepseek-harness/README-windows-build.md`），
+  产物为 NSIS `.exe`
+- 更新源：`latest.json` 同时支持 `dmgUrl`（macOS）与 `exeUrl`（Windows），用
+  `deepseek-harness/scripts/generate-latest.mjs` 生成；`scripts/test-feed.mjs` 可起本地限速源验证进度条
+- Windows 上点「运行安装器」会直接拉起下载好的 `.exe`；macOS 上点「安装更新」会挂载 DMG

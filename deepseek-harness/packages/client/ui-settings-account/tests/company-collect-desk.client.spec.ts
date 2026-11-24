@@ -1,0 +1,115 @@
+import { describe, expect, it } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
+import { shouldShowRecordRail } from '../src/client/DigitalHumanRecordRail.tsx'
+
+const root = dirname(fileURLToPath(import.meta.url))
+const panel = readFileSync(join(root, '../src/client/DigitalHumanPanel.tsx'), 'utf8')
+const download = readFileSync(join(root, '../src/client/DigitalHumanVideoDownload.tsx'), 'utf8')
+
+const downloadBranch = panel.slice(
+  panel.indexOf(") : appPage === 'video-download' ? ("),
+  panel.indexOf(") : appPage === 'industry-hotboard' ? ("),
+)
+const matBar = panel.slice(panel.indexOf('className={css.matBarActions}'), panel.indexOf('className={css.matBarActions}') + 700)
+
+describe('collect desk source scope', () => {
+  it('moves 采集 into the materials toolbar, no separate left-nav entry', () => {
+    expect(panel).not.toContain("isSideNavOn(appPage, 'video-download')")
+    expect(matBar).toContain('采集')
+    expect(matBar).toContain("setAppPage('video-download')")
+    const highlight = panel.slice(panel.indexOf('function companyRailHighlight'), panel.indexOf('function normalizeRailActive'))
+    expect(highlight).not.toContain('video-download')
+    expect(downloadBranch).toContain("renderCompanyDeskHead(spaceId, '', {")
+    expect(downloadBranch).toContain("subtitle: '贴一条链接，进这家公司的素材柜。'")
+    expect(downloadBranch).toContain('去素材柜')
+    expect(downloadBranch).not.toContain('素材库')
+    expect(downloadBranch).not.toContain('全部公司')
+    expect(panel).toContain("{opts.extra}\n        <button type=\"button\" className={css.deskGhost} onClick={() => { setAppPage('companies'); setCompanyOpen(false); setSpaceMenu('closed') }}>全部公司</button>")
+  })
+
+  it('keeps pick/empty before the form and hides the rail without a company', () => {
+    expect(shouldShowRecordRail('video-download', false, false)).toBe(false)
+    expect(shouldShowRecordRail('video-download', false, true)).toBe(true)
+    expect(downloadBranch).toContain("publishCompany.status === 'pick'")
+    expect(downloadBranch).toContain('下载会进这家公司的素材柜。')
+    // form is only rendered after pick/empty checks
+    expect(downloadBranch.indexOf("if (publishCompany.status === 'pick')")).toBeLessThan(downloadBranch.indexOf('<DigitalHumanVideoDownload'))
+  })
+
+  it('has no peer tabs, no first-screen refresh/list, and folds 选题和词云', () => {
+    expect(download).not.toContain('role="tablist"')
+    expect(download).not.toContain('css.tabs')
+    expect(download).not.toContain('css.contextBar')
+    expect(download).not.toContain('css.steps')
+    expect(download).not.toContain('刷新任务')
+    expect(download).not.toContain('当前任务')
+    expect(download).toContain("summary>选题和词云")
+    expect(download).not.toContain('<details open')
+    expect(download).toContain('选题不会下载视频。词云不会去平台爬评论，要自己导入文本。')
+    expect(download).toContain("className={css.ghost}")
+    expect(download).toContain('开始搜索')
+    expect(download).toContain('生成词云')
+    expect(download).toContain("className={css.primary}")
+    expect(download).toContain('下载到素材柜')
+    expect(download).toContain('下载中…')
+    expect(download.indexOf('下载到素材柜')).toBeLessThan(download.indexOf('开始搜索'))
+    expect(download).toContain('capability?.configured === false')
+    expect(download).not.toContain('当前采集结果')
+    expect(download).toContain('DigitalHumanDeskModal')
+    expect(download).toContain('shouldAutoOpenCollectDialog')
+    expect(download).toContain('closeCollectDialog')
+    expect(download).toContain('openMaterialsFromDialog')
+    expect(download).toContain('setDialogOpen(true)')
+    expect(download).not.toContain('css.taskList')
+    expect(download).not.toContain('[selectedTask].map')
+    expect(download).toContain('selectedTask ?')
+    expect(download).toContain('去素材柜查看')
+    expect(download).toContain('去素材柜上传')
+    expect(download).toContain('再试一次')
+    expect(download).toContain('collectFailureKind')
+    expect(download).not.toContain('anyNeedsLogin')
+    expect(download).not.toContain('tasks.some')
+    expect(download).toContain("title: '采集'")
+    expect(download).toContain('collectRailEmpty(activeMode)')
+    expect(download).toContain("if (!open) setRailMode('download')")
+  })
+
+  it('keeps classify/download/search/wordcloud payloads, poll, and isolation', () => {
+    expect(download).toContain("action: 'classify'")
+    expect(download).toContain("action: 'download', source: url, slot")
+    expect(download).toContain("action: 'keyword-search'")
+    expect(download).toContain("platform: 'dy'")
+    expect(download).toContain('maxNotes: 10')
+    expect(download).toContain("useState<'standard' | 'cdp_existing' | 'cdp_launch'>('standard')")
+    expect(download).toContain('原版方式（登录弹窗，之后命令执行）')
+    expect(download).toContain('cdpPort: 9222')
+    expect(download).toContain("action: 'analyze'")
+    expect(download).toContain('fixtureLabeled: wcFixture')
+    expect(download).toContain('/digital-human-studio/platform-media')
+    expect(download).toContain('/digital-human-studio/comment-wordcloud')
+    expect(download).toContain(', 2500)')
+    expect(download).toContain('shouldApplyAsyncResult')
+    expect(download).toContain('shouldApplyDownloadSuccess')
+    expect(download).toContain('collectFailureClerkMessage')
+    expect(download).toContain('startDownload({ source: request.source, slot: request.slot })')
+    expect(download).not.toContain('resolveActionErrorPriority')
+    expect(download).toContain('pendingSetupBanner')
+    expect(download).not.toContain('setAppPage')
+    expect(download).not.toContain('platform-accounts')
+  })
+
+  it('uses 素材柜 copy and never 热搜/热点/热榜 or 素材库', () => {
+    expect(download).not.toContain('素材库')
+    expect(download).not.toContain('热搜')
+    expect(download).not.toContain('热点')
+    expect(download).not.toContain('热榜')
+    expect(downloadBranch).not.toContain('素材库')
+    expect(downloadBranch).not.toContain('热搜')
+    expect(downloadBranch).not.toContain('热点')
+    expect(downloadBranch).not.toContain('热榜')
+    expect(download).toContain('downloadSuccessNotice')
+    expect(download).toContain('抖音 / 小红书 / 快手 / B站 / 微博链接，或整段分享口令')
+  })
+})
