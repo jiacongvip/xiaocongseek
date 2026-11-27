@@ -12,6 +12,10 @@
 | `assets/` | 小葱 logo、桌面/Web 图标源文件 |
 | `scripts/` | `start-web.sh` 等本地启动脚本 |
 | `patches/` | `deepseek-harness-xiaocongseek.patch`：相对上游的完整改动，便于日后 rebase 上游 |
+| `deepseek-harness/README-windows-build.md` | Windows x64 未签名测试包的打包步骤（必须在 Windows 机器上打包） |
+| `deepseek-harness/build-win.ps1` | Windows 一键打包脚本（预检 + 完整构建 + 出 EXE） |
+| `deepseek-harness/scripts/test-feed.mjs` | 本地限速更新源，用于验证「检查更新 → 下载进度条 → 运行安装器」 |
+| `deepseek-harness/scripts/generate-latest.mjs` | 生成 latest.json（支持 macOS `dmgUrl` 与 Windows `exeUrl`） |
 | `README.md` / `MEMORY-稳定结论.md` / `LESSONS-*.md` | 启动流程、稳定结论、踩坑记录 |
 | `docs/2026-11-08-数字人工作台/记忆文档.md` | 工作台产品接力（公司空间、档案、素材柜、记录、预览） |
 
