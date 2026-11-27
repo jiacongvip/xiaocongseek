@@ -24,8 +24,8 @@ PREVIEW_ROUTER = "/draft/downloader"
 # 是否上传草稿文件
 IS_UPLOAD_DRAFT = False
 
-# 端口号
-PORT = 9000
+# 端口号（与 digital-human-studio 默认端口 9001 保持一致，避免无 config.json 时监听 9000 导致一直离线）
+PORT = 9001
 
 OSS_CONFIG = []
 MP4_OSS_CONFIG=[]
@@ -83,3 +83,7 @@ if os.path.exists(CONFIG_FILE_PATH):
     except Exception as e:
         # 配置文件加载失败，使用默认配置
         pass
+
+_env_port = os.environ.get("XIAOCONGCUT_PORT", "").strip()
+if _env_port.isdigit():
+    PORT = int(_env_port)

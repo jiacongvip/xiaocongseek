@@ -2928,13 +2928,27 @@ export async function apply(ctx: Context) {
       const childPath = [...extraPath, process.env.PATH || ''].filter(Boolean).join(PATH_DELIMITER)
       const ffmpegBin = findMediaTool(PLUGIN_ROOT_DIR, 'ffmpeg')
       const ffprobeBin = findMediaTool(PLUGIN_ROOT_DIR, 'ffprobe')
+      let targetPort = '9001'
+      try {
+        const parsedPort = new URL(config.xiaocongcutBaseUrl || DEFAULT_BASE).port
+        if (parsedPort) targetPort = parsedPort
+      } catch { /* ignore */ }
+      if (ffmpegBin) {
+        const ffDir = dirname(ffmpegBin)
+        if (existsSync(ffDir) && !extraPath.includes(ffDir)) extraPath.unshift(ffDir)
+      }
+      const childPath2 = [...extraPath, process.env.PATH || process.env.Path || ''].filter(Boolean).join(PATH_DELIMITER)
       child = spawn(py, ['capcut_server.py'], {
         cwd: root,
-        detached: true,
+        detached: !IS_WIN,
+        windowsHide: true,
         stdio: ['ignore', logFd, logFd],
         env: {
           ...process.env,
-          PATH: childPath,
+          PATH: childPath2,
+          XIAOCONGCUT_PORT: targetPort,
+          PYTHONUTF8: '1',
+          PYTHONIOENCODING: 'utf-8',
           ...(ffmpegBin && !process.env.XCY_FFMPEG ? { XCY_FFMPEG: ffmpegBin } : {}),
           ...(ffprobeBin && !process.env.XCY_FFPROBE ? { XCY_FFPROBE: ffprobeBin } : {}),
         },

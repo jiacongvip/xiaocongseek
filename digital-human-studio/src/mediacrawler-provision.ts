@@ -147,7 +147,7 @@ function run(
   opts: { cwd?: string; timeoutMs?: number; logFile?: string },
 ): Promise<{ ok: boolean; output: string }> {
   return new Promise((done) => {
-    const child = spawn(cmd, args, { cwd: opts.cwd, env: process.env })
+    const child = spawn(cmd, args, { cwd: opts.cwd, env: process.env, windowsHide: true })
     let buf = ''
     const cap = (chunk: Buffer) => {
       buf += chunk.toString()

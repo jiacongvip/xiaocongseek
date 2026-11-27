@@ -453,7 +453,7 @@ async function runPublishEnsure(): Promise<{ ok: boolean; text: string }> {
     env.PUBLISH_STUDIO_BOOTSTRAP_PYTHON = runner
   }
   return await new Promise((done) => {
-    const child = spawn(runner, [script], { cwd: dirname(script), env })
+    const child = spawn(runner, [script], { cwd: dirname(script), env, windowsHide: true })
     let buf = ''
     child.stdout?.on('data', (c) => { buf += c.toString() })
     child.stderr?.on('data', (c) => { buf += c.toString() })
@@ -500,7 +500,7 @@ function spawnStep(
     }
     let child
     try {
-      child = spawn(cmd, args, { cwd: opts.cwd, env })
+      child = spawn(cmd, args, { cwd: opts.cwd, env, windowsHide: true })
     } catch (e: any) {
       done({ ok: false, output: String(e?.message || e) })
       return

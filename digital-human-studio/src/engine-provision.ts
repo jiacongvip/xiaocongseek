@@ -183,7 +183,7 @@ function run(
           delete env[k]
         }
       }
-      child = spawn(cmd, args, { cwd: opts.cwd, env })
+      child = spawn(cmd, args, { cwd: opts.cwd, env, windowsHide: true })
     } catch (e: any) {
       finish(false, `无法执行 ${cmd}: ${e?.message || e}`)
       return
