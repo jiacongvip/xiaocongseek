@@ -49,10 +49,14 @@ CACHE_ROOT = Path(os.environ.get('XCY_CACHE', str(Path.home() / '.xiaocongcut' /
 STYLE_DIR = CACHE_ROOT / 'styled-text'
 
 _BUNDLED_FONTS = Path(__file__).resolve().parent / 'fonts'
+_ASSETS_FONTS = Path(__file__).resolve().parent.parent.parent / 'assets' / 'fonts'
+_USER_FONTS = Path.home() / '.xiaocongcut' / 'fonts'
+_FONT_DIRS = [_BUNDLED_FONTS, _ASSETS_FONTS, _USER_FONTS]
 
 FONT_CANDIDATES = [
     os.environ.get('XCY_FONT', ''),
     str(_BUNDLED_FONTS / 'NotoSansSC-Black.otf'),
+    str(_ASSETS_FONTS / 'NotoSansSC-Black.otf'),
     str(_BUNDLED_FONTS / 'Full-SourceHanSerifSC-Bold.otf'),
     str(_BUNDLED_FONTS / 'Full-LantingheiSC-Demibold.otf'),
     '/System/Library/Fonts/STHeiti Medium.ttc',
@@ -105,13 +109,13 @@ def _font_by_family(fam: str) -> Optional[str]:
     global _FONT_FAMILY_CACHE
     if _FONT_FAMILY_CACHE is None:
         _FONT_FAMILY_CACHE = {}
-        fd = Path(__file__).resolve().parent / 'fonts'
-        for p in sorted(fd.iterdir()) if fd.is_dir() else []:
-            try:
-                fn, _sub = ImageFont.truetype(str(p), 40).getname()
-                _FONT_FAMILY_CACHE[fn] = str(p)
-            except Exception:
-                pass
+        for fd in _FONT_DIRS:
+            for p in sorted(fd.iterdir()) if fd.is_dir() else []:
+                try:
+                    fn, _sub = ImageFont.truetype(str(p), 40).getname()
+                    _FONT_FAMILY_CACHE.setdefault(fn, str(p))
+                except Exception:
+                    pass
         for p in FONT_CANDIDATES:
             if p and os.path.exists(p):
                 try:
@@ -141,12 +145,15 @@ def _pick_font_path(requested: Optional[str] = None) -> Optional[str]:
         req = str(requested).strip()
         if os.path.exists(req):
             return req
-        direct_bundled = _BUNDLED_FONTS / req
-        if direct_bundled.exists():
-            return str(direct_bundled)
+        for fd in _FONT_DIRS:
+            direct_bundled = fd / req
+            if direct_bundled.exists():
+                return str(direct_bundled)
         alias = _FONT_ALIASES.get(req)
-        if alias and (_BUNDLED_FONTS / alias).exists():
-            return str(_BUNDLED_FONTS / alias)
+        if alias:
+            for fd in _FONT_DIRS:
+                if (fd / alias).exists():
+                    return str(fd / alias)
         hit = _font_by_family(req)
         if hit:
             return hit

@@ -11,7 +11,13 @@
  * - optional=true 的项缺失不影响剪片，只影响对应功能；engine/crawler 这种缺了就直接不能用的标 false。
  */
 import { execFileSync, spawn } from 'node:child_process'
-import { resolveEngineVenvDir, resolveEngineVenvPython } from './platform.js'
+import {
+  findBundledPython,
+  findMediaTool,
+  findUsableSystemPython,
+  resolveEngineVenvDir,
+  resolveEngineVenvPython,
+} from './platform.js'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -106,18 +112,30 @@ function pyImportOk(python: string, mods: string): boolean {
   }
 }
 
-/** Bundled standalone Python for this OS. A Mac folder does not count on Windows. */
+/** Bundled standalone Python for this OS (plugin vendor/runtime or desktop host bundled runtime). */
 function checkRuntime(): SetupItem {
-  const py = runtimePython()
-  const bundled = py.startsWith(RUNTIME) && existsSync(py)
-  const folder = bundled ? py.slice(RUNTIME.length).split(/[\\/]/).filter(Boolean)[0] : ''
+  const bundledPy = findBundledPython(PLUGIN_ROOT)
+  const inPlugin = !!bundledPy && bundledPy.startsWith(RUNTIME) && existsSync(bundledPy)
+  const inHost = !!bundledPy && !inPlugin && existsSync(bundledPy)
+  const sysPy = (!bundledPy && process.platform === 'win32') ? findUsableSystemPython() : ''
+  const sysOk = !!sysPy && pyImportOk(sysPy, 'venv')
+  const ok = inPlugin || inHost || sysOk
+  const folder = inPlugin ? bundledPy.slice(RUNTIME.length).split(/[\\/]/).filter(Boolean)[0] : ''
   return {
     key: 'runtime',
     label: '自带 Python',
-    ok: bundled,
+    ok,
     blocking: true,
-    detail: bundled ? `已带 ${folder}` : '插件里缺 standalone Python，安装包不完整',
-    hint: bundled ? undefined : '重新安装完整包（vendor/runtime 必须随包分发，不能现装）',
+    detail: inPlugin
+      ? `已带 ${folder}`
+      : inHost
+        ? '已就绪（复用桌面端内置 Python）'
+        : sysOk
+          ? `已就绪（系统 Python：${sysPy}）`
+          : '插件里缺 standalone Python，安装包不完整',
+    hint: ok ? undefined : (process.platform === 'win32'
+      ? '请安装 Python 3.11+（勾选 Add to PATH）或使用 build-win.ps1 重新打包'
+      : '重新安装完整包（vendor/runtime 必须随包分发，不能现装）'),
   }
 }
 
@@ -157,33 +175,47 @@ function checkCrawler(): SetupItem {
 
 function checkFfmpeg(): SetupItem {
   const bin = join(RUNTIME, 'bin')
-  const ffmpegNames = process.platform === 'win32' ? ['ffmpeg.exe', 'ffmpeg'] : ['ffmpeg']
-  const ffprobeNames = process.platform === 'win32' ? ['ffprobe.exe', 'ffprobe'] : ['ffprobe']
-  const ok = ffmpegNames.some(name => existsSync(join(bin, name)))
-    && ffprobeNames.some(name => existsSync(join(bin, name)))
+  const ffmpegPath = findMediaTool(PLUGIN_ROOT, 'ffmpeg')
+  const ffprobePath = findMediaTool(PLUGIN_ROOT, 'ffprobe')
+  const ok = !!ffmpegPath && !!ffprobePath
+  const inBundle = ok && ffmpegPath.startsWith(bin) && ffprobePath.startsWith(bin)
   return {
     key: 'ffmpeg',
     label: 'ffmpeg / ffprobe',
     ok,
     blocking: true,
-    detail: ok ? '已随包在（vendor/runtime/bin）' : '缺 ffmpeg/ffprobe，导不出片',
+    detail: inBundle
+      ? '已随包在（vendor/runtime/bin）'
+      : ok
+        ? `已就绪（${ffmpegPath}）`
+        : '缺 ffmpeg/ffprobe，导不出片',
     sizeHint: '约 95MB',
-    hint: ok ? undefined : '安装包不完整，需要重新解压完整包',
+    hint: ok ? undefined : (process.platform === 'win32'
+      ? '在 Windows 终端执行 winget install Gyan.FFmpeg 或重新用 build-win.ps1 打包即可随包内置'
+      : '安装包不完整，需要重新解压完整包'),
   }
 }
 
 function checkFonts(): SetupItem {
-  const dir = join(XIAOCONGCUT, 'fonts')
-  let n = 0
+  const dirs = [
+    join(XIAOCONGCUT, 'fonts'),
+    join(PLUGIN_ROOT, 'assets', 'fonts'),
+    join(homedir(), '.xiaocongcut', 'fonts'),
+  ]
+  const seen = new Set<string>()
   let bytes = 0
-  try {
-    const names = readdirSync(dir).filter((f) => /\.(otf|ttf|ttc)$/i.test(f))
-    n = names.length
-    for (const f of names) {
-      try { bytes += statSync(join(dir, f)).size } catch { /* ignore */ }
-    }
-  } catch { /* ignore */ }
-  // 清单里的总数（随包核心 8 款 + 可点选下载的扩展字体）
+  for (const dir of dirs) {
+    try {
+      const names = readdirSync(dir).filter((f) => /\.(otf|ttf|ttc)$/i.test(f))
+      for (const f of names) {
+        if (seen.has(f)) continue
+        seen.add(f)
+        try { bytes += statSync(join(dir, f)).size } catch { /* ignore */ }
+      }
+    } catch { /* ignore */ }
+  }
+  const n = seen.size
+  // 清单里的总数（随包核心字体 + 可点选下载的扩展字体）
   let total = 0
   try {
     const m = JSON.parse(readFileSync(join(XIAOCONGCUT, 'fonts-manifest.json'), 'utf8'))
@@ -403,32 +435,12 @@ function publishEnsureScript(): string {
   return candidates.find(path => existsSync(path)) || candidates[0] || ''
 }
 
-/** Prefer the CPython directory that matches this OS and CPU. Fall back to any bundled interpreter. */
+/** Prefer the bundled standalone CPython (plugin vendor or host Electron runtime), then a usable system Python. */
 function runtimePython(): string {
-  let names: string[] = []
-  try {
-    names = readdirSync(RUNTIME).filter(name => name.startsWith('cpython-'))
-  } catch {
-    names = []
-  }
-  const osTag = process.platform === 'win32' ? 'windows' : process.platform === 'darwin' ? 'macos' : 'linux'
-  const archTag = process.arch === 'arm64' ? 'aarch64' : process.arch === 'x64' ? 'x86_64' : process.arch
-  const ranked = [...names].sort((left, right) => {
-    const score = (name: string) => (name.includes(osTag) ? 2 : 0) + (name.includes(archTag) ? 1 : 0)
-    return score(right) - score(left)
-  })
-  for (const name of ranked) {
-    const bins = process.platform === 'win32'
-      ? [join(RUNTIME, name, 'python.exe')]
-      : [
-          join(RUNTIME, name, 'bin', 'python3.12'),
-          join(RUNTIME, name, 'bin', 'python3'),
-          join(RUNTIME, name, 'bin', 'python'),
-        ]
-    for (const bin of bins) {
-      if (existsSync(bin)) return bin
-    }
-  }
+  const bundled = findBundledPython(PLUGIN_ROOT)
+  if (bundled) return bundled
+  const sys = findUsableSystemPython()
+  if (sys) return sys
   return process.platform === 'win32' ? 'python' : 'python3'
 }
 
@@ -436,8 +448,12 @@ async function runPublishEnsure(): Promise<{ ok: boolean; text: string }> {
   const script = publishEnsureScript()
   if (!script || !existsSync(script)) return { ok: false, text: '安装包不完整：缺 publish-studio/publishing/ensure_runtime.py' }
   const runner = runtimePython()
+  const env = { ...process.env }
+  if (!env.PUBLISH_STUDIO_BOOTSTRAP_PYTHON && existsSync(runner)) {
+    env.PUBLISH_STUDIO_BOOTSTRAP_PYTHON = runner
+  }
   return await new Promise((done) => {
-    const child = spawn(runner, [script], { cwd: dirname(script), env: process.env })
+    const child = spawn(runner, [script], { cwd: dirname(script), env })
     let buf = ''
     child.stdout?.on('data', (c) => { buf += c.toString() })
     child.stderr?.on('data', (c) => { buf += c.toString() })

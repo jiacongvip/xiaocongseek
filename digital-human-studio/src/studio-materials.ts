@@ -1,6 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from 'node:fs'
-import { whichSync } from './platform.js'
-import { basename, extname, isAbsolute, join, resolve } from 'node:path'
+import { findMediaTool, whichSync } from './platform.js'
+import { basename, dirname, extname, isAbsolute, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { execFileSync, spawn } from 'node:child_process'
 import { createHash, randomUUID } from 'node:crypto'
 import { homedir } from 'node:os'
@@ -358,6 +359,9 @@ export function findStudioMaterial(spaceId: string, id: string): StudioMaterial 
 }
 
 function resolveBin(name: 'ffmpeg' | 'ffprobe'): string {
+  const pluginRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+  const bundled = findMediaTool(pluginRoot, name)
+  if (bundled) return bundled
   const home = homedir()
   const candidates = [
     join(home, '.local', 'bin', name),

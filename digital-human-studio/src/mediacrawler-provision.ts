@@ -11,7 +11,7 @@
  * - 装前先看磁盘：装到一半磁盘满，会把正在跑的渲染和发布一起带崩，必须提前拒绝。
  */
 import { execFileSync, spawn } from 'node:child_process'
-import { whichSync } from './platform.js'
+import { findBundledPython, findUsableSystemPython, whichSync } from './platform.js'
 import { appendFileSync, existsSync, mkdirSync, statfsSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -206,7 +206,8 @@ export async function provisionMcEnv(opts: {
     if (uv) {
       r = await run(uv, ['venv', status.venvDir, '--python', PREFERRED_PY], { timeoutMs: 300_000, logFile: opts.logFile })
     } else {
-      r = await run('python3', ['-m', 'venv', status.venvDir], { timeoutMs: 300_000, logFile: opts.logFile })
+      const py = findBundledPython(pluginRoot()) || findUsableSystemPython() || (process.platform === 'win32' ? 'python' : 'python3')
+      r = await run(py, ['-m', 'venv', status.venvDir], { timeoutMs: 300_000, logFile: opts.logFile })
     }
     steps.push({
       key: 'venv',

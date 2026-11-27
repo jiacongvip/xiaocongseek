@@ -8,7 +8,7 @@
 import { execFileSync } from 'node:child_process'
 import { accessSync, constants, existsSync, readdirSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { delimiter, join } from 'node:path'
+import { delimiter, join, resolve } from 'node:path'
 
 export const IS_WIN = process.platform === 'win32'
 export const IS_MAC = process.platform === 'darwin'
@@ -49,17 +49,31 @@ export function engineStartCommand(root: string, hasVenv: boolean): string {
 }
 
 /**
- * 找可执行文件：Windows 用 where（可能返回多行，取第一行），其它平台用 which。
+ * 找可执行文件：Windows 用 where（可能返回多行，自动跳过 Microsoft Store 假 python stub），其它平台用 which。
  * 找不到返回空串，调用方照旧走 try/catch。
  */
 export function whichSync(name: string): string {
   try {
     const bin = IS_WIN ? 'where' : 'which'
     const out = String(execFileSync(bin, [name], { encoding: 'utf8' })).trim()
-    return IS_WIN ? (out.split(/\r?\n/)[0] || '') : out
+    if (!IS_WIN) return out
+    const lines = out.split(/\r?\n/).map(l => l.trim()).filter(Boolean)
+    const isStorePyStub = (p: string) => /\\Microsoft\\WindowsApps\\python/i.test(p)
+    const clean = lines.find(p => !isStorePyStub(p))
+    return clean || ''
   } catch {
     return ''
   }
+}
+
+/** 找系统可用的 Python 解释器（Windows 自动跳过 Microsoft Store 假 stub，且优先 python 再 python3）。 */
+export function findUsableSystemPython(): string {
+  const names = IS_WIN ? ['python', 'python3'] : ['python3', 'python']
+  for (const name of names) {
+    const hit = whichSync(name)
+    if (hit && existsSync(hit)) return hit
+  }
+  return ''
 }
 
 /** PATH separator for the current process. Windows uses `;`, other systems use `:`. */
@@ -70,31 +84,38 @@ export function runtimeBin(pluginRoot: string): string {
   return join(pluginRoot, 'vendor', 'runtime', 'bin')
 }
 
-/** Find ffmpeg or ffprobe: bundled runtime first, then the usual install locations. */
+/** Find ffmpeg or ffprobe: bundled runtime first, then user-local & usual install locations. */
 export function findMediaTool(pluginRoot: string, name: 'ffmpeg' | 'ffprobe'): string {
   const file = IS_WIN ? `${name}.exe` : name
   const candidates = [
     join(runtimeBin(pluginRoot), file),
     join(runtimeBin(pluginRoot), name),
+    join(homedir(), '.xiaocongcut', 'bin', file),
+    join(homedir(), '.local', 'bin', file),
     join(homedir(), '.local', 'bin', name),
-    `/opt/homebrew/bin/${name}`,
-    `/usr/local/bin/${name}`,
-    `/usr/bin/${name}`,
-  ]
+    ...(IS_WIN ? [
+      join('C:\\ffmpeg\\bin', file),
+      join(process.env.LOCALAPPDATA || '', 'Microsoft', 'WinGet', 'Links', file),
+    ] : [
+      `/opt/homebrew/bin/${name}`,
+      `/usr/local/bin/${name}`,
+      `/usr/bin/${name}`,
+    ]),
+  ].filter(Boolean)
   for (const candidate of candidates) {
     if (existsSync(candidate)) return candidate
   }
   return whichSync(file) || whichSync(name)
 }
 
-/** 随包自带的独立 Python 解释器（vendor/runtime/cpython-*），按当前系统和架构优先匹配。 */
+/** 随包自带的独立 Python 解释器：优先 plugin/vendor/runtime/cpython-*，其次宿主 Electron 随包带的 primary-runtime Python。 */
 export function findBundledPython(pluginRoot: string): string {
   const runtimeDir = join(pluginRoot, 'vendor', 'runtime')
   let names: string[] = []
   try {
     names = readdirSync(runtimeDir).filter(name => name.startsWith('cpython-'))
   } catch {
-    return ''
+    names = []
   }
   const osTag = IS_WIN ? 'windows' : IS_MAC ? 'macos' : 'linux'
   const archTag = process.arch === 'arm64' ? 'aarch64' : process.arch === 'x64' ? 'x86_64' : process.arch
@@ -113,6 +134,21 @@ export function findBundledPython(pluginRoot: string): string {
           join(runtimeDir, name, 'bin', 'python3'),
           join(runtimeDir, name, 'bin', 'python'),
         ]
+    for (const bin of bins) {
+      if (existsSync(bin)) return bin
+    }
+  }
+  // 兜底：复用宿主 Xiaocongseek 桌面端随包自带的 standalone Python（resources/runtime/primary-runtime/dependencies/python）
+  const hostPythonRoots = [
+    resolve(pluginRoot, '..', '..', 'runtime', 'primary-runtime', 'dependencies', 'python'),
+    ...((process as any).resourcesPath
+      ? [join(String((process as any).resourcesPath), 'runtime', 'primary-runtime', 'dependencies', 'python')]
+      : []),
+  ]
+  for (const pyRoot of hostPythonRoots) {
+    const bins = IS_WIN
+      ? [join(pyRoot, 'python.exe'), join(pyRoot, 'Scripts', 'python.exe')]
+      : [join(pyRoot, 'bin', 'python3.12'), join(pyRoot, 'bin', 'python3'), join(pyRoot, 'bin', 'python')]
     for (const bin of bins) {
       if (existsSync(bin)) return bin
     }

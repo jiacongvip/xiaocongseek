@@ -1,4 +1,4 @@
-# Xiaocongseek Windows x64 未签名测试包 —— 一键打包
+﻿# Xiaocongseek Windows x64 未签名测试包 —— 一键打包
 # 前置：Node 24.x、pnpm 11.28.5、Git、PowerShell 7(pwsh)、Python 3.11+、
 #       Visual Studio Build Tools(C++ 桌面开发)+Windows SDK、tar
 # 用法：在仓库根目录（本脚本所在目录）执行  pwsh -File build-win.ps1
@@ -46,6 +46,78 @@ if (-not (Test-Path $envFile) -and (Test-Path $envExample)) {
 Write-Host "== 2/4 安装依赖（首次约 10-20 分钟，需访问 npm registry）==" -ForegroundColor Cyan
 pnpm install --frozen-lockfile
 if ($LASTEXITCODE -ne 0) { Fail "pnpm install 失败" }
+
+# ---------- 2.5 准备 Windows 插件随包资源（编译插件 + 字体 + ffmpeg/ffprobe，不影响 macOS） ----------
+Write-Host "== 2.5/4 编译插件 & 准备 Windows 随包资源 ==" -ForegroundColor Cyan
+$tscJs = Join-Path $PSScriptRoot 'node_modules\typescript\bin\tsc'
+$typeRoots = Join-Path $PSScriptRoot 'node_modules\@types'
+$pluginRoot = Resolve-Path (Join-Path $PSScriptRoot '..\digital-human-studio')
+$publishRoot = Resolve-Path (Join-Path $PSScriptRoot '..\publish-studio')
+
+if (Test-Path $tscJs) {
+  $dhsFiles = (Get-ChildItem (Join-Path $pluginRoot 'src') -Filter '*.ts').FullName
+  & node $tscJs --ignoreConfig --target es2022 --lib es2022 --module esnext --moduleResolution bundler --verbatimModuleSyntax --outDir (Join-Path $pluginRoot 'dist') --rootDir (Join-Path $pluginRoot 'src') --skipLibCheck --esModuleInterop --noEmitOnError false --types node --typeRoots $typeRoots @dhsFiles | Out-Null
+  $global:LASTEXITCODE = 0
+  if (-not (Test-Path (Join-Path $pluginRoot 'dist\index.js'))) { Fail "digital-human-studio 编译失败（未生成 dist\index.js）" }
+  Write-Host "  digital-human-studio dist/ 已编译"
+
+  $pubFiles = (Get-ChildItem (Join-Path $publishRoot 'src') -Filter '*.ts').FullName
+  & node $tscJs --ignoreConfig --target es2022 --module nodenext --moduleResolution nodenext --outDir (Join-Path $publishRoot 'dist') --rootDir (Join-Path $publishRoot 'src') --skipLibCheck --esModuleInterop --noEmitOnError false --types node --typeRoots $typeRoots @pubFiles | Out-Null
+  $global:LASTEXITCODE = 0
+  if (-not (Test-Path (Join-Path $publishRoot 'dist\index.js'))) { Fail "publish-studio 编译失败（未生成 dist\index.js）" }
+  Write-Host "  publish-studio dist/ 已编译"
+} else {
+  Write-Host "  [警告] 未找到 $tscJs，跳过插件编译" -ForegroundColor Yellow
+}
+
+$fontsDstDir = Join-Path $pluginRoot 'vendor\xiaocongcut\fonts'
+$fallbackFont = Join-Path $pluginRoot 'assets\fonts\NotoSansSC-Black.otf'
+if (-not (Test-Path $fontsDstDir)) { New-Item -ItemType Directory -Path $fontsDstDir -Force | Out-Null }
+if ((Test-Path $fallbackFont) -and -not (Test-Path (Join-Path $fontsDstDir 'NotoSansSC-Black.otf'))) {
+  Copy-Item $fallbackFont (Join-Path $fontsDstDir 'NotoSansSC-Black.otf') -Force
+  Write-Host "  已内置基础字体 NotoSansSC-Black.otf 到 vendor\xiaocongcut\fonts"
+}
+
+$runtimeBinDir = Join-Path $pluginRoot 'vendor\runtime\bin'
+if (-not (Test-Path $runtimeBinDir)) { New-Item -ItemType Directory -Path $runtimeBinDir -Force | Out-Null }
+$ffmpegDst = Join-Path $runtimeBinDir 'ffmpeg.exe'
+$ffprobeDst = Join-Path $runtimeBinDir 'ffprobe.exe'
+if ((Test-Path $ffmpegDst) -and (Test-Path $ffprobeDst)) {
+  Write-Host "  ffmpeg.exe / ffprobe.exe 已就绪（vendor\runtime\bin）"
+} else {
+  $sysFfmpeg = Get-Command ffmpeg -ErrorAction SilentlyContinue
+  $sysFfprobe = Get-Command ffprobe -ErrorAction SilentlyContinue
+  if ($sysFfmpeg -and $sysFfprobe -and (Test-Path $sysFfmpeg.Source) -and (Test-Path $sysFfprobe.Source)) {
+    Copy-Item $sysFfmpeg.Source $ffmpegDst -Force
+    Copy-Item $sysFfprobe.Source $ffprobeDst -Force
+    Write-Host "  已从本机 PATH 复制 ffmpeg.exe / ffprobe.exe 到随包目录"
+  } elseif (-not $CheckOnly) {
+    Write-Host "  未检测到本机 ffmpeg，正在下载 Windows 静态版 ffmpeg-release-essentials.zip ..." -ForegroundColor Yellow
+    $tmpRoot = Join-Path $env:TEMP ("xiaocong-ffmpeg-" + [guid]::NewGuid().ToString('N').Substring(0, 8))
+    $zipPath = Join-Path $tmpRoot 'ffmpeg.zip'
+    try {
+      New-Item -ItemType Directory -Path $tmpRoot -Force | Out-Null
+      $ProgressPreference = 'SilentlyContinue'
+      Invoke-WebRequest -Uri 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip' -OutFile $zipPath -TimeoutSec 300
+      Expand-Archive -Path $zipPath -DestinationPath $tmpRoot -Force
+      $foundFfmpeg = Get-ChildItem -Path $tmpRoot -Recurse -Filter 'ffmpeg.exe' | Select-Object -First 1
+      $foundFfprobe = Get-ChildItem -Path $tmpRoot -Recurse -Filter 'ffprobe.exe' | Select-Object -First 1
+      if ($foundFfmpeg -and $foundFfprobe) {
+        Copy-Item $foundFfmpeg.FullName $ffmpegDst -Force
+        Copy-Item $foundFfprobe.FullName $ffprobeDst -Force
+        Write-Host "  已下载并内置 ffmpeg.exe / ffprobe.exe 到 vendor\runtime\bin" -ForegroundColor Green
+      } else {
+        Write-Host "  [警告] 下载包中未找到 ffmpeg.exe / ffprobe.exe，可手动放入 digital-human-studio\vendor\runtime\bin\" -ForegroundColor Yellow
+      }
+    } catch {
+      Write-Host ("  [警告] 自动下载 ffmpeg 失败：" + $_.Exception.Message + "（可先执行 winget install Gyan.FFmpeg 后重新打包）") -ForegroundColor Yellow
+    } finally {
+      if (Test-Path $tmpRoot) { Remove-Item $tmpRoot -Recurse -Force -ErrorAction SilentlyContinue }
+    }
+  } else {
+    Write-Host "  [提示] 正式打包时将自动下载或复制本机 ffmpeg.exe / ffprobe.exe 到 vendor\runtime\bin" -ForegroundColor Yellow
+  }
+}
 
 # ---------- 3. 配置预检 ----------
 Write-Host "== 3/4 配置与工具预检 ==" -ForegroundColor Cyan

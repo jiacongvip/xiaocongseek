@@ -13,6 +13,7 @@ import { execFileSync, spawn } from 'node:child_process'
 import {
   findBundledPython,
   findMediaTool,
+  findUsableSystemPython,
   resolveEngineVenvDir,
   resolveEngineVenvPython,
   whichSync,
@@ -69,9 +70,9 @@ function venvPython(root: string): string {
   return resolveEngineVenvPython(root)
 }
 
-/** 基础 Python：优先随包自带的 vendor/runtime/cpython-*，再兜底系统 python3/python。 */
+/** 基础 Python：优先随包自带的 vendor/runtime/cpython-* 或宿主内置 Python，再兜底可用系统 python（跳过 Windows 商店假桩）。 */
 function basePython(): string {
-  return findBundledPython(PLUGIN_ROOT) || which('python3') || which('python') || ''
+  return findBundledPython(PLUGIN_ROOT) || findUsableSystemPython() || ''
 }
 
 /** 仓库入口脚本。 */

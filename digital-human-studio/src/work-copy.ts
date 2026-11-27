@@ -4,6 +4,9 @@
 import { execFile } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { homedir } from 'node:os'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { findMediaTool } from './platform.js'
 
 export type WorkCopyShot = { shot: string; visual: string; voice: string; seconds: number }
 
@@ -163,8 +166,15 @@ export function normalizeCopy(raw: any, model?: string): WorkCopy | null {
 /** 成片时长（ffprobe）。拿不到就当未知，不影响生成。 */
 export async function probeSeconds(file: string): Promise<number | null> {
   if (!file || !existsSync(file)) return null
-  const bin = [process.env.XCY_FFPROBE || '', `${homedir()}/.local/bin/ffprobe`, '/opt/homebrew/bin/ffprobe', '/usr/local/bin/ffprobe', '/usr/bin/ffprobe']
-    .find(candidate => candidate && existsSync(candidate))
+  const pluginRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+  const bin = [
+    process.env.XCY_FFPROBE || '',
+    findMediaTool(pluginRoot, 'ffprobe'),
+    `${homedir()}/.local/bin/ffprobe`,
+    '/opt/homebrew/bin/ffprobe',
+    '/usr/local/bin/ffprobe',
+    '/usr/bin/ffprobe',
+  ].find(candidate => candidate && existsSync(candidate))
   if (!bin) return null
   return new Promise(resolve => {
     execFile(bin, ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=nw=1:nk=1', file], { timeout: 15000 }, (error, stdout) => {

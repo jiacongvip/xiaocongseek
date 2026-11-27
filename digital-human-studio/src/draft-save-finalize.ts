@@ -14,6 +14,7 @@ import { basename, dirname, join, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
+import { findMediaTool } from './platform.js'
 
 function looksForeignTemplatePath(p: string) {
   return /\/Users\/sunguannan\//.test(p) || /\/0707$/.test(p)
@@ -64,6 +65,11 @@ function ensureContentMirrors(draftDir: string, contentFile: string, contentBody
 
 function findFfmpeg(): string | null {
   const here = dirname(fileURLToPath(import.meta.url))
+  const fromPlatform = findMediaTool(resolve(here, '..'), 'ffmpeg')
+  if (fromPlatform) {
+    const r = spawnSync(fromPlatform, ['-version'], { encoding: 'utf8' })
+    if (r.status === 0) return fromPlatform
+  }
   const candidates = [
     resolve(here, '../vendor/runtime/bin/ffmpeg'),
     resolve(here, '../../vendor/runtime/bin/ffmpeg'),
