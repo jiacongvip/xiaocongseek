@@ -1,16 +1,33 @@
 /* Publish packs — 黑白灰编辑风，与主页/日历同一套语言。 */
 .root {
   --purple: #1b1b1d;
-  --purple-deep: #000000;
-  --purple-soft: #f4f4f5;
-  --purple-line: #e3e3e5;
+  --purple-fg: #fff;
+  --purple-fg-muted: color-mix(in srgb, var(--purple-fg) 68%, transparent);
+  --purple-deep: #000;
+  --purple-soft: var(--dsw-alias-bg-module-platform, #f4f4f5);
+  --purple-line: var(--dsw-alias-border-l3, #e3e3e5);
   --ink: var(--dsw-alias-label-primary, #17181a);
   --ink2: var(--dsw-alias-label-secondary, #606269);
   --ink3: var(--dsw-alias-label-tertiary, #9a9ca3);
   --line: var(--dsw-alias-border-l2, #ececee);
   --line-strong: var(--dsw-alias-border-l4, #e0e1e3);
+  --bg: var(--dsw-alias-bg-base, #fbfbfb);
   --card: var(--dsw-alias-bg-layer-2, #fff);
-  --tool: #f5f5f6;
+  --surface: color-mix(in srgb, var(--dsw-alias-bg-layer-1, #fff) 96%, var(--dsw-alias-bg-module-platform, #f5f5f6));
+  --input-bg: var(--dsw-specific-input-major, #fff);
+  --tool: var(--dsw-alias-bg-module-platform, #f5f5f6);
+  --hover-bg: var(--dsw-alias-interactive-bg-hover-solid, #f4f4f5);
+  --danger: var(--dsw-alias-state-error-primary, #b4392b);
+  --danger-soft: var(--dsw-alias-code-diff-deleted, #fdecea);
+  --danger-line: color-mix(in srgb, var(--danger) 30%, transparent);
+  --success: var(--dsw-alias-state-success-primary, #37795a);
+  --success-soft: var(--dsw-alias-state-success-tertiary, #e7f6ee);
+  --success-line: color-mix(in srgb, var(--success) 30%, transparent);
+  --warn: var(--dsw-alias-state-warn-label, #b08243);
+  --warn-soft: var(--dsw-alias-state-warn-tertiary, #fef5e7);
+  --warn-line: color-mix(in srgb, var(--warn) 32%, transparent);
+  --focus-ring: color-mix(in srgb, var(--purple) 14%, transparent);
+  --card-glass: color-mix(in srgb, var(--card) 82%, transparent);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -18,6 +35,13 @@
   min-width: 0;
   color: var(--ink);
 }
+
+:global(body[data-ds-dark-theme]) .root {
+  --purple: var(--dsw-alias-button-primary-fill, #f9fafb);
+  --purple-fg: var(--dsw-alias-label-primary-foreground, #0f1115);
+  --purple-deep: var(--dsw-alias-button-primary-hover, #ebeef2);
+}
+
 
 /* 顶部动作条 */
 .toolbar {
@@ -58,17 +82,17 @@
 }
 
 .chip:hover {
-  background: rgba(255, 255, 255, 0.75);
+  background: var(--card-glass);
   color: var(--ink);
 }
 
 .chip[data-on='on'] {
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
 }
 
 .chip[data-on='on'] em {
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--purple-fg-muted);
 }
 
 /* 发布包列表 */
@@ -97,7 +121,7 @@
 
 .row:hover {
   border-color: var(--line-strong);
-  background: #fcfcfc;
+  background: var(--surface);
 }
 
 .rowText {
@@ -231,9 +255,9 @@
   align-items: center;
   gap: 10px;
   padding: 9px 12px;
-  border-left: 2px solid #1b1b1d;
+  border-left: 2px solid var(--purple);
   border-radius: 0 6px 6px 0;
-  background: #f7f7f8;
+  background: var(--tool);
   color: var(--ink2);
   font-size: 12px;
 }
@@ -242,15 +266,15 @@
   height: 24px;
   padding: 0 9px;
   border-radius: 6px;
-  background: #fff;
+  background: var(--card);
   color: var(--ink2);
   font-size: 11.5px;
   box-shadow: inset 0 0 0 1px var(--line-strong);
 }
 
 .planNote button:hover {
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
   box-shadow: none;
 }
 
@@ -290,7 +314,7 @@
   padding: 8px 10px;
   border: 1px solid var(--line-strong);
   border-radius: 8px;
-  background: #fff;
+  background: var(--input-bg);
   color: var(--ink);
   font: inherit;
   font-size: 13px;
@@ -306,8 +330,8 @@
 .field textarea:focus,
 .field select:focus {
   outline: none;
-  border-color: #1b1b1d;
-  box-shadow: 0 0 0 3px rgba(27, 27, 29, 0.07);
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .previewVideo {
@@ -338,7 +362,7 @@
   height: 28px;
   padding: 0 12px;
   border-radius: 7px;
-  background: #fff;
+  background: var(--card);
   color: var(--ink2);
   box-shadow: inset 0 0 0 1px var(--line-strong);
   font-size: 12px;
@@ -346,8 +370,8 @@
 }
 
 .resources a:hover {
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
   box-shadow: none;
 }
 
@@ -380,16 +404,16 @@
   padding: 10px 12px;
   border: 1px dashed var(--line-strong);
   border-radius: 10px;
-  background: #fbfbfb;
+  background: var(--surface);
   color: var(--ink3);
 }
 
 .warn {
   padding: 9px 12px;
-  border-left: 2px solid #b08243;
+  border-left: 2px solid var(--warn);
   border-radius: 0 6px 6px 0;
-  background: #fdf8ef;
-  color: #7a5a24;
+  background: var(--warn-soft);
+  color: var(--warn);
 }
 
 /* 弹窗里的排期选择 */
@@ -410,7 +434,7 @@
   padding: 11px 13px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--card);
   text-align: left;
   cursor: pointer;
   transition: border-color 0.16s, background 0.16s;
@@ -418,5 +442,5 @@
 
 .planRow:hover {
   border-color: var(--line-strong);
-  background: #fcfcfc;
+  background: var(--surface);
 }

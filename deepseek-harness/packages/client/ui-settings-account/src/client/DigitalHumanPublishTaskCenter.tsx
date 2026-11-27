@@ -129,7 +129,7 @@ export function DigitalHumanPublishTaskCenter(props: { spaceId: string; onGoAcco
   ]
 
   return (
-    <section style={{ border: '1px solid #ececee', borderRadius: 14, background: '#fff', padding: 14, marginBottom: 14 }}>
+    <section style={{ border: '1px solid var(--line, var(--dsw-alias-border-l2))', borderRadius: 14, background: 'var(--card, var(--dsw-alias-bg-layer-2))', color: 'var(--ink, var(--dsw-alias-label-primary))', padding: 14, marginBottom: 14 }}>
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
         <b style={{ fontSize: 15 }}>发布任务</b>
         <div style={{ display: 'flex', gap: 6 }}>
@@ -139,9 +139,9 @@ export function DigitalHumanPublishTaskCenter(props: { spaceId: string; onGoAcco
               type="button"
               onClick={() => setFilter(tab.id)}
               style={{
-                border: '1px solid ' + (filter === tab.id ? '#1b1b1d' : '#e6e6e8'),
-                background: filter === tab.id ? '#1b1b1d' : '#fff',
-                color: filter === tab.id ? '#fff' : 'var(--ink2)',
+                border: '1px solid ' + (filter === tab.id ? 'var(--purple, var(--dsw-alias-button-primary-fill))' : 'var(--line-strong, var(--dsw-alias-border-l3))'),
+                background: filter === tab.id ? 'var(--purple, var(--dsw-alias-button-primary-fill))' : 'var(--card, var(--dsw-alias-bg-layer-2))',
+                color: filter === tab.id ? 'var(--purple-fg, var(--dsw-alias-label-primary-foreground))' : 'var(--ink2)',
                 borderRadius: 999, padding: '4px 10px', fontSize: 12, cursor: 'pointer',
               }}
             >
@@ -151,7 +151,7 @@ export function DigitalHumanPublishTaskCenter(props: { spaceId: string; onGoAcco
         </div>
       </header>
 
-      {note ? <p style={{ margin: '10px 0 0', fontSize: 12, color: note.includes('失败') ? '#b3362b' : '#267f57' }}>{note}</p> : null}
+      {note ? <p style={{ margin: '10px 0 0', fontSize: 12, color: note.includes('失败') ? 'var(--danger, #b3362b)' : 'var(--success, #267f57)' }}>{note}</p> : null}
 
       {loading ? <p style={{ margin: '14px 0 0', fontSize: 13, color: 'var(--ink3)' }}>读取任务中…</p> : null}
       {!loading && shown.length === 0 ? (
@@ -159,8 +159,8 @@ export function DigitalHumanPublishTaskCenter(props: { spaceId: string; onGoAcco
           <p style={{ margin: 0, fontSize: 13, color: 'var(--ink3)' }}>{emptyMessageFor(filter)}</p>
           {tasks.length === 0 ? (
             <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-              {onGoCalendar ? <button type="button" onClick={onGoCalendar} style={{ border: '1px solid #e6e6e8', background: '#fff', borderRadius: 999, padding: '5px 12px', fontSize: 12, cursor: 'pointer' }}>去日历排期</button> : null}
-              {onGoAccounts ? <button type="button" onClick={onGoAccounts} style={{ border: '1px solid #e6e6e8', background: '#fff', borderRadius: 999, padding: '5px 12px', fontSize: 12, cursor: 'pointer' }}>看授权账号</button> : null}
+              {onGoCalendar ? <button type="button" onClick={onGoCalendar} style={{ border: '1px solid var(--line-strong, var(--dsw-alias-border-l3))', background: 'var(--card, var(--dsw-alias-bg-layer-2))', color: 'var(--ink)', borderRadius: 999, padding: '5px 12px', fontSize: 12, cursor: 'pointer' }}>去日历排期</button> : null}
+              {onGoAccounts ? <button type="button" onClick={onGoAccounts} style={{ border: '1px solid var(--line-strong, var(--dsw-alias-border-l3))', background: 'var(--card, var(--dsw-alias-bg-layer-2))', color: 'var(--ink)', borderRadius: 999, padding: '5px 12px', fontSize: 12, cursor: 'pointer' }}>看授权账号</button> : null}
             </div>
           ) : null}
         </div>
@@ -170,7 +170,7 @@ export function DigitalHumanPublishTaskCenter(props: { spaceId: string; onGoAcco
         {shown.map(task => {
           const info = taskGroupLabel(task)
           return (
-            <div key={task.id} style={{ padding: '12px 0', borderTop: '1px solid #f2f2f3' }}>
+            <div key={task.id} style={{ padding: '12px 0', borderTop: '1px solid var(--line, var(--dsw-alias-border-l2))' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
                 <b style={{ fontSize: 13.5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{task.title || '未命名'}</b>
                 <span style={{ fontSize: 12, color: info.color, flex: 'none' }}>{info.label}</span>
@@ -184,27 +184,27 @@ export function DigitalHumanPublishTaskCenter(props: { spaceId: string; onGoAcco
                     type="button"
                     disabled={!!busyId}
                     onClick={() => void retry(task)}
-                    style={{ border: '1px solid #e6e6e8', background: '#fff', borderRadius: 999, padding: '4px 12px', fontSize: 12, cursor: busyId ? 'wait' : 'pointer', flex: 'none' }}
+                    style={{ border: '1px solid var(--line-strong, var(--dsw-alias-border-l3))', background: 'var(--card, var(--dsw-alias-bg-layer-2))', color: 'var(--ink)', borderRadius: 999, padding: '4px 12px', fontSize: 12, cursor: busyId ? 'wait' : 'pointer', flex: 'none' }}
                   >
                     {busyId === task.id ? '重发中…' : '手动重发'}
                   </button>
                 ) : null}
               </div>
-              <div style={{ height: 4, borderRadius: 999, background: '#f0f0f2', marginTop: 8, overflow: 'hidden' }}>
+              <div style={{ height: 4, borderRadius: 999, background: 'var(--tool, var(--dsw-alias-bg-module-platform))', marginTop: 8, overflow: 'hidden' }}>
                 <i style={{ display: 'block', height: '100%', width: `${info.pct}%`, background: info.color, borderRadius: 999, transition: 'width .4s' }} />
               </div>
               {task.verified && task.verified.ok ? (
-                <div style={{ marginTop: 8, background: '#f0f7f2', border: '1px solid #d6e8dc', borderRadius: 8, padding: '8px 10px' }}>
-                  <b style={{ fontSize: 12, color: '#267f57' }}>平台已核实</b>
-                  <div style={{ fontSize: 12, color: '#267f57', lineHeight: 1.55, marginTop: 2 }}>
+                <div style={{ marginTop: 8, background: 'var(--success-soft, var(--dsw-alias-state-success-tertiary))', border: '1px solid var(--success-line, color-mix(in srgb, var(--dsw-alias-state-success-primary) 30%, transparent))', borderRadius: 8, padding: '8px 10px' }}>
+                  <b style={{ fontSize: 12, color: 'var(--success, var(--dsw-alias-state-success-primary))' }}>平台已核实</b>
+                  <div style={{ fontSize: 12, color: 'var(--success, var(--dsw-alias-state-success-primary))', lineHeight: 1.55, marginTop: 2 }}>
                     后台已出现这条作品{task.verified.works ? ` · 作品共 ${task.verified.works} 条` : ''}{task.verified.pendingReview ? ' · 审核中' : ''}
                   </div>
                 </div>
               ) : null}
               {task.error ? (
-                <div style={{ marginTop: 8, background: '#fdf1ef', border: '1px solid #f6d9d3', borderRadius: 8, padding: '8px 10px' }}>
-                  <b style={{ fontSize: 12, color: '#b3362b' }}>{task.state === 'failed' ? '没发出去' : '说明'}</b>
-                  <div style={{ fontSize: 12, color: '#b3362b', lineHeight: 1.55, marginTop: 2 }}>{task.error}</div>
+                <div style={{ marginTop: 8, background: 'var(--danger-soft, var(--dsw-alias-code-diff-deleted))', border: '1px solid var(--danger-line, color-mix(in srgb, var(--dsw-alias-state-error-primary) 30%, transparent))', borderRadius: 8, padding: '8px 10px' }}>
+                  <b style={{ fontSize: 12, color: 'var(--danger, var(--dsw-alias-state-error-primary))' }}>{task.state === 'failed' ? '没发出去' : '说明'}</b>
+                  <div style={{ fontSize: 12, color: 'var(--danger, var(--dsw-alias-state-error-primary))', lineHeight: 1.55, marginTop: 2 }}>{task.error}</div>
                 </div>
               ) : null}
             </div>

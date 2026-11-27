@@ -579,7 +579,7 @@ export function DigitalHumanCalendar({
         <div className={css.flyDot} style={{ left: flight.x, top: flight.y, transform: flight.go ? `translate(${flight.dx}px, ${flight.dy}px) scale(.55)` : 'translate(0px, 0px) scale(1)', opacity: flight.go ? 0.25 : 1 }} />
       ) : null}
       {taskPanelOpen ? (
-        <div className={css.taskPanel} style={{ position: 'fixed', top: 76, right: 16, width: 'min(312px, calc(100vw - 32px))', zIndex: 300, background: '#fff', border: '1px solid #ececee', borderRadius: 14, boxShadow: '0 16px 48px rgba(20,20,30,.16)', padding: 12, maxHeight: '70vh', overflow: 'auto' }}>
+        <div className={css.taskPanel} style={{ position: 'fixed', top: 76, right: 16, width: 'min(312px, calc(100vw - 32px))', zIndex: 300, background: 'var(--card, var(--dsw-alias-bg-layer-2))', color: 'var(--ink, var(--dsw-alias-label-primary))', border: '1px solid var(--line, var(--dsw-alias-border-l2))', borderRadius: 14, boxShadow: '0 16px 48px rgba(0,0,0,.28)', padding: 12, maxHeight: '70vh', overflow: 'auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
             <b style={{ fontSize: 14 }}>发布任务</b>
             <span>
@@ -588,10 +588,10 @@ export function DigitalHumanCalendar({
             </span>
           </div>
           {lastSend ? (
-            <div style={{ background: '#fafafa', border: '1px solid #f0f0f2', borderRadius: 10, padding: '8px 10px', marginBottom: 8 }}>
+            <div style={{ background: 'var(--tool, var(--dsw-alias-bg-module-platform))', border: '1px solid var(--line, var(--dsw-alias-border-l2))', borderRadius: 10, padding: '8px 10px', marginBottom: 8 }}>
               <b style={{ fontSize: 12, color: 'var(--ink2)' }}>最近一次发送</b>
               {lastSend.results.map(r => (
-                <div key={r.bindingId} style={{ fontSize: 12, marginTop: 4, color: r.state === 'failed' ? '#b3362b' : '#267f57' }}>
+                <div key={r.bindingId} style={{ fontSize: 12, marginTop: 4, color: r.state === 'failed' ? 'var(--danger, #b3362b)' : 'var(--success, #267f57)' }}>
                   {r.accountLabel || '账号'}：{r.state === 'failed' ? '失败' : r.state === 'done' ? '已发布' : '已提交，请到平台核对'}{r.error ? `（${r.error}）` : ''}
                 </div>
               ))}
@@ -602,24 +602,24 @@ export function DigitalHumanCalendar({
           ) : tasks.filter(t => t.state !== 'cancelled').map(task => {
             const info = taskStateInfo(task)
             return (
-              <div key={task.id} style={{ padding: '10px 0', borderTop: '1px solid #f2f2f3' }}>
+              <div key={task.id} style={{ padding: '10px 0', borderTop: '1px solid var(--line, var(--dsw-alias-border-l2))' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
                   <b style={{ fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{task.title || '未命名'}</b>
                   <span style={{ fontSize: 12, color: info.color, flex: 'none' }}>{info.label}</span>
                 </div>
                 <small style={{ color: 'var(--ink3)', fontSize: 11 }}>{PLATFORM_NAME[task.platform] || task.platform} · {task.accountLabel || '账号'}</small>
-                <div style={{ height: 5, borderRadius: 999, background: '#f0f0f2', marginTop: 6, overflow: 'hidden' }}>
+                <div style={{ height: 5, borderRadius: 999, background: 'var(--tool, var(--dsw-alias-bg-module-platform))', marginTop: 6, overflow: 'hidden' }}>
                   <i style={{ display: 'block', height: '100%', width: `${info.pct}%`, background: info.color, borderRadius: 999, transition: 'width .4s' }} />
                 </div>
                 {task.verified && task.verified.ok ? (
-                  <small style={{ color: '#267f57', fontSize: 11 }}>平台已核实 · {task.verified.works ? `作品共 ${task.verified.works} 条 · ` : ''}审核中</small>
+                  <small style={{ color: 'var(--success, #267f57)', fontSize: 11 }}>平台已核实 · {task.verified.works ? `作品共 ${task.verified.works} 条 · ` : ''}审核中</small>
                 ) : null}
                 {task.state === 'failed' ? (
-                  <div style={{ marginTop: 6, background: '#fdf1ef', border: '1px solid #f6d9d3', borderRadius: 8, padding: '7px 9px' }}>
-                    <b style={{ fontSize: 12, color: '#b3362b' }}>没发出去</b>
-                    <div style={{ fontSize: 12, color: '#b3362b', lineHeight: 1.5, marginTop: 2 }}>{task.error || '发布失败，请查看任务日志'}</div>
+                  <div style={{ marginTop: 6, background: 'var(--danger-soft, var(--dsw-alias-code-diff-deleted))', border: '1px solid var(--danger-line, color-mix(in srgb, var(--dsw-alias-state-error-primary) 30%, transparent))', borderRadius: 8, padding: '7px 9px' }}>
+                    <b style={{ fontSize: 12, color: 'var(--danger, var(--dsw-alias-state-error-primary))' }}>没发出去</b>
+                    <div style={{ fontSize: 12, color: 'var(--danger, var(--dsw-alias-state-error-primary))', lineHeight: 1.5, marginTop: 2 }}>{task.error || '发布失败，请查看任务日志'}</div>
                   </div>
-                ) : task.error ? <small style={{ color: '#b3362b', fontSize: 11 }}>{task.error}</small> : null}
+                ) : task.error ? <small style={{ color: 'var(--danger, var(--dsw-alias-state-error-primary))', fontSize: 11 }}>{task.error}</small> : null}
               </div>
             )
           })}

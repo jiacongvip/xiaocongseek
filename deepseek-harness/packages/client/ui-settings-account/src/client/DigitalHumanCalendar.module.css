@@ -1,12 +1,12 @@
-.root { max-width: 1100px; margin: 0 auto; padding: 24px; color: var(--dsw-alias-text-primary, #252332); }
+.root { max-width: 1100px; margin: 0 auto; padding: 24px; color: var(--dsw-alias-label-primary, #17181a); }
 .header, .nav, .actions, .plan { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-.header h1 { font-size: 24px; margin: 0 0 8px; } .header p, .hint { font-size: 13px; color: var(--dsw-alias-text-secondary, #777); }
-.root button { border: 1px solid var(--dsw-alias-border-primary, #ddd); border-radius: 9px; padding: 8px 12px; background: var(--dsw-alias-background-secondary, #f4f1fa); color: inherit; cursor: pointer; }
+.header h1 { font-size: 24px; margin: 0 0 8px; } .header p, .hint { font-size: 13px; color: var(--dsw-alias-label-secondary, #606269); }
+.root button { border: 1px solid var(--dsw-alias-border-l3, #ddd); border-radius: 9px; padding: 8px 12px; background: var(--dsw-alias-bg-module-platform, #f4f4f5); color: inherit; cursor: pointer; }
 .root button:disabled { opacity: .5; cursor: default; } .nav { justify-content: flex-start; margin: 20px 0 12px; }
 .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; } .weekday { text-align: center; font-size: 12px; padding: 6px; }
 .root .day { min-height: 92px; text-align: left; padding: 8px; overflow: hidden; } .day strong { font-size: 12px; display: block; } .day span, .day small { display: block; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 5px; }
-.root .selected { border-color: #8a59d6; background: #f1e8ff; color: #42305f; } .plan { border-bottom: 1px solid #ddd; padding: 12px 0; } .plan p { margin: 5px 0; font-size: 13px; } .notes { white-space: pre-wrap; overflow-wrap: anywhere; }
-.editor { border: 1px solid #cdb4ee; border-radius: 14px; padding: 18px; margin-top: 20px; display: grid; gap: 12px; } .editor label { display: grid; gap: 6px; font-size: 13px; } .editor input, .editor select, .editor textarea { width: 100%; box-sizing: border-box; border: 1px solid #ccc; border-radius: 8px; padding: 9px; background: var(--dsw-alias-background-primary, #fff); color: inherit; } .error { color: #a92d37; white-space: pre-wrap; }
+.root .selected { border-color: var(--dsw-alias-button-primary-fill, #1b1b1d); background: var(--dsw-alias-interactive-bg-active, #f1f2f4); color: var(--dsw-alias-label-primary, #17181a); } .plan { border-bottom: 1px solid var(--dsw-alias-border-l2, #ececee); padding: 12px 0; } .plan p { margin: 5px 0; font-size: 13px; } .notes { white-space: pre-wrap; overflow-wrap: anywhere; }
+.editor { border: 1px solid var(--dsw-alias-border-l2, #ececee); border-radius: 14px; padding: 18px; margin-top: 20px; display: grid; gap: 12px; } .editor label { display: grid; gap: 6px; font-size: 13px; } .editor input, .editor select, .editor textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--dsw-alias-border-l4, #e0e1e3); border-radius: 8px; padding: 9px; background: var(--dsw-specific-input-major, #fff); color: var(--dsw-alias-label-primary, #17181a); } .error { color: var(--dsw-alias-state-error-primary, #a92d37); white-space: pre-wrap; }
 @media (max-width: 700px) { .root { padding: 12px; } .root .day { min-height: 70px; padding: 4px; } .day span { font-size: 10px; } }
 
 /* 弹窗里的排期编辑器：外壳已经给了留白和边框，旧紫色描边在弹窗里等于双框 */
@@ -20,7 +20,7 @@
 
 .editor label {
   gap: 6px;
-  color: #9a9ca3;
+  color: var(--dsw-alias-label-tertiary, #9a9ca3);
   font-size: 11.5px;
   letter-spacing: 0.02em;
 }
@@ -40,9 +40,10 @@
 .editor textarea {
   height: 38px;
   padding: 0 12px;
-  border: 1px solid #e0e1e3;
+  border: 1px solid var(--dsw-alias-border-l4, #e0e1e3);
   border-radius: 10px;
-  background: #fff;
+  background: var(--dsw-specific-input-major, #fff);
+  color: var(--dsw-alias-label-primary, #17181a);
   font-size: 13px;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -58,8 +59,8 @@
 .editor select:focus,
 .editor textarea:focus {
   outline: none;
-  border-color: #9a9ca3;
-  box-shadow: 0 0 0 3px rgb(27 27 29 / 0.06);
+  border-color: var(--dsw-alias-label-tertiary, #9a9ca3);
+  box-shadow: 0 0 0 3px var(--dsw-alias-interactive-bg-hover, rgb(27 27 29 / 0.06));
 }
 
 /* 勾选框那一行要横排，别被 label 的 grid 自动排成一列 */
@@ -84,13 +85,13 @@
   gap: 8px;
   margin-top: 2px;
   padding-top: 16px;
-  border-top: 1px solid #ececee;
+  border-top: 1px solid var(--dsw-alias-border-l2, #ececee);
 }
 
 .editor .actions .disclaimer {
   margin: 0 auto 0 0;
   max-width: 60%;
-  color: #9a9ca3;
+  color: var(--dsw-alias-label-tertiary, #9a9ca3);
   font-size: 12px;
   line-height: 1.55;
 }
@@ -99,32 +100,33 @@
 .editor .actions button {
   height: 36px;
   padding: 0 16px;
-  border: 1px solid #e0e1e3;
+  border: 1px solid var(--dsw-alias-border-l4, #e0e1e3);
   border-radius: 10px;
-  background: #fff;
-  color: #606269;
+  background: var(--dsw-alias-bg-layer-2, #fff);
+  color: var(--dsw-alias-label-secondary, #606269);
   font-size: 13px;
 }
 
 .editor .actions button:hover {
-  color: #17181d;
-  border-color: #cfd0d4;
+  color: var(--dsw-alias-label-primary, #17181d);
+  border-color: var(--dsw-alias-border-l4, #cfd0d4);
+  background: var(--dsw-alias-interactive-bg-hover-solid, #f4f4f5);
 }
 
 .editor .actions button[type='submit'] {
-  border-color: #1b1b1d;
-  background: #1b1b1d;
-  color: #fff;
+  border-color: var(--dsw-alias-button-primary-fill, #1b1b1d);
+  background: var(--dsw-alias-button-primary-fill, #1b1b1d);
+  color: var(--dsw-alias-label-primary-foreground, #fff);
 }
 
 .editor .actions button[type='submit']:hover {
-  background: #000;
+  background: var(--dsw-alias-button-primary-hover, #000);
 }
 
 .editor .error {
   padding: 8px 10px;
   border-radius: 8px;
-  background: #fdecea;
-  color: #c0392b;
+  background: var(--dsw-alias-code-diff-deleted, #fdecea);
+  color: var(--dsw-alias-state-error-primary, #c0392b);
   font-size: 12px;
 }

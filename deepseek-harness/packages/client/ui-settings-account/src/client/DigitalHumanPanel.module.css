@@ -1,11 +1,12 @@
 /* Digital human panel — visual language follows the media workbench: near-monochrome,
    hairline borders, editorial numerals, no heavy shadows. */
 .root {
-  /* Accent is ink, not purple: the workbench UI reads as black/white with one status dot. */
   --purple: #1b1b1d;
+  --purple-fg: #fff;
+  --purple-fg-muted: color-mix(in srgb, var(--purple-fg) 68%, transparent);
   --purple-deep: #000;
-  --purple-soft: #f4f4f5;
-  --purple-line: #e3e3e5;
+  --purple-soft: var(--dsw-alias-bg-module-platform, #f4f4f5);
+  --purple-line: var(--dsw-alias-border-l3, #e3e3e5);
   --ink: var(--dsw-alias-label-primary, #17181a);
   --ink2: var(--dsw-alias-label-secondary, #606269);
   --ink3: var(--dsw-alias-label-tertiary, #9a9ca3);
@@ -13,9 +14,22 @@
   --line-strong: var(--dsw-alias-border-l4, #e0e1e3);
   --bg: var(--dsw-alias-bg-base, #fbfbfb);
   --card: var(--dsw-alias-bg-layer-2, #fff);
-  --tool: #f5f5f6;
-  --danger: #b4392b;
-  --success: #37795a;
+  --surface: color-mix(in srgb, var(--dsw-alias-bg-layer-1, #fff) 96%, var(--dsw-alias-bg-module-platform, #f5f5f6));
+  --input-bg: var(--dsw-specific-input-major, #fff);
+  --tool: var(--dsw-alias-bg-module-platform, #f5f5f6);
+  --hover-bg: var(--dsw-alias-interactive-bg-hover-solid, #f4f4f5);
+  --danger: var(--dsw-alias-state-error-primary, #b4392b);
+  --danger-soft: var(--dsw-alias-code-diff-deleted, #fdecea);
+  --danger-line: color-mix(in srgb, var(--danger) 30%, transparent);
+  --success: var(--dsw-alias-state-success-primary, #37795a);
+  --success-soft: var(--dsw-alias-state-success-tertiary, #e7f6ee);
+  --success-line: color-mix(in srgb, var(--success) 30%, transparent);
+  --warn: var(--dsw-alias-state-warn-label, #b08243);
+  --warn-soft: var(--dsw-alias-state-warn-tertiary, #fef5e7);
+  --warn-line: color-mix(in srgb, var(--warn) 32%, transparent);
+  --focus-ring: color-mix(in srgb, var(--purple) 14%, transparent);
+  --card-glass: color-mix(in srgb, var(--card) 82%, transparent);
+  /* Accent is ink, not purple: the workbench UI reads as black/white with one status dot. */
   --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Songti SC', 'Source Han Serif SC', serif;
   position: relative;
   height: 100%;
@@ -25,6 +39,13 @@
   font-size: 13px;
   line-height: 20px;
 }
+
+:global(body[data-ds-dark-theme]) .root {
+  --purple: var(--dsw-alias-button-primary-fill, #f9fafb);
+  --purple-fg: var(--dsw-alias-label-primary-foreground, #0f1115);
+  --purple-deep: var(--dsw-alias-button-primary-hover, #ebeef2);
+}
+
 
 .root *,
 .root *::before,
@@ -100,7 +121,7 @@
   padding: 0 12px 0 10px;
   border-radius: 17px;
   border: 1px solid var(--purple-line);
-  background: #fff;
+  background: var(--card);
   color: var(--ink);
 }
 
@@ -188,7 +209,7 @@
   padding: 0 12px;
   overflow: hidden;
   border-radius: 17px;
-  background: #fff;
+  background: var(--card);
   color: var(--ink2);
   font-size: 12px;
   text-align: left;
@@ -216,7 +237,7 @@
   padding: 0 10px;
   border: 1px solid var(--line-strong);
   border-radius: 10px;
-  background: #fff;
+  background: var(--input-bg);
 }
 
 .spaceBriefOn {
@@ -237,9 +258,9 @@
 .spaceBriefHint {
   margin: 0;
   padding: 9px 12px;
-  border-left: 2px solid #1b1b1d;
+  border-left: 2px solid var(--purple);
   border-radius: 0 6px 6px 0;
-  background: #f7f7f8;
+  background: var(--tool);
   color: var(--ink2);
   font-size: 12px;
   line-height: 1.55;
@@ -300,13 +321,13 @@
   height: 32px;
   padding: 0 16px;
   border-radius: 9px;
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
   font-size: 12.5px;
 }
 
 .spaceBriefActions .deskPrimary:hover {
-  background: #000;
+  background: var(--purple-deep);
 }
 
 .spaceBriefFolder {
@@ -353,7 +374,7 @@
   padding: 8px 10px;
   border: 1px solid var(--line-strong);
   border-radius: 10px;
-  background: #fff;
+  background: var(--input-bg);
   color: var(--ink);
   font-size: 13px;
   line-height: 1.45;
@@ -373,7 +394,7 @@
   width: 88px;
   padding: 16px 10px;
   border-right: 1px solid var(--line);
-  background: color-mix(in srgb, var(--card) 90%, var(--purple-soft));
+  background: var(--dsw-specific-sidebar-fill, color-mix(in srgb, var(--card) 90%, var(--purple-soft)));
 }
 
 .sideNavBrand {
@@ -396,13 +417,13 @@
 }
 
 .sideNavItem:hover {
-  background: color-mix(in srgb, #fff 70%, var(--purple-soft));
+  background: var(--hover-bg);
   color: var(--ink);
 }
 
 .sideNavItemOn {
-  background: #fff;
-  color: var(--purple-deep);
+  background: var(--card);
+  color: var(--ink);
   box-shadow: 0 0 0 1px var(--purple-line);
 }
 
@@ -471,11 +492,11 @@
 
 .deskPrimary {
   background: var(--purple);
-  color: #fff;
+  color: var(--purple-fg);
 }
 
 .deskGhost {
-  background: #fff;
+  background: var(--card);
   color: var(--ink2);
   box-shadow: inset 0 0 0 1px var(--line-strong);
 }
@@ -553,13 +574,13 @@
   gap: 6px;
   padding: 0 16px;
   border-radius: 10px;
-  background: #1b1b1d;
+  background: var(--purple);
   box-shadow: none;
   transition: background 0.16s;
 }
 
 .homeDesk .deskPrimary:hover {
-  background: #000;
+  background: var(--purple-deep);
 }
 
 .homeDesk .deskGhost {
@@ -598,7 +619,7 @@
 
 .dashCard:hover {
   border-color: var(--line-strong);
-  background: #fcfcfc;
+  background: var(--surface);
 }
 
 .dashIcon {
@@ -612,8 +633,8 @@
 }
 
 .dashCard[data-tone='warn'] .dashIcon {
-  background: #f8f4ee;
-  color: #8a6a2f;
+  background: var(--warn-soft);
+  color: var(--warn);
 }
 
 .dashBody {
@@ -806,7 +827,7 @@
   padding: 24px 16px;
   border: 1px dashed var(--line-strong);
   border-radius: 10px;
-  background: #fbfbfb;
+  background: var(--surface);
   text-align: center;
 }
 
@@ -817,7 +838,7 @@
   height: 34px;
   margin-bottom: 2px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--card);
   color: var(--success);
   box-shadow: 0 1px 3px rgba(23, 24, 29, 0.09);
 }
@@ -898,7 +919,7 @@
 }
 
 .homeRecentList button:hover {
-  background: #fcfcfc;
+  background: var(--surface);
   border-color: var(--line-strong);
 }
 
@@ -939,7 +960,7 @@
   height: 20px;
   padding: 0 8px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--card-glass);
   color: var(--ink2);
   font-size: 10.5px;
   font-weight: 500;
@@ -1025,7 +1046,7 @@
   padding: 0 12px;
   border: 1px solid var(--line-strong);
   border-radius: 17px;
-  background: #fff;
+  background: var(--input-bg);
 }
 
 .companyGrid {
@@ -1119,13 +1140,13 @@
 }
 
 .companyListAction:hover {
-  background: #fff;
+  background: var(--card);
   color: var(--purple-deep);
 }
 
 /* Selected shortcut on company list cards and the inner-page top row. */
 .companyListActionOn {
-  background: #fff;
+  background: var(--card);
   color: var(--purple-deep);
   box-shadow: 0 0 0 1px var(--purple-line);
 }
@@ -1185,9 +1206,9 @@
 }
 
 .companyDeskHeadLead input[aria-label="公司名称"]:focus {
-  background: #fff;
-  border-color: #1b1b1d;
-  box-shadow: 0 0 0 3px rgba(27, 27, 29, 0.08);
+  background: var(--input-bg);
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .companyDeskHeadLead p {
@@ -1236,20 +1257,20 @@
 
 /* 选中项：参考自媒体工作台的黑色药丸 */
 .companyDeskTabs .companyListActionOn {
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
   font-weight: 500;
 }
 
 .companyDeskTabs .companyListActionOn:hover {
-  background: #000;
-  color: #fff;
+  background: var(--purple-deep);
+  color: var(--purple-fg);
 }
 
 .deskGhostDanger:hover {
   color: var(--danger);
-  background: #fdecea;
-  box-shadow: inset 0 0 0 1px #f3c1ba;
+  background: var(--danger-soft);
+  box-shadow: inset 0 0 0 1px var(--danger-line);
 }
 
 .taskRailMain {
@@ -1339,7 +1360,7 @@
   padding: 0 10px 0 30px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: var(--input-bg);
   transition: border-color 0.16s, box-shadow 0.16s;
 }
 
@@ -1351,8 +1372,8 @@
 }
 
 .companyListSearch:focus-within {
-  border-color: #1b1b1d;
-  box-shadow: 0 0 0 3px rgba(27, 27, 29, 0.08);
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .companyListSearch input {
@@ -1397,12 +1418,12 @@
 
 .companyListDesk .companyCard:hover {
   border-color: var(--line-strong);
-  background: #fcfcfc;
+  background: var(--surface);
 }
 
 .companyListDesk .companyCardOn {
   border-color: var(--line-strong);
-  background: #fcfcfc;
+  background: var(--surface);
 }
 
 .companyListDesk .companyCardOn::before {
@@ -1411,7 +1432,7 @@
   inset: 0 auto 0 0;
   width: 3px;
   border-radius: 14px 0 0 14px;
-  background: #1b1b1d;
+  background: var(--purple);
 }
 
 .companyListDesk .companyCardTitle {
@@ -1432,7 +1453,7 @@
   height: 38px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fafafa;
+  background: var(--surface);
   color: var(--ink);
   font-size: 14px;
   font-weight: 600;
@@ -1441,19 +1462,19 @@
 
 /* 灰度分层：靠明度区分公司，不用彩色 */
 .companyAvatar[data-tone='blue'] {
-  background: #f4f4f5;
+  background: var(--tool);
 }
 
 .companyAvatar[data-tone='teal'] {
-  background: #efefef;
+  background: var(--tool);
 }
 
 .companyAvatar[data-tone='amber'] {
-  background: #e9e9ea;
+  background: var(--tool);
 }
 
 .companyAvatar[data-tone='rose'] {
-  background: #f7f7f8;
+  background: var(--tool);
 }
 
 .companyCardMain {
@@ -1488,8 +1509,8 @@
   height: 18px;
   padding: 0 7px;
   border-radius: 9px;
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
   font-size: 10.5px;
   font-weight: 500;
 }
@@ -1509,7 +1530,7 @@
   padding: 0 7px;
   border: 1px solid var(--line);
   border-radius: 6px;
-  background: #fff;
+  background: var(--card);
   color: var(--ink2);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
@@ -1528,7 +1549,7 @@
 }
 
 .companyChip[data-tone='warn'] i {
-  background: #b08243;
+  background: var(--warn);
 }
 
 .companyListDesk .companyActionsCompact {
@@ -1576,7 +1597,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--card);
   color: var(--purple-deep);
   box-shadow: 0 1px 3px rgba(23, 24, 29, 0.09);
 }
@@ -1601,7 +1622,7 @@
 
 .companyListDesk .spaceForm button[type='submit'] {
   background: var(--purple);
-  color: #fff;
+  color: var(--purple-fg);
 }
 
 .companyAction {
@@ -1621,12 +1642,12 @@
 }
 
 .companyAction:hover {
-  background: #fff;
+  background: var(--card);
   color: var(--purple-deep);
 }
 
 .companyActionOn {
-  background: #fff;
+  background: var(--card);
   color: var(--purple-deep);
   box-shadow: 0 0 0 1px var(--purple-line);
 }
@@ -1690,7 +1711,7 @@
   padding: 0 11px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: var(--input-bg);
   color: var(--ink);
   font-size: 12.5px;
   outline: none;
@@ -1698,8 +1719,8 @@
 }
 
 .workSearch:focus {
-  border-color: #1b1b1d;
-  box-shadow: 0 0 0 3px rgba(27, 27, 29, 0.07);
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .workFilters {
@@ -1732,17 +1753,17 @@
 }
 
 .workChip:hover {
-  background: rgba(255, 255, 255, 0.75);
+  background: var(--card-glass);
   color: var(--ink);
 }
 
 .workChip[data-on='on'] {
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
 }
 
 .workChip[data-on='on'] em {
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--purple-fg-muted);
 }
 
 .workBarActions {
@@ -1779,7 +1800,7 @@
 
 .workCard:hover {
   border-color: var(--line-strong);
-  background: #fcfcfc;
+  background: var(--surface);
 }
 
 .workThumb {
@@ -1819,7 +1840,7 @@
   height: 18px;
   padding: 0 6px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--card-glass);
   color: var(--ink2);
   font-size: 10px;
   font-weight: 500;
@@ -1842,7 +1863,7 @@
 }
 
 .workStatus[data-tone='run'] i {
-  background: #1b1b1d;
+  background: var(--purple);
   animation: work-pulse 1.4s ease-in-out infinite;
 }
 
@@ -1885,7 +1906,7 @@
 .workProgress i {
   display: block;
   height: 100%;
-  background: #1b1b1d;
+  background: var(--purple);
   transition: width 0.3s;
 }
 
@@ -1927,15 +1948,15 @@
   padding: 0 8px;
   border: 1px solid var(--line);
   border-radius: 5px;
-  background: #fff;
+  background: var(--card);
   color: var(--ink2);
   font-size: 11px;
 }
 
 .workPublish:hover {
-  border-color: #1b1b1d;
-  background: #1b1b1d;
-  color: #fff;
+  border-color: var(--purple);
+  background: var(--purple);
+  color: var(--purple-fg);
 }
 
 .workDelete {
@@ -1957,7 +1978,7 @@
   padding: 52px 16px;
   border: 1px dashed var(--line-strong);
   border-radius: 14px;
-  background: #fbfbfb;
+  background: var(--surface);
   text-align: center;
 }
 
@@ -1968,7 +1989,7 @@
   height: 38px;
   border-radius: 50%;
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--card);
   color: var(--ink2);
 }
 
@@ -2080,7 +2101,7 @@
   padding: 0 11px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: var(--input-bg);
   color: var(--ink);
   font-size: 12.5px;
   outline: none;
@@ -2088,8 +2109,8 @@
 }
 
 .matSearch:focus {
-  border-color: #1b1b1d;
-  box-shadow: 0 0 0 3px rgba(27, 27, 29, 0.07);
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .matFilters {
@@ -2122,17 +2143,17 @@
 }
 
 .matChip:hover {
-  background: rgba(255, 255, 255, 0.75);
+  background: var(--card-glass);
   color: var(--ink);
 }
 
 .matChip[data-on='on'] {
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
 }
 
 .matChip[data-on='on'] em {
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--purple-fg-muted);
 }
 
 .matHint {
@@ -2187,7 +2208,7 @@
 }
 
 .matBoard[data-drag='on'] {
-  outline-color: #1b1b1d;
+  outline-color: var(--purple);
 }
 
 .matCard {
@@ -2204,7 +2225,7 @@
 
 .matCard:hover {
   border-color: var(--line-strong);
-  background: #fcfcfc;
+  background: var(--surface);
 }
 
 .matThumb {
@@ -2243,7 +2264,7 @@
   height: 18px;
   padding: 0 6px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--card-glass);
   color: var(--ink2);
   font-size: 10px;
   font-weight: 500;
@@ -2309,7 +2330,7 @@
   height: 5px;
   margin-right: 6px;
   border-radius: 50%;
-  background: #1b1b1d;
+  background: var(--purple);
   vertical-align: 2px;
 }
 
@@ -2348,14 +2369,14 @@
   min-height: 178px;
   border: 1px dashed var(--line-strong);
   border-radius: 12px;
-  background: #fbfbfb;
+  background: var(--surface);
   color: var(--ink3);
   transition: border-color 0.16s, color 0.16s, background 0.16s;
 }
 
 .matAdd:hover {
-  border-color: #1b1b1d;
-  background: #fff;
+  border-color: var(--purple);
+  background: var(--card);
   color: var(--ink);
 }
 
@@ -2386,7 +2407,7 @@
   padding: 52px 16px;
   border: 1px dashed var(--line-strong);
   border-radius: 14px;
-  background: #fbfbfb;
+  background: var(--surface);
   text-align: center;
 }
 
@@ -2397,7 +2418,7 @@
   height: 38px;
   border-radius: 50%;
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--card);
   color: var(--ink2);
 }
 
@@ -2423,13 +2444,13 @@
   padding: 0 12px;
   border: 1px solid var(--line-strong);
   border-radius: 7px;
-  background: #fff;
+  background: var(--card);
   color: var(--ink2);
   font-size: 12px;
 }
 
 .matEmptySlots button:hover {
-  border-color: #1b1b1d;
+  border-color: var(--purple);
   color: var(--ink);
 }
 
@@ -2477,9 +2498,9 @@
   height: 36px;
   padding: 0 14px;
   border-radius: 18px;
-  border: 1px solid #f2f2f3;
-  background: #f7f7f8;
-  color: #4a4b50;
+  border: 1px solid var(--line);
+  background: var(--tool);
+  color: var(--ink2);
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
@@ -2487,20 +2508,20 @@
 }
 
 .tab:hover {
-  background: #f4f4f5;
-  color: #1b1b1d;
-  border-color: #e3e3e5;
+  background: var(--tool);
+  color: var(--ink);
+  border-color: var(--line-strong);
 }
 
 .tabOn {
-  background: #f4f4f5;
-  color: #1b1b1d;
-  border-color: #1b1b1d;
+  background: var(--tool);
+  color: var(--ink);
+  border-color: var(--purple);
 }
 
 .tabOn:hover {
-  background: #f4f4f5;
-  color: #1b1b1d;
+  background: var(--tool);
+  color: var(--ink);
 }
 
 .tab svg {
@@ -2538,7 +2559,7 @@
   position: relative;
   padding: 22px 24px 20px;
   border-radius: 22px;
-  border: 1px solid #f2f2f3;
+  border: 1px solid var(--line);
   background: var(--card);
   box-shadow: 0 20px 50px -38px rgb(85 60 200 / 0.4);
 }
@@ -2575,8 +2596,8 @@
   padding: 0 10px;
   border: 0;
   border-radius: 999px;
-  background: #f2f2f3;
-  color: #1b1b1d;
+  background: var(--tool);
+  color: var(--ink);
   font-size: 12px;
   font-weight: 700;
   overflow: hidden;
@@ -2602,14 +2623,14 @@
   padding: 12px;
   border-radius: 14px;
   border: 1.5px dashed var(--line-strong);
-  background: #fbfbfe;
+  background: var(--surface);
   transition: border-color 0.16s, background 0.16s;
 }
 
 .slot:hover,
 .slot:focus-within {
   border-color: var(--purple);
-  background: #fafafa;
+  background: var(--surface);
 }
 
 .slotPlus {
@@ -2657,8 +2678,8 @@
   min-height: 118px;
   padding: 14px 16px;
   border-radius: 14px;
-  border: 1px solid #eceef5;
-  background: #f8f9fc;
+  border: 1px solid var(--line);
+  background: var(--surface);
   font-size: 13.5px;
   line-height: 22px;
   outline: 0;
@@ -2668,7 +2689,7 @@
 
 .prompt:focus {
   border-color: var(--purple);
-  background: #fff;
+  background: var(--card);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--purple) 12%, transparent);
 }
 
@@ -2703,23 +2724,23 @@
   height: 30px;
   padding: 0 13px;
   border-radius: 16px;
-  border: 1px solid #f2f2f3;
-  background: #f7f7f8;
-  color: #4a4b50;
+  border: 1px solid var(--line);
+  background: var(--tool);
+  color: var(--ink2);
   font-size: 12px;
   line-height: 30px;
   transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
 
 .modelChip:hover {
-  background: #f2f2f3;
+  background: var(--tool);
   color: var(--ink);
 }
 
 .modelChipOn {
-  background: #f4f4f5;
-  color: #1b1b1d;
-  border-color: #1b1b1d;
+  background: var(--tool);
+  color: var(--ink);
+  border-color: var(--purple);
 }
 
 .cloneRow {
@@ -2746,8 +2767,8 @@
   height: 38px;
   padding: 0 12px;
   border-radius: 10px;
-  border: 1px solid #eceef5;
-  background: #f8f9fc;
+  border: 1px solid var(--line);
+  background: var(--surface);
   font-size: 13px;
   outline: 0;
   transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
@@ -2756,7 +2777,7 @@
 .input:focus,
 .select:focus {
   border-color: var(--purple);
-  background: #fff;
+  background: var(--input-bg);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--purple) 12%, transparent);
 }
 
@@ -2782,8 +2803,8 @@
   height: 32px;
   padding: 0 12px;
   border-radius: 6px;
-  border: 1px solid #f2f2f3;
-  background: #fff;
+  border: 1px solid var(--line);
+  background: var(--card);
   color: var(--ink2);
   font-size: 12.5px;
   white-space: nowrap;
@@ -2791,7 +2812,7 @@
 }
 
 .mini:hover {
-  background: #f2f2f3;
+  background: var(--tool);
   color: var(--ink);
 }
 
@@ -2810,8 +2831,8 @@
   height: 44px;
   padding: 0 26px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #2b2b2e, #1b1b1d);
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
   font-size: 15px;
   font-weight: 700;
   white-space: nowrap;
@@ -2852,7 +2873,7 @@
 }
 
 .secondary:hover {
-  background: #e4dcff;
+  background: var(--tool);
 }
 
 .secondary:active {
@@ -2864,7 +2885,7 @@
   padding: 10px 12px;
   border-radius: 10px;
   background: color-mix(in srgb, var(--danger) 9%, transparent);
-  color: #b3362b;
+  color: var(--danger);
   font-size: 12.5px;
   line-height: 19px;
 }
@@ -2905,7 +2926,7 @@
   height: 24px;
   padding: 0 9px;
   border-radius: 999px;
-  background: #f5f5f6;
+  background: var(--tool);
   color: var(--ink2);
   font-size: 11.5px;
   white-space: nowrap;
@@ -2913,12 +2934,12 @@
 
 .statusSuccess {
   background: color-mix(in srgb, var(--success) 13%, transparent);
-  color: #267f57;
+  color: var(--success);
 }
 
 .statusFailure {
   background: color-mix(in srgb, var(--danger) 11%, transparent);
-  color: #b3362b;
+  color: var(--danger);
 }
 
 .statusRunning {
@@ -3025,7 +3046,7 @@
   padding: 12px 14px;
   border-radius: 10px;
   background: color-mix(in srgb, var(--danger) 8%, transparent);
-  color: #b3362b;
+  color: var(--danger);
   font-size: 12.5px;
   line-height: 19px;
 }
@@ -3055,7 +3076,7 @@
 }
 
 .historyRow:hover {
-  background: #f6f6fa;
+  background: var(--tool);
 }
 
 .historyDot {
@@ -3103,7 +3124,7 @@
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid var(--line);
-  background: #fbfbfe;
+  background: var(--surface);
   color: var(--ink);
   text-decoration: none;
   font-size: 12.5px;
@@ -3112,7 +3133,7 @@
 
 .artifact:hover {
   border-color: var(--purple-line);
-  background: #fafafa;
+  background: var(--surface);
 }
 
 .artifact span {
@@ -3155,7 +3176,7 @@
 }
 
 .tool:hover {
-  background: #e9eaf1;
+  background: var(--tool);
 }
 
 .tool:active {
@@ -3170,7 +3191,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  background: #fff;
+  background: var(--card);
   color: var(--purple);
   box-shadow: 0 6px 16px -12px rgb(55 37 140 / 0.5);
 }
@@ -3319,7 +3340,7 @@
 .slotSelected {
   border-style: solid;
   border-color: var(--purple-line);
-  background: #fafafa;
+  background: var(--surface);
 }
 
 .slotCover {
@@ -3342,7 +3363,7 @@
   padding: 0 8px;
   border-radius: 8px;
   border: 1px solid transparent;
-  background: #f6f7fb;
+  background: var(--tool);
   text-align: center;
   outline: 0;
   color: var(--ink2);
@@ -3352,7 +3373,7 @@
 
 .slotManual:focus {
   border-color: var(--purple-line);
-  background: #fff;
+  background: var(--card);
 }
 
 .overlay {
@@ -3374,7 +3395,7 @@
   max-height: min(82vh, 760px);
   overflow: hidden;
   border-radius: 24px;
-  background: #fff;
+  background: var(--card);
   box-shadow: 0 30px 80px -32px rgb(17 17 19 / 0.42);
   animation: picker-in 0.2s ease both;
 }
@@ -3409,14 +3430,14 @@
   justify-content: center;
   margin-left: auto;
   border-radius: 9px;
-  background: #f2f2f3;
+  background: var(--tool);
   color: var(--ink2);
   font-size: 20px;
   line-height: 1;
 }
 
 .pickerClose:hover {
-  background: #f2f2f3;
+  background: var(--tool);
   color: var(--ink);
 }
 
@@ -3430,14 +3451,14 @@
   height: 32px;
   padding: 0 12px;
   border-radius: 8px;
-  background: #f4f5f8;
+  background: var(--tool);
   color: var(--ink2);
   font-size: 12.5px;
   transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
 
 .pickerTab:hover {
-  background: #f2f2f3;
+  background: var(--tool);
   color: var(--ink);
 }
 
@@ -3450,7 +3471,7 @@
 .pickerBody {
   overflow: auto;
   padding: 20px 24px 24px;
-  background: #fafafa;
+  background: var(--surface);
 }
 
 .resourceGrid {
@@ -3467,21 +3488,21 @@
   min-width: 0;
   padding: 10px;
   border-radius: 16px;
-  border: 1px solid #ececec;
-  background: #fff;
+  border: 1px solid var(--line);
+  background: var(--card);
   text-align: left;
   transition: border-color 0.15s, background 0.15s, transform 0.2s;
 }
 
 .resourceCard:hover {
   border-color: var(--purple-line);
-  background: #fafafa;
+  background: var(--surface);
   transform: translateY(-1px);
 }
 
 .resourceCardOn {
   border-color: var(--purple);
-  background: #fafafa;
+  background: var(--surface);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--purple) 14%, transparent);
 }
 
@@ -3503,7 +3524,7 @@
   align-items: center;
   justify-content: center;
   color: var(--purple);
-  background: linear-gradient(135deg, #e3e3e5, #f4f4f5);
+  background: var(--tool);
 }
 
 .resourceVoiceCover {
@@ -3550,7 +3571,7 @@
   margin-left: auto;
   padding: 0 7px;
   border-radius: 6px;
-  background: #fff;
+  background: var(--card);
   color: var(--purple-deep);
   font-size: 10.5px;
   box-shadow: inset 0 0 0 0.5px var(--purple-line);
@@ -3597,7 +3618,7 @@
 }
 
 .picker.deskModal .pickerBody {
-  background: #fff;
+  background: var(--card);
   padding: 14px 20px 20px;
 }
 
@@ -3658,8 +3679,8 @@
   min-height: 40px;
   padding: 0 20px;
   border-radius: 20px;
-  background: #f0f1f7;
-  color: #333;
+  background: var(--tool);
+  color: var(--ink);
   font-size: 16px;
   font-weight: 500;
   overflow: visible;
@@ -3674,7 +3695,7 @@
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: linear-gradient(135deg, #2b2b2e, #1b1b1d);
+  background: var(--purple);
   transform: translate(-50%, 50%);
   transition: width 0.35s ease, height 0.35s ease, border-radius 0.35s ease;
 }
@@ -3686,7 +3707,7 @@
 
 .mainTab:hover {
   height: 56px;
-  color: #fff;
+  color: var(--purple-fg);
 }
 
 .mainTab:hover::before {
@@ -3697,7 +3718,7 @@
 
 .mainTabOn {
   height: 56px;
-  color: #fff;
+  color: var(--purple-fg);
 }
 
 .mainTabOn::before {
@@ -3716,7 +3737,7 @@
   width: 0;
   height: 0;
   overflow: hidden;
-  color: #fff;
+  color: var(--purple-fg);
   opacity: 0.9;
   pointer-events: none;
   transform: translateY(100%);
@@ -3771,8 +3792,8 @@
   width: 100px;
   height: 140px;
   border-radius: 12px;
-  border: 2px dashed #d1d5db;
-  background: #f4f5f7;
+  border: 2px dashed var(--line-strong);
+  background: var(--tool);
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
   overflow: hidden;
   transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
@@ -3787,25 +3808,25 @@
 }
 
 .heroCard:hover {
-  background: #e9ebef;
-  border-color: #9ca3af;
+  background: var(--tool);
+  border-color: var(--line-strong);
 }
 
 .heroCardOn {
-  border: 2px solid #1b1b1d;
-  background: #fff;
+  border: 2px solid var(--purple);
+  background: var(--card);
   box-shadow: 0 4px 6px rgb(0 0 0 / 0.07), 0 0 0 2px rgb(99 102 241 / 0.2);
 }
 
 .heroCardPlus {
-  color: #1b1b1d;
+  color: var(--ink);
   font-size: 24px;
   font-weight: 700;
   line-height: 1;
 }
 
 .heroCardLabel {
-  color: #374151;
+  color: var(--ink);
   font-size: 13px;
   font-weight: 500;
 }
@@ -3825,8 +3846,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1b1b1d;
-  background: linear-gradient(135deg, #e3e3e5, #f4f4f5);
+  color: var(--ink);
+  background: var(--tool);
 }
 
 .heroCardName {
@@ -3851,13 +3872,13 @@
   height: 40px;
   margin-bottom: 6px;
   border-radius: 50%;
-  background: #e6e6e8;
-  color: #1b1b1d;
+  background: var(--tool);
+  color: var(--ink);
 }
 
 .heroCardVoiceName {
   padding: 0 8px;
-  color: #111827;
+  color: var(--ink);
   font-size: 12px;
   font-weight: 700;
   line-height: 16px;
@@ -3887,14 +3908,14 @@
 }
 
 .composeInput::placeholder {
-  color: #9ca3af;
+  color: var(--ink3);
 }
 
 .composeCount {
   position: absolute;
   right: 0;
   bottom: 0;
-  color: #9ca3af;
+  color: var(--ink3);
   font-size: 12px;
 }
 
@@ -3908,19 +3929,19 @@
 .cloneInput {
   height: 40px;
   padding: 0 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fff;
+  background: var(--card);
   font-size: 13px;
 }
 
 .cloneInput:focus {
-  border-color: #1b1b1d;
+  border-color: var(--purple);
   outline: 0;
 }
 
 .cloneHint {
-  color: #9ca3af;
+  color: var(--ink3);
   font-size: 12px;
 }
 
@@ -3945,7 +3966,7 @@
   align-items: center;
   gap: 8px;
   margin-top: 8px;
-  color: #6b7280;
+  color: var(--ink2);
   font-size: 12px;
 }
 
@@ -3973,23 +3994,23 @@
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--line);
   border-radius: 4px;
-  background: #fff;
-  color: #6b7280;
+  background: var(--card);
+  color: var(--ink2);
   font-size: 12.5px;
   transition: color 0.15s, border-color 0.15s;
 }
 
 .toolChip:hover {
-  color: #1b1b1d;
-  border-color: #1b1b1d;
+  color: var(--ink);
+  border-color: var(--purple);
 }
 
 .toolChip b {
   overflow: hidden;
   max-width: 108px;
-  color: #1b1b1d;
+  color: var(--ink);
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -4024,14 +4045,14 @@
 .actionSecondary {
   padding: 8px 22px;
   border-radius: 8px;
-  background: #f2f2f3;
-  color: #1b1b1d;
+  background: var(--tool);
+  color: var(--ink);
   font-size: 14px;
   font-weight: 700;
 }
 
 .actionSecondary:hover {
-  background: #e6e6e8;
+  background: var(--tool);
 }
 
 .actionText {
@@ -4048,7 +4069,7 @@
 }
 
 .actionSecondary .actionText small {
-  color: #1b1b1d;
+  color: var(--ink);
 }
 
 /* Model chooser. */
@@ -4064,24 +4085,24 @@
   align-items: flex-start;
   gap: 4px;
   padding: 14px 16px;
-  border: 1px solid #ececec;
+  border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
+  background: var(--card);
   text-align: left;
 }
 
 .modelCard b {
-  color: #111827;
+  color: var(--ink);
   font-size: 15px;
 }
 
 .modelCard span {
-  color: #9ca3af;
+  color: var(--ink3);
   font-size: 12px;
 }
 
 .modelCardOn {
-  border-color: #1b1b1d;
+  border-color: var(--purple);
   box-shadow: 0 0 0 2px rgb(124 92 255 / 0.18);
 }
 
@@ -4112,17 +4133,17 @@
 .uploadBtn {
   height: 34px;
   padding: 0 14px;
-  border: 1px solid #1b1b1d;
+  border: 1px solid var(--purple);
   border-radius: 8px;
-  background: #f7f7f8;
-  color: #1b1b1d;
+  background: var(--tool);
+  color: var(--ink);
   font-size: 13px;
   font-weight: 600;
   transition: background 0.15s;
 }
 
 .uploadBtn:hover {
-  background: #f4f4f5;
+  background: var(--tool);
 }
 
 .uploadBtn:disabled {
@@ -4133,10 +4154,10 @@
 
 .uploadError {
   padding: 8px 10px;
-  border: 1px solid #fecaca;
+  border: 1px solid var(--danger-line);
   border-radius: 8px;
-  background: #fef2f2;
-  color: #b91c1c;
+  background: var(--danger-soft);
+  color: var(--danger);
   font-size: 12.5px;
 }
 
@@ -4148,8 +4169,8 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  border-left: 1px solid #f2f2f3;
-  background: #fff;
+  border-left: 1px solid var(--line);
+  background: var(--card);
 }
 
 .taskRailHead {
@@ -4192,11 +4213,11 @@
 }
 
 .taskRailRow:hover {
-  background: #f7f7f8;
+  background: var(--tool);
 }
 
 .taskRailRowOn {
-  background: #f4f4f5;
+  background: var(--tool);
 }
 
 .taskRailRowEnter {
@@ -4207,7 +4228,7 @@
   from {
     opacity: 0;
     transform: translateY(-10px) scale(0.96);
-    background: #f4f4f5;
+    background: var(--tool);
   }
   to {
     opacity: 1;
@@ -4262,7 +4283,7 @@
   overflow: hidden;
   margin-top: 1px;
   border-radius: 10px;
-  background: #f5f5f6;
+  background: var(--tool);
 }
 
 .taskRailThumb img,
@@ -4311,7 +4332,7 @@
   height: 18px;
   padding: 0 6px;
   border-radius: 999px;
-  background: #f5f5f6;
+  background: var(--tool);
   color: var(--ink2);
   font-size: 10px;
   font-style: normal;
@@ -4321,17 +4342,17 @@
 
 .taskRailStatusOk {
   background: color-mix(in srgb, var(--success) 13%, transparent);
-  color: #267f57;
+  color: var(--success);
 }
 
 .taskRailStatusFail {
   background: color-mix(in srgb, var(--danger) 11%, transparent);
-  color: #b3362b;
+  color: var(--danger);
 }
 
 .taskRailStatusWarn {
-  background: color-mix(in srgb, #f0a92a 16%, transparent);
-  color: #8a5a00;
+  background: color-mix(in srgb, var(--warn) 16%, transparent);
+  color: var(--warn);
 }
 
 .taskRailStatusRun {
@@ -4346,7 +4367,7 @@
   margin-top: 5px;
   overflow: hidden;
   border-radius: 999px;
-  background: #f2f2f3;
+  background: var(--tool);
 }
 
 .taskRailProgress i {
@@ -4362,7 +4383,7 @@
   display: flex;
   height: 100%;
   min-height: 0;
-  background: #000;
+  background: var(--purple-deep);
 }
 
 .taskStage {
@@ -4436,15 +4457,15 @@
   height: 36px;
   padding: 0 16px;
   border-radius: 999px;
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
   font-size: 13px;
   font-weight: 600;
   box-shadow: 0 8px 20px -8px rgb(124 92 255 / 0.8);
 }
 
 .taskNav:hover:not(:disabled) {
-  background: #000000;
+  background: var(--purple-deep);
 }
 
 .taskNav:disabled {
@@ -4468,8 +4489,8 @@
   min-height: 0;
   overflow: auto;
   padding: 16px 16px 22px;
-  background: #f4f4f5;
-  color: #26272b;
+  background: var(--tool);
+  color: var(--ink);
 }
 
 .taskSideTop {
@@ -4488,20 +4509,20 @@
   height: 34px;
   padding: 0 14px;
   border-radius: 10px;
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
 }
 
 .taskDownload:hover {
-  background: #000000;
+  background: var(--purple-deep);
 }
 
 .taskDownloadMuted {
-  background: #e3e3e5;
-  color: #fff;
+  background: var(--tool);
+  color: var(--purple-fg);
 }
 
 .taskStar {
@@ -4511,17 +4532,17 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  color: #1b1b1d;
+  color: var(--ink);
 }
 
 .taskPromptLabel {
-  color: #6b6d75;
+  color: var(--ink2);
   font-size: 12px;
 }
 
 .taskPrompt {
   margin: 6px 0 16px;
-  color: #1c1630;
+  color: var(--ink);
   font-size: 20px;
   font-weight: 700;
   line-height: 1.35;
@@ -4545,14 +4566,14 @@
 }
 
 .taskMeta dt {
-  color: #6b6d75;
+  color: var(--ink2);
   font-size: 12px;
 }
 
 .taskMeta dd {
   margin: 0;
   overflow: hidden;
-  color: #26272b;
+  color: var(--ink);
   font-size: 12px;
   text-align: right;
   text-overflow: ellipsis;
@@ -4569,16 +4590,16 @@
 .taskAction {
   height: 42px;
   border-radius: 12px;
-  background: #fff;
-  color: #5b5470;
+  background: var(--card);
+  color: var(--ink2);
   font-size: 13px;
   font-weight: 600;
   box-shadow: 0 1px 0 rgb(70 50 140 / 0.04);
 }
 
 .taskAction:hover {
-  color: #1b1b1d;
-  background: #fbfbfb;
+  color: var(--ink);
+  background: var(--surface);
 }
 
 @media (max-width: 980px) {
@@ -4602,7 +4623,7 @@
     height: 240px;
     flex: none;
     border-left: 0;
-    border-top: 1px solid #f2f2f3;
+    border-top: 1px solid var(--line);
   }
 
   .taskDetail {
@@ -4863,7 +4884,7 @@
 }
 
 .materialPreviewActions > a.deskPrimary {
-  color: #fff;
+  color: var(--purple-fg);
 }
 
 @media (max-width: 980px) {
@@ -4991,7 +5012,7 @@
   padding: 14px 16px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fafafa;
+  background: var(--surface);
   font-family: inherit;
   font-size: 14px;
   line-height: 1.85;
@@ -5013,7 +5034,7 @@
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fff;
+  background: var(--card);
 }
 
 .workCopyShot b {
@@ -5212,7 +5233,7 @@
   border-radius: 10px;
   font-size: 12px;
   line-height: 1.6;
-  background: #f2f3f5;
+  background: var(--tool);
   color: var(--ink);
   align-self: flex-start;
   max-width: 100%;
@@ -5220,8 +5241,8 @@
 
 .workCopyChatLine[data-role='user'] {
   align-self: flex-end;
-  background: #17181c;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
 }
 
 .workCopyChips {
@@ -5274,7 +5295,7 @@
   padding: 16px;
   border-radius: 14px;
   border: 1px solid var(--line);
-  background: linear-gradient(120deg, #f6f7fb 0%, #fdf3ee 100%);
+  background: linear-gradient(120deg, var(--tool) 0%, var(--danger-soft) 100%);
 }
 
 .workCopyHeroText {
@@ -5412,7 +5433,7 @@
   align-items: center;
   padding: 0 9px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--card);
   box-shadow: inset 0 0 0 1px var(--line-strong);
   color: var(--ink);
   font-size: 11.5px;
@@ -5442,7 +5463,7 @@
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fbfbfc;
+  background: var(--surface);
 }
 
 .briefAiHead {
@@ -5469,7 +5490,7 @@
   padding: 9px 11px;
   border: 1px solid var(--line-strong);
   border-radius: 10px;
-  background: #fff;
+  background: var(--card);
   color: var(--ink);
   font: inherit;
   font-size: 12.5px;
@@ -5480,7 +5501,7 @@
 .briefAiNotes:focus {
   outline: 0;
   border-color: var(--ink3);
-  box-shadow: 0 0 0 3px rgb(27 27 29 / 0.06);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .briefAiFiles {
@@ -5495,7 +5516,7 @@
   padding: 0 10px;
   border: 1px solid var(--line-strong);
   border-radius: 8px;
-  background: #fff;
+  background: var(--card);
   color: var(--ink2);
   font: inherit;
   font-size: 11.5px;
@@ -5510,7 +5531,7 @@
   overflow: hidden;
   padding: 0 8px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--card);
   box-shadow: inset 0 0 0 1px var(--line);
   color: var(--ink3);
   font-size: 11px;
@@ -5528,8 +5549,8 @@
   margin: 0;
   padding: 8px 10px;
   border-radius: 8px;
-  background: #fdecea;
-  color: #c0392b;
+  background: var(--danger-soft);
+  color: var(--danger);
   font-size: 12px;
   line-height: 1.55;
 }
@@ -5566,13 +5587,13 @@
   padding: 8px 10px;
   border: 1px solid var(--line);
   border-radius: 9px;
-  background: #fff;
+  background: var(--card);
   cursor: pointer;
 }
 
 .briefAiItem[data-on='on'] {
   border-color: var(--line-strong);
-  background: #fff;
+  background: var(--card);
 }
 
 .briefAiItem[data-on='on']:not(:has(input:checked)) {
@@ -5630,8 +5651,8 @@
   padding: 34px 40px 30px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background-color: #fff;
-  background-image: radial-gradient(circle, #e3e5e9 1px, transparent 1px);
+  background-color: var(--card);
+  background-image: radial-gradient(circle, var(--line-strong) 1px, transparent 1px);
   background-size: 24px 24px;
   background-position: 18px 18px;
 }
@@ -5663,7 +5684,7 @@
   justify-content: center;
   margin: 0 4px;
   border-radius: 999px;
-  background: #f1f2f5;
+  background: var(--tool);
   color: var(--ink);
   font-size: 22px;
   font-style: normal;
@@ -5684,7 +5705,7 @@
   align-items: center;
   padding: 0 10px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--card);
   box-shadow: inset 0 0 0 1px var(--line-strong);
   color: var(--ink);
   font-size: 11.5px;
@@ -5707,9 +5728,9 @@
 
 .archiveCanvas .spaceBriefField {
   padding: 12px 14px 13px;
-  border: 1px solid #e7e8eb;
+  border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--card);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
@@ -5753,7 +5774,7 @@
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fcfcfd;
+  background: var(--surface);
 }
 
 .railHead {
@@ -5769,7 +5790,7 @@
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: #2f9e6b;
+  background: var(--success);
 }
 
 .railHead div {
@@ -5796,7 +5817,7 @@
   height: 26px;
   border: 0;
   border-radius: 7px;
-  background: #f1f2f4;
+  background: var(--tool);
   color: var(--ink3);
   font: inherit;
   font-size: 14px;
@@ -5817,7 +5838,7 @@
   max-width: 88%;
   padding: 9px 12px;
   border-radius: 14px 14px 4px 14px;
-  background: #eef0f3;
+  background: var(--tool);
   color: var(--ink2);
   font-size: 12px;
   line-height: 1.65;
@@ -5843,7 +5864,7 @@
   padding: 8px 10px;
   border: 0;
   border-radius: 9px;
-  background: #fff;
+  background: var(--card);
   box-shadow: inset 0 0 0 1px var(--line);
   text-align: left;
   font: inherit;
@@ -5852,12 +5873,12 @@
 
 .railTool[data-on='on'] {
   box-shadow: inset 0 0 0 1px var(--line-strong);
-  background: #fff;
+  background: var(--card);
 }
 
 .railTool[data-on='on'] .railTick {
-  background: #eaf5ef;
-  color: #2f9e6b;
+  background: var(--success-soft);
+  color: var(--success);
 }
 
 .railTick {
@@ -5869,7 +5890,7 @@
   justify-content: center;
   margin-top: 1px;
   border-radius: 999px;
-  background: #f2f3f5;
+  background: var(--tool);
   color: var(--ink3);
   font-size: 11px;
 }
@@ -5903,7 +5924,7 @@
 }
 
 .railNote i {
-  color: #b9bbc0;
+  color: var(--ink3);
   font-style: normal;
 }
 .railActions {
@@ -5938,7 +5959,7 @@
   overflow: hidden;
   padding: 0 8px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--card);
   box-shadow: inset 0 0 0 1px var(--line);
   color: var(--ink3);
   font-size: 11px;
@@ -5956,11 +5977,11 @@
   padding: 10px 10px 8px 12px;
   border: 1px solid var(--line-strong);
   border-radius: 14px;
-  background: #fff;
+  background: var(--card);
 }
 
 .railComposer:focus-within {
-  border-color: #cfd0d4;
+  border-color: var(--line-strong);
   box-shadow: 0 2px 16px -8px rgb(17 17 19 / 0.3);
 }
 
@@ -5993,7 +6014,7 @@
   height: 26px;
   border: 0;
   border-radius: 8px;
-  background: #f1f2f4;
+  background: var(--tool);
   color: var(--ink2);
   font: inherit;
   font-size: 15px;
@@ -6005,8 +6026,8 @@
   height: 28px;
   border: 0;
   border-radius: 999px;
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
   font: inherit;
   font-size: 13px;
   cursor: pointer;
@@ -6057,7 +6078,7 @@
   margin-right: auto;
   padding: 0 9px;
   border-radius: 999px;
-  background: #f4f5f7;
+  background: var(--tool);
   color: var(--ink2);
   font-size: 11px;
   font-style: normal;
@@ -6077,7 +6098,7 @@
 }
 
 .railIcon:hover {
-  background: #f1f2f4;
+  background: var(--tool);
   color: var(--ink);
 }
 
@@ -6088,7 +6109,7 @@
   gap: 8px;
   padding: 7px 9px;
   border-radius: 9px;
-  background: #fff;
+  background: var(--card);
   box-shadow: inset 0 0 0 1px var(--line);
   color: var(--ink2);
   font-size: 11.5px;
@@ -6097,20 +6118,20 @@
 
 .railRule .railTick {
   margin-top: 0;
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
 }
 
 /* 勾选是实心深色圆 + 白勾，取消变空心灰 */
 .railTool[data-on='on'] .railTick,
 .railTick {
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
 }
 
 .railTool:not([data-on='on']) .railTick {
-  background: #f2f3f5;
-  color: #fff;
+  background: var(--tool);
+  color: var(--purple-fg);
 }
 
 .railHint {
@@ -6121,23 +6142,23 @@
 }
 
 .railLink i {
-  color: #b9bbc0;
+  color: var(--ink3);
   font-style: normal;
 }
 
 .railLink {
   text-decoration: underline;
-  text-decoration-color: #d8d9dc;
+  text-decoration-color: var(--line-strong);
   text-underline-offset: 3px;
 }
 
 .railSend {
-  background: #f1f2f4;
+  background: var(--tool);
   color: var(--ink2);
 }
 
 .railSend:hover:not(:disabled) {
-  background: #e6e7ea;
+  background: var(--tool);
   color: var(--ink);
 }
 
@@ -6152,8 +6173,8 @@
 }
 
 .archiveHero h1 i {
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
   box-shadow: 0 4px 12px -6px rgb(17 17 19 / 0.45);
 }
 
@@ -6165,7 +6186,7 @@
   height: 26px;
   padding: 0 12px;
   font-size: 12px;
-  box-shadow: inset 0 0 0 1px #e0e1e3;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
 }
 
 .archiveCanvas .spaceBriefForm {
@@ -6173,9 +6194,9 @@
 }
 
 .archiveCanvas .spaceBriefHint {
-  border-left: 3px solid #1b1b1d;
+  border-left: 3px solid var(--purple);
   border-radius: 0 8px 8px 0;
-  background: #f7f7f8;
+  background: var(--tool);
   padding: 10px 14px;
   font-size: 12.5px;
 }
@@ -6184,18 +6205,18 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 7px;
   padding: 14px 16px 15px;
-  border-color: #ebedf0;
+  border-color: var(--line);
   border-radius: 13px;
-  background: #fafbfc;
+  background: var(--surface);
 }
 
 .archiveCanvas .spaceBriefField:hover {
-  border-color: #e0e3e7;
+  border-color: var(--line-strong);
 }
 
 .archiveCanvas .spaceBriefField:focus-within {
-  border-color: #c9ccd2;
-  background: #fff;
+  border-color: var(--line-strong);
+  background: var(--card);
   box-shadow: 0 3px 16px -8px rgb(17 17 19 / 0.2);
 }
 
@@ -6232,9 +6253,9 @@
   flex-direction: column;
   gap: 10px;
   padding: 12px;
-  border: 1px solid #ebedf0;
+  border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fafbfc;
+  background: var(--surface);
 }
 
 .restylePreviewImg {
@@ -6244,7 +6265,7 @@
   border-radius: 10px;
   overflow: hidden;
   object-fit: cover;
-  background: #eceef1;
+  background: var(--tool);
 }
 
 .restylePreviewEmpty {
@@ -6252,9 +6273,9 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 3 / 4;
-  border: 1px dashed #d8dade;
+  border: 1px dashed var(--line-strong);
   border-radius: 10px;
-  color: #9aa0a8;
+  color: var(--ink3);
   font-size: 12.5px;
 }
 
@@ -6266,13 +6287,13 @@
 
 .restylePreviewMeta b {
   font-size: 13px;
-  color: #1b1b1d;
+  color: var(--ink);
 }
 
 .restylePreviewMeta small {
   font-size: 11.5px;
   line-height: 1.55;
-  color: #8a8f99;
+  color: var(--ink3);
 }
 
 .restyleForm {
@@ -6287,9 +6308,9 @@
   flex-direction: column;
   gap: 6px;
   padding: 10px 12px;
-  border: 1px solid #ebedf0;
+  border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fafbfc;
+  background: var(--surface);
   transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -6297,7 +6318,7 @@
   font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: #6b7078;
+  color: var(--ink2);
 }
 
 .restyleField input {
@@ -6308,7 +6329,7 @@
   background: transparent;
   font-size: 14px;
   line-height: 1.6;
-  color: #1b1b1d;
+  color: var(--ink);
 }
 
 .restyleField input::placeholder {
@@ -6316,8 +6337,8 @@
 }
 
 .restyleField:focus-within {
-  background: #fff;
-  border-color: #c9ccd2;
+  background: var(--card);
+  border-color: var(--line-strong);
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.05);
 }
 
@@ -6331,24 +6352,24 @@
 .restyleChip {
   height: 28px;
   padding: 0 11px;
-  border: 1px solid #e3e5e8;
+  border: 1px solid var(--line-strong);
   border-radius: 999px;
-  background: #fff;
-  color: #52565d;
+  background: var(--card);
+  color: var(--ink2);
   font-size: 12px;
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
 }
 
 .restyleChip:hover {
-  border-color: #c9ccd2;
-  color: #1b1b1d
+  border-color: var(--line-strong);
+  color: var(--ink)
 }
 
 .restyleChipOn {
-  border-color: #1b1b1d;
-  background: #1b1b1d;
-  color: #fff;
+  border-color: var(--purple);
+  background: var(--purple);
+  color: var(--purple-fg);
 }
 
 .restyleActions {
@@ -6375,10 +6396,10 @@
 .restyleError {
   margin: 0;
   padding: 9px 12px;
-  border: 1px solid #f3d2d2;
+  border: 1px solid var(--danger-line);
   border-radius: 10px;
-  background: #fdf3f3;
-  color: #c0392b;
+  background: var(--danger-soft);
+  color: var(--danger);
   font-size: 12.5px;
   line-height: 1.5;
 }
@@ -6392,10 +6413,10 @@
 
 .restyleShot {
   margin: 0;
-  border: 1px solid #ebedf0;
+  border: 1px solid var(--line);
   border-radius: 12px;
   overflow: hidden;
-  background: #fff;
+  background: var(--card);
 }
 
 .restyleShot img {
@@ -6403,7 +6424,7 @@
   width: 100%;
   aspect-ratio: 3 / 4;
   object-fit: cover;
-  background: #eceef1;
+  background: var(--tool);
 }
 
 .restyleShotBar {
@@ -6417,22 +6438,22 @@
 .restyleShotBar button {
   height: 30px;
   padding: 0 12px;
-  border: 1px solid #e3e5e8;
+  border: 1px solid var(--line-strong);
   border-radius: 8px;
-  background: #fff;
-  color: #52565d;
+  background: var(--card);
+  color: var(--ink2);
   font-size: 12px;
   cursor: pointer;
 }
 
 .restyleShotBar button:disabled {
-  color: #9aa0a8;
+  color: var(--ink3);
   cursor: default;
 }
 
 .restyleLink {
   font-size: 12px;
-  color: #6b7078;
+  color: var(--ink2);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -6461,10 +6482,10 @@
 .restyleUploadGhost {
   height: 32px;
   padding: 0 12px;
-  border: 1px solid #e3e5e8;
+  border: 1px solid var(--line-strong);
   border-radius: 9px;
-  background: #fff;
-  color: #3d4148;
+  background: var(--card);
+  color: var(--ink);
   font-size: 12.5px;
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
@@ -6472,13 +6493,13 @@
 
 .restyleUpload:hover,
 .restyleUploadGhost:hover {
-  border-color: #c9ccd2;
-  background: #f7f8f9;
+  border-color: var(--line-strong);
+  background: var(--tool);
 }
 
 .restyleUploadGhost {
   border-style: dashed;
-  color: #8a8f99;
+  color: var(--ink3);
 }
 
 .restyleModeRow {
@@ -6490,24 +6511,24 @@
 .restyleMode {
   height: 32px;
   padding: 0 14px;
-  border: 1px solid #e3e5e8;
+  border: 1px solid var(--line-strong);
   border-radius: 999px;
-  background: #fff;
-  color: #52565d;
+  background: var(--card);
+  color: var(--ink2);
   font-size: 13px;
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
 .restyleMode:hover {
-  border-color: #c9ccd2;
-  color: #1b1b1d;
+  border-color: var(--line-strong);
+  color: var(--ink);
 }
 
 .restyleModeOn {
-  border-color: #1b1b1d;
-  background: #1b1b1d;
-  color: #fff;
+  border-color: var(--purple);
+  background: var(--purple);
+  color: var(--purple-fg);
   font-weight: 600;
 }
 
@@ -6517,9 +6538,9 @@
   flex-direction: column;
   gap: 10px;
   padding: 12px;
-  border: 1px dashed #dcdfe4;
+  border: 1px dashed var(--line-strong);
   border-radius: 14px;
-  background: #fafbfc;
+  background: var(--surface);
 }
 
 .restyleBackdropImg {
@@ -6536,19 +6557,19 @@
   gap: 4px;
   padding: 18px 12px;
   border-radius: 10px;
-  background: #fff;
+  background: var(--card);
   border: 1px solid #eceef1;
   text-align: center;
 }
 
 .restyleBackdropEmpty b {
   font-size: 13px;
-  color: #1b1b1d;
+  color: var(--ink);
 }
 
 .restyleBackdropEmpty span {
   font-size: 12px;
-  color: #8b9098;
+  color: var(--ink3);
   line-height: 1.5;
 }
 
@@ -6560,7 +6581,7 @@
 
 .restyleBackdropHint {
   font-size: 12px;
-  color: #8b9098;
+  color: var(--ink3);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -6575,7 +6596,7 @@
 
 .restylePresetLabel {
   font-size: 12px;
-  color: #8b9098;
+  color: var(--ink3);
 }
 
 .restylePresetRow {
@@ -6592,16 +6613,16 @@
   flex-direction: column;
   gap: 5px;
   padding: 5px;
-  border: 1px solid #e9ebef;
+  border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--card);
   cursor: pointer;
   box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
   transition: box-shadow 0.16s ease, transform 0.16s ease, border-color 0.16s ease;
 }
 
 .restylePreset:hover {
-  border-color: #d9dce2;
+  border-color: var(--line-strong);
   box-shadow: 0 6px 16px rgba(16, 24, 40, 0.1);
   transform: translateY(-1px);
 }
@@ -6616,7 +6637,7 @@
 
 .restylePreset span {
   font-size: 11.5px;
-  color: #4b5058;
+  color: var(--ink2);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -6624,7 +6645,7 @@
 }
 
 .restylePresetOn {
-  border-color: #1b1b1d;
+  border-color: var(--purple);
   box-shadow: 0 0 0 2px rgba(27, 27, 29, 0.12);
 }
 
@@ -6637,19 +6658,19 @@
   align-items: stretch;
   gap: 5px;
   padding: 5px;
-  border: 1px dashed #d7dbe2;
+  border: 1px dashed var(--line-strong);
   border-radius: 12px;
-  background: linear-gradient(180deg, #fafbfc 0%, #f4f6f8 100%);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--tool) 100%);
   cursor: pointer;
-  color: #8b9098;
+  color: var(--ink3);
   transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
 }
 
 .restylePresetAdd:hover {
-  border-color: #1b1b1d;
-  background: #fff;
+  border-color: var(--purple);
+  background: var(--card);
   box-shadow: 0 6px 16px rgba(16, 24, 40, 0.1);
-  color: #1b1b1d;
+  color: var(--ink);
 }
 
 .restylePresetAddPlus {
@@ -6660,8 +6681,8 @@
   height: 34px;
   margin: 19px auto;
   border-radius: 50%;
-  background: #e9ecf1;
-  color: #6b7280;
+  background: var(--tool);
+  color: var(--ink2);
   font-size: 17px;
   font-weight: 400;
   line-height: 1;
@@ -6669,8 +6690,8 @@
 }
 
 .restylePresetAdd:hover .restylePresetAddPlus {
-  background: #1b1b1d;
-  color: #fff;
+  background: var(--purple);
+  color: var(--purple-fg);
 }
 
 .restylePresetAdd span:last-child {

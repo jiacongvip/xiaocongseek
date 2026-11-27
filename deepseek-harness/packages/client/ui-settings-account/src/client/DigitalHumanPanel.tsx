@@ -3609,7 +3609,7 @@ export function DigitalHumanPanel({ sendToChat, askAi }: { sendToChat?: SendToCh
                                     padding: '2px 8px',
                                     borderRadius: 999,
                                     border: briefDraft[field.key] === preset ? '1px solid currentColor' : '1px solid rgba(128,128,128,0.28)',
-                                    background: briefDraft[field.key] === preset ? 'rgba(27,27,29,0.08)' : 'transparent',
+                                    background: briefDraft[field.key] === preset ? 'var(--dsw-alias-interactive-bg-active, rgba(27,27,29,0.08))' : 'transparent',
                                     color: 'inherit',
                                     cursor: 'pointer',
                                   }}
