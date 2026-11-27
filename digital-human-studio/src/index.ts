@@ -173,7 +173,7 @@ import {
 } from './retro-review.js'
 import { accountMonitor, accountMonitorCapability, spaceAccountWorks } from './account-monitor.js'
 import { diagnoseMcEnv, provisionMcEnv, mcVendorRoot } from './mediacrawler-provision.js'
-import { setupStatus, setupFootprint } from './setup-center.js'
+import { setupStatus, setupFootprint, installAsrModel } from './setup-center.js'
 
 async function runDyDownloadPreferringCdp(args: {
   spaceId: string
@@ -6165,8 +6165,8 @@ export async function apply(ctx: Context) {
             return
           }
           if (key === 'asr') {
-            const r = await vcFetch('/xcy/asr/prepare', { model: 'small' }, 'POST')
-            sendJson(res, r.ok ? 200 : 502, { success: !!r.ok, key, detail: r.ok ? '模型开始下载（进度见状态）' : (r.data as any)?.error || '模型下载没起来' })
+            const r = await installAsrModel(root, 'small', join(tmpdir(), 'dsh-asr-install.log'))
+            sendJson(res, r.success ? 200 : 500, { success: r.success, key, detail: r.detail })
             return
           }
           if (key === 'node') {
@@ -8165,8 +8165,12 @@ export async function apply(ctx: Context) {
           return
         }
         const body = await readJson(req).catch(() => ({}))
+        const model = String((body as any)?.model || 'small')
         try {
-          const r = await vcFetch('/xcy/asr/prepare', { model: String((body as any)?.model || 'small') }, 'POST')
+          if (!(await probeOnline()).online) {
+            await engineStart()
+          }
+          const r = await vcFetch('/xcy/asr/prepare', { model }, 'POST')
           sendJson(res, r.ok ? 200 : 502, r.ok ? r.data : { success: false, error: (r.data as any)?.error || '模型下载没起来' })
         } catch (e: any) {
           sendJson(res, 502, { success: false, error: e?.message || '模型下载没起来' })

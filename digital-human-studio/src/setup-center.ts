@@ -18,7 +18,7 @@ import {
   resolveEngineVenvDir,
   resolveEngineVenvPython,
 } from './platform.js'
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
+import { appendFileSync, existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -479,4 +479,100 @@ export async function waitPublishInstall(maxMs = 20 * 60 * 1000): Promise<void> 
   while (publishJob.running && Date.now() - t0 < maxMs) {
     await new Promise((r) => setTimeout(r, 2000))
   }
+}
+
+// ─────────────────────────────────────────────────────────────
+// 语音转字幕模型（faster-whisper）：不依赖 capcut_server.py 已启动，
+// 缺 faster-whisper 自动 pip 补装，再用 hf-mirror / 官方源下载模型。
+// ─────────────────────────────────────────────────────────────
+const ASR_PYPI_MIRROR = 'https://pypi.tuna.tsinghua.edu.cn/simple'
+const PROXY_KEYS = ['HTTP_PROXY', 'HTTPS_PROXY', 'ALL_PROXY', 'http_proxy', 'https_proxy', 'all_proxy']
+
+function spawnStep(
+  cmd: string,
+  args: string[],
+  opts: { cwd?: string; timeoutMs: number; logFile?: string; stripProxy?: boolean; extraEnv?: Record<string, string> },
+): Promise<{ ok: boolean; output: string }> {
+  return new Promise((done) => {
+    const env: NodeJS.ProcessEnv = { ...process.env, PYTHONUNBUFFERED: '1', ...(opts.extraEnv || {}) }
+    if (opts.stripProxy) {
+      for (const k of PROXY_KEYS) delete env[k]
+    }
+    let child
+    try {
+      child = spawn(cmd, args, { cwd: opts.cwd, env })
+    } catch (e: any) {
+      done({ ok: false, output: String(e?.message || e) })
+      return
+    }
+    let buf = ''
+    let settled = false
+    const finish = (ok: boolean, extra = '') => {
+      if (settled) return
+      settled = true
+      const text = [buf, extra].filter(Boolean).join('\n').trim()
+      done({ ok, output: text.slice(-4000) })
+    }
+    const cap = (c: Buffer) => {
+      const s = c.toString()
+      buf += s
+      if (buf.length > 40000) buf = buf.slice(-40000)
+      if (opts.logFile) {
+        try { appendFileSync(opts.logFile, s) } catch { /* ignore */ }
+      }
+    }
+    child.stdout?.on('data', cap)
+    child.stderr?.on('data', cap)
+    const timer = setTimeout(() => {
+      try { child.kill('SIGKILL') } catch { /* ignore */ }
+      finish(false, `超时（${Math.round(opts.timeoutMs / 1000)}s）`)
+    }, opts.timeoutMs)
+    child.on('error', (e: any) => { clearTimeout(timer); finish(false, String(e?.message || e)) })
+    child.on('close', (code) => { clearTimeout(timer); finish(code === 0, code === 0 ? '' : `退出码 ${code}`) })
+  })
+}
+
+export async function installAsrModel(
+  engineRoot = XIAOCONGCUT,
+  model = 'small',
+  logFile?: string,
+): Promise<{ success: boolean; detail: string }> {
+  const root = engineRoot || XIAOCONGCUT
+  const py = resolveEngineVenvPython(root)
+  if (!existsSync(py)) {
+    return { success: false, detail: '渲染引擎还没装好，请先安装「渲染引擎」' }
+  }
+  if (!pyImportOk(py, 'faster_whisper')) {
+    const base = ['-m', 'pip', 'install', 'faster-whisper', 'zhconv']
+    const hasProxy = PROXY_KEYS.some((k) => !!process.env[k])
+    let r = await spawnStep(py, [...base, '-i', ASR_PYPI_MIRROR], { cwd: root, timeoutMs: 600_000, logFile })
+    if (!r.ok && hasProxy) {
+      r = await spawnStep(py, [...base, '-i', ASR_PYPI_MIRROR], { cwd: root, timeoutMs: 600_000, logFile, stripProxy: true })
+    }
+    if (!r.ok) {
+      r = await spawnStep(py, base, { cwd: root, timeoutMs: 600_000, logFile })
+    }
+    if (!r.ok) {
+      const tail = r.output.split('\n').filter(Boolean).slice(-6).join(' | ')
+      return { success: false, detail: `安装 faster-whisper 失败：${tail || '检查网络后重试'}` }
+    }
+  }
+  const code = [
+    'import sys',
+    `sys.path.insert(0, ${JSON.stringify(root)})`,
+    'import xcy_subtitle',
+    `xcy_subtitle.ensure_model(${JSON.stringify(model)})`,
+    'print("ASR_MODEL_READY")',
+  ].join('; ')
+  const dl = await spawnStep(py, ['-c', code], {
+    cwd: root,
+    timeoutMs: 15 * 60 * 1000,
+    logFile,
+    extraEnv: { HF_HUB_DISABLE_SYMLINKS_WARNING: '1' },
+  })
+  if (!dl.ok || !hasModelBin(join(CACHE, 'asr-models'))) {
+    const tail = dl.output.split('\n').filter(Boolean).slice(-6).join(' | ')
+    return { success: false, detail: `模型下载失败：${tail || '请检查网络或代理设置后重试'}` }
+  }
+  return { success: true, detail: `语音转字幕模型（${model}）已下载就绪` }
 }

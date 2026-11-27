@@ -83,22 +83,80 @@ def model_ready(model: str = 'small') -> bool:
     return any(p.name == 'model.bin' for p in d.rglob('*'))
 
 
+def _set_hf_endpoint(endpoint: str) -> None:
+    os.environ['HF_ENDPOINT'] = endpoint
+    try:
+        import huggingface_hub.constants as hf_const
+        hf_const.ENDPOINT = endpoint.rstrip('/')
+    except Exception:
+        pass
+    try:
+        import huggingface_hub.file_download as hf_dl
+        if hasattr(hf_dl, 'ENDPOINT'):
+            hf_dl.ENDPOINT = endpoint.rstrip('/')
+    except Exception:
+        pass
+
+
 def ensure_model(model: str = 'small'):
-    """确保模型在本地；没有就现在下载（首次要等，之后秒开）。"""
+    """确保模型在本地；没有就现在下载（首次要等，之后秒开）。
+
+    国内环境 huggingface.co 常连不上，默认先走 hf-mirror.com，再回退官方源；
+    若机器挂着代理导致 TLS 断流，自动去代理直连重试。
+    """
     _patch_av_open()
+    os.environ.setdefault('HF_HUB_DISABLE_SYMLINKS_WARNING', '1')
+
+    user_ep = os.environ.get('HF_ENDPOINT', '').strip().rstrip('/')
+    endpoints: list[str] = []
+    for ep in ([user_ep] if user_ep else []) + ['https://hf-mirror.com', 'https://huggingface.co']:
+        if ep and ep not in endpoints:
+            endpoints.append(ep)
+    if not user_ep:
+        os.environ['HF_ENDPOINT'] = endpoints[0]
+
     try:
         from faster_whisper import WhisperModel
     except Exception as exc:  # noqa: BLE001
         raise RuntimeError(
             '缺转写依赖：在引擎 venv 里执行 '
-            f'`.venv/bin/pip install faster-whisper`（原始错误：{exc}）'
+            f'`pip install faster-whisper`（原始错误：{exc}）'
         ) from exc
+
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
-    return WhisperModel(
-        model, device=os.environ.get('XCY_ASR_DEVICE', 'cpu'),
-        compute_type=os.environ.get('XCY_ASR_COMPUTE', 'int8'),
-        download_root=str(MODEL_DIR),
-    )
+    device = os.environ.get('XCY_ASR_DEVICE', 'cpu')
+    compute = os.environ.get('XCY_ASR_COMPUTE', 'int8')
+    if model_ready(model):
+        return WhisperModel(model, device=device, compute_type=compute, download_root=str(MODEL_DIR))
+
+    proxy_keys = ('HTTP_PROXY', 'HTTPS_PROXY', 'ALL_PROXY', 'http_proxy', 'https_proxy', 'all_proxy')
+    saved_proxy = {k: os.environ.get(k) for k in proxy_keys if os.environ.get(k)}
+    attempts: list[tuple[str, bool]] = []
+    for ep in endpoints:
+        attempts.append((ep, False))
+        if saved_proxy:
+            attempts.append((ep, True))
+
+    last_exc: Exception | None = None
+    for ep, strip_proxy in attempts:
+        try:
+            _set_hf_endpoint(ep)
+            if strip_proxy:
+                for k in proxy_keys:
+                    os.environ.pop(k, None)
+            else:
+                for k, v in saved_proxy.items():
+                    if v is not None:
+                        os.environ[k] = v
+            return WhisperModel(model, device=device, compute_type=compute, download_root=str(MODEL_DIR))
+        except Exception as exc:  # noqa: BLE001
+            last_exc = exc
+        finally:
+            for k, v in saved_proxy.items():
+                if v is not None:
+                    os.environ[k] = v
+    assert last_exc is not None
+    raise RuntimeError(f'下载语音模型失败（已尝试镜像与官方源）：{last_exc}') from last_exc
 
 def transcribe(path: str, model: str = 'small', language: str = 'zh',
                on_progress=None, force: bool = False, words: bool = False) -> list[dict]:
