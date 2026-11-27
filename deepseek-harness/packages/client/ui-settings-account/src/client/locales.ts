@@ -71,7 +71,7 @@ export const zh: Record<AccountKey, string> = {
   signInDescription: '登录 XiaocongAPI 账号以开始使用',
   profileUnavailable: '账号资料暂不可用',
   balance: '充值余额', bonusBalance: '赠金余额', balanceUnavailable: '前往开放平台查看', balanceSignedOut: '登录后查看',
-  mcpTitle: 'MCP 服务', mcpIntro: '客户端启动后，本地 MCP 服务自动运行；外部 AI Agent 可通过它调用 Xiaocongseek 的剪辑、渲染、字幕等能力。', mcpRunning: '运行中', mcpStopped: '未运行', mcpAddress: '地址', mcpToolCount: '个工具', mcpCopyConfig: '自定义 MCP Server 配置', mcpCopyHint: '如需在其他 AI Agent 中使用 Xiaocongseek MCP，请复制以下 JSON 配置，并粘贴到对应 Agent 的 MCP 配置文件中。', mcpPromptTitle: '给其他 AI 的调用提示词', mcpPromptHint: '复制下方提示词发给 Claude Code、Cursor、WorkBuddy、Codex 等外部 AI（或写进它的系统规则），它就会准确调用本地 Xiaocongseek 接口来完成剪辑、字幕、模板和出片。', mcpCopyPrompt: '复制提示词', mcpCopy: '复制', mcpCopied: '已复制', mcpWriteFailed: '写入 Agent 配置失败，请重试',
+  mcpTitle: 'MCP 服务', mcpIntro: '客户端启动后，本地 MCP 服务自动运行；外部 AI Agent 可通过它调用 Xiaocongseek 的配音、数字人、代码动画、剪辑、文案封面与多平台发布等全流程能力。', mcpRunning: '运行中', mcpStopped: '未运行', mcpAddress: '地址', mcpToolCount: '个工具', mcpCopyConfig: '自定义 MCP Server 配置', mcpCopyHint: '如需在其他 AI Agent 中使用 Xiaocongseek MCP，请复制以下 JSON 配置，并粘贴到对应 Agent 的 MCP 配置文件中。', mcpPromptTitle: '给其他 AI 的调用提示词', mcpPromptHint: '点「复制提示词」直接发给外部 AI（或写进它的系统规则），AI 会先自动检查连接并用人话引导你开工，无需懂技术参数。', mcpCopyPrompt: '复制提示词', mcpCopy: '复制', mcpCopied: '已复制', mcpWriteFailed: '写入 Agent 配置失败，请重试',
   accountInfo: '更多账号信息', more: '更多', usage: '查询用量', topUp: '充值',
   quotaTitle: '当前无可用余额',
   quotaDescription: '没有可用额度时，Xiaocongseek 无法开始新的任务，是否前往充值？或者可以稍后前往 设置 → 账号与余额 进行充值。',
