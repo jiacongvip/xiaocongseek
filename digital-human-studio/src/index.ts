@@ -174,6 +174,12 @@ import {
 import { accountMonitor, accountMonitorCapability, spaceAccountWorks } from './account-monitor.js'
 import { diagnoseMcEnv, provisionMcEnv, mcVendorRoot } from './mediacrawler-provision.js'
 import { setupStatus, setupFootprint, installAsrModel } from './setup-center.js'
+import {
+  listCodeAnimStyles,
+  getCodeAnimStyle,
+  resolveCodeAnimStillPath,
+  renderCodeAnimHtml,
+} from './code-anim.js'
 
 async function runDyDownloadPreferringCdp(args: {
   spaceId: string
@@ -4948,6 +4954,96 @@ export async function apply(ctx: Context) {
           })
         } catch (e: any) {
           sendJson(res, 400, { success: false, error: e?.message || '读取音乐列表失败' })
+        }
+      }),
+      register('/digital-human-studio/code-anim/styles', async (req, res) => {
+        if (String(req.method || 'GET').toUpperCase() !== 'GET') {
+          sendJson(res, 405, { success: false, error: 'method not allowed' }); return
+        }
+        try {
+          const url = new URL(String(req.url || '/'), 'http://127.0.0.1')
+          sendJson(res, 200, listCodeAnimStyles({
+            query: url.searchParams.get('query') || '',
+            series: url.searchParams.get('series') || '',
+            featuredOnly: url.searchParams.get('featured') === '1' || url.searchParams.get('featured') === 'true',
+            hasStill: url.searchParams.get('hasStill') === '1' || url.searchParams.get('hasStill') === 'true',
+            limit: url.searchParams.get('limit') ? Number(url.searchParams.get('limit')) : undefined,
+          }))
+        } catch (e: any) {
+          sendJson(res, 400, { success: false, error: e?.message || '读取代码动画风格列表失败' })
+        }
+      }),
+      register('/digital-human-studio/code-anim/style', async (req, res) => {
+        if (String(req.method || 'GET').toUpperCase() !== 'GET') {
+          sendJson(res, 405, { success: false, error: 'method not allowed' }); return
+        }
+        try {
+          const url = new URL(String(req.url || '/'), 'http://127.0.0.1')
+          const id = String(url.searchParams.get('id') || '').trim()
+          const oriRaw = String(url.searchParams.get('orientation') || 'auto').trim().toLowerCase()
+          const orientation = oriRaw === 'vertical' ? 'vertical' : oriRaw === 'horizontal' ? 'horizontal' : 'auto'
+          const r = getCodeAnimStyle(id, orientation)
+          sendJson(res, r.success ? 200 : 404, r)
+        } catch (e: any) {
+          sendJson(res, 400, { success: false, error: e?.message || '读取代码动画风格失败' })
+        }
+      }),
+      register('/digital-human-studio/code-anim/still', async (req, res) => {
+        const method = String(req.method || 'GET').toUpperCase()
+        if (method !== 'GET' && method !== 'HEAD') {
+          sendJson(res, 405, { success: false, error: 'method not allowed' }); return
+        }
+        try {
+          const url = new URL(String(req.url || '/'), 'http://127.0.0.1')
+          const rel = String(url.searchParams.get('path') || '')
+          const abs = resolveCodeAnimStillPath(rel)
+          if (!abs) { sendJson(res, 404, { success: false, error: '静帧图片不存在' }); return }
+          const buf = readFileSync(abs)
+          if (method === 'HEAD') {
+            res.writeHead(200, { 'content-type': 'image/jpeg', 'content-length': buf.length, 'cache-control': 'public, max-age=86400' })
+            res.end(); return
+          }
+          sendBinary(res, 200, buf, 'image/jpeg', 'public, max-age=86400')
+        } catch (e: any) {
+          sendJson(res, 400, { success: false, error: e?.message || '读取静帧图片失败' })
+        }
+      }),
+      register('/digital-human-studio/code-anim/render', async (req, res) => {
+        if (String(req.method || 'GET').toUpperCase() !== 'POST') {
+          sendJson(res, 405, { success: false, error: 'method not allowed' }); return
+        }
+        if (!sameOrigin(req)) { sendJson(res, 403, { success: false, error: 'origin not allowed' }); return }
+        try {
+          const body = await readJson(req)
+          const spaceQuery = String((body as any)?.space || '').trim()
+          const spaceId = isSpaceId(spaceQuery) ? spaceQuery : activeSpaceId
+          const htmlPath = (body as any)?.html_path ? expandPath(String((body as any).html_path)) : undefined
+          const outputPath = (body as any)?.output_path ? expandPath(String((body as any).output_path)) : undefined
+          const rendered = await renderCodeAnimHtml({
+            htmlPath,
+            html: typeof (body as any)?.html === 'string' ? (body as any).html : undefined,
+            outputPath,
+            width: (body as any)?.width ? Number((body as any).width) : undefined,
+            height: (body as any)?.height ? Number((body as any).height) : undefined,
+            fps: (body as any)?.fps ? Number((body as any).fps) : undefined,
+            duration: (body as any)?.duration ? Number((body as any).duration) : undefined,
+            transparent: !!(body as any)?.transparent,
+            workDir: join(spaceAssetRoot(spaceId), 'code-anim'),
+          })
+          if (!rendered.success || !rendered.output) {
+            sendJson(res, 500, rendered); return
+          }
+          let work: any = undefined
+          if ((body as any)?.import_to_works && !rendered.transparent && existsSync(rendered.output)) {
+            try {
+              const title = String((body as any)?.title || '代码动画成片').trim()
+              const safeName = title.endsWith('.mp4') ? title : `${title}.mp4`
+              work = importExport(spaceId, safeName, readFileSync(rendered.output))
+            } catch { /* non-fatal */ }
+          }
+          sendJson(res, 200, { ...rendered, spaceId, ...(work ? { work } : {}) })
+        } catch (e: any) {
+          sendJson(res, 400, { success: false, error: e?.message || '渲染代码动画失败' })
         }
       }),
       register('/digital-human-studio/spaces', async (req, res) => {
@@ -9883,6 +9979,105 @@ export async function apply(ctx: Context) {
           presentCall: (args) => ({
             card: 'generic',
             title: `快速剪辑：${String((args as any)?.title || '成片')}`,
+            kind: 'other',
+          }),
+        }),
+      ),
+      trackTool(ctx,
+        defineTool({
+          name: 'dh_list_code_anim_styles',
+          description:
+            'Digital Human Studio: 检索内置的 341 种 HTML Canvas/SVG 代码动画风格提示词库（支持按关键词、系列 AG/M/K/Z/H/L/V/X/R/O 或精选筛选）。默认返回精选高频款或最匹配的前 24 条；选定编号后调用 dh_get_code_anim_style 获取完整提示词。',
+          parameters: {
+            query: { type: 'string', description: '可选：按关键词检索（如「对比」「流程」「水墨」「剪纸」「黑板」「霓虹」「数据」）' },
+            series: { type: 'string', description: '可选：按系列筛选（L=商业信息图 / M=动态叙事 / H=现成版式 / K=卡通手绘 / Z=中国风 / AG=代码样片 / V=MG动效 / X=code-video / R=赛博 / O=奥斯卡98部）' },
+            featured: { type: 'boolean', description: '可选：仅看口播高频精选风格' },
+            has_still: { type: 'boolean', description: '可选：仅看带静帧预览图的风格' },
+            limit: { type: 'number', description: '可选：返回条数上限（默认 24，最大 100）' },
+          },
+          output: { schema: { type: 'object', additionalProperties: true }, render: renderJson },
+          execute: async (args) => toLosslessJson(listCodeAnimStyles({
+            query: String((args as any)?.query || ''),
+            series: String((args as any)?.series || ''),
+            featuredOnly: !!(args as any)?.featured,
+            hasStill: !!(args as any)?.has_still,
+            limit: (args as any)?.limit ? Number((args as any).limit) : undefined,
+          })),
+          presentCall: (args) => ({
+            card: 'generic',
+            title: `检索代码动画风格${(args as any)?.query ? `：${String((args as any).query)}` : ''}`,
+            kind: 'other',
+          }),
+        }),
+      ),
+      trackTool(ctx,
+        defineTool({
+          name: 'dh_get_code_anim_style',
+          description:
+            'Digital Human Studio: 读取指定代码动画风格（如 L42、Z5、B6、H1）的完整提示词原文与画幅规范。写 HTML 代码动画前必须先调此工具获取完整做法。',
+          parameters: {
+            id: { type: 'string', required: true, description: '风格编号（如 L42、Z5、B6、H1）或风格名称' },
+            orientation: { type: 'string', description: '可选：vertical（1080×1920 竖屏口播插片）/ horizontal（1920×1080 横屏）/ auto' },
+          },
+          output: { schema: { type: 'object', additionalProperties: true }, render: renderJson },
+          execute: async (args) => {
+            const oriRaw = String((args as any)?.orientation || 'auto').trim().toLowerCase()
+            const ori = oriRaw === 'vertical' ? 'vertical' : oriRaw === 'horizontal' ? 'horizontal' : 'auto'
+            return toLosslessJson(getCodeAnimStyle(String((args as any)?.id || ''), ori)) as Record<string, any>
+          },
+          presentCall: (args) => ({
+            card: 'generic',
+            title: `读取代码动画风格：${String((args as any)?.id || '')}`,
+            kind: 'other',
+          }),
+        }),
+      ),
+      trackTool(ctx,
+        defineTool({
+          name: 'dh_render_code_anim',
+          description:
+            'Digital Human Studio: 将确定性 HTML Canvas/SVG 代码动画（实现 window.draw(t) 或 ?t=秒）通过本机 Chromium + ffmpeg 无损逐帧渲染为 MP4（或 transparent=true 导出透明通道 WebM）。支持直接入当前公司成片库或拼进口播视频中段。',
+          parameters: {
+            html: { type: 'string', description: '完整单文件 HTML 代码（与 html_path 二选一）' },
+            html_path: { type: 'string', description: '本地 HTML 文件绝对路径（与 html 二选一）' },
+            width: { type: 'number', description: '画幅宽度（竖屏口播默认 1080，横屏 1920；不传则自动读 canvas width）' },
+            height: { type: 'number', description: '画幅高度（竖屏口播默认 1920，横屏 1080；不传则自动读 canvas height）' },
+            fps: { type: 'number', description: '帧率（默认 30，最高 60）' },
+            duration: { type: 'number', description: '时长（秒；不传则自动读 window.__T_END 或默认 6 秒）' },
+            transparent: { type: 'boolean', description: '可选：true 导出带 Alpha 透明通道的 WebM（可叠在口播人像旁）' },
+            output_path: { type: 'string', description: '可选：指定输出文件路径' },
+            import_to_works: { type: 'boolean', description: '可选：true 时自动登记进当前公司「成片库」' },
+            title: { type: 'string', description: '可选：入成片库时的名称' },
+          },
+          output: { schema: { type: 'object', additionalProperties: true }, render: renderJson },
+          execute: async (args) => {
+            const spaceId = activeSpaceId
+            const htmlPath = (args as any)?.html_path ? expandPath(String((args as any).html_path)) : undefined
+            const outputPath = (args as any)?.output_path ? expandPath(String((args as any).output_path)) : undefined
+            const rendered = await renderCodeAnimHtml({
+              htmlPath,
+              html: typeof (args as any)?.html === 'string' ? (args as any).html : undefined,
+              outputPath,
+              width: (args as any)?.width ? Number((args as any).width) : undefined,
+              height: (args as any)?.height ? Number((args as any).height) : undefined,
+              fps: (args as any)?.fps ? Number((args as any).fps) : undefined,
+              duration: (args as any)?.duration ? Number((args as any).duration) : undefined,
+              transparent: !!(args as any)?.transparent,
+              workDir: join(spaceAssetRoot(spaceId), 'code-anim'),
+            })
+            if (!rendered.success || !rendered.output) return toLosslessJson(rendered)
+            let work: any = undefined
+            if ((args as any)?.import_to_works && !rendered.transparent && existsSync(rendered.output)) {
+              try {
+                const title = String((args as any)?.title || '代码动画成片').trim()
+                work = importExport(spaceId, title.endsWith('.mp4') ? title : `${title}.mp4`, readFileSync(rendered.output))
+              } catch { /* non-fatal */ }
+            }
+            return toLosslessJson({ ...rendered, spaceId, ...(work ? { work } : {}) })
+          },
+          presentCall: (args) => ({
+            card: 'generic',
+            title: `渲染代码动画：${String((args as any)?.title || 'MP4')}`,
             kind: 'other',
           }),
         }),

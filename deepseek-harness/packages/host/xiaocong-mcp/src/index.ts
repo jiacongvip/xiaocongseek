@@ -316,6 +316,42 @@ function buildMcpServer(shellPort: () => number | undefined, bridgeToken: string
     }
   })
 
+  // ── Code Animation (341 Built-in Styles + Deterministic HTML -> MP4) ──────
+  registerGet('xiaocong_anim_styles_list', '检索内置 341 种 HTML Canvas/SVG 代码动画风格提示词库（支持按 query 关键词、series 系列 L/M/H/K/Z/AG/V/X/R/O 或 featured 精选筛选）', '/digital-human-studio/code-anim/styles', {
+    query: { name: 'query', description: '可选：关键词检索（如 对比/流程/水墨/剪纸/黑板/霓虹/数据）', optional: true },
+    series: { name: 'series', description: '可选：系列代码（L/M/H/K/Z/AG/V/X/R/O）', optional: true },
+    featured: { name: 'featured', description: '可选：传 1 只看口播高频精选', optional: true },
+    hasStill: { name: 'hasStill', description: '可选：传 1 只看带静帧预览图的风格', optional: true },
+    limit: { name: 'limit', description: '可选：返回条数（默认 24，最大 100）', optional: true },
+  })
+  registerGet('xiaocong_anim_style_get', '读取指定代码动画风格（如 L42、Z5、B6、H1）的完整提示词与横竖屏画幅规范', '/digital-human-studio/code-anim/style', {
+    id: { name: 'id', description: '风格编号（如 L42、Z5、B6、H1）或风格名称' },
+    orientation: { name: 'orientation', description: '可选：vertical（1080×1920 竖屏口播）/ horizontal（1920×1080 横屏）/ auto', optional: true },
+  })
+  addTool('xiaocong_anim_render', {
+    title: 'xiaocong_anim_render',
+    description: '将确定性 HTML Canvas/SVG 代码动画（实现 window.draw(t) 或 ?t=秒）通过本机 Chromium + ffmpeg 无损逐帧渲成 MP4（或 transparent=true 导出透明底 WebM）',
+    inputSchema: {
+      html: z.string().optional().describe('完整单文件 HTML 代码（与 html_path 二选一）'),
+      html_path: z.string().optional().describe('本机 HTML 文件绝对路径（与 html 二选一）'),
+      width: z.number().optional().describe('画幅宽（竖屏 1080 / 横屏 1920）'),
+      height: z.number().optional().describe('画幅高（竖屏 1920 / 横屏 1080）'),
+      fps: z.number().optional().describe('帧率（默认 30，最高 60）'),
+      duration: z.number().optional().describe('时长秒数（不传自动读 window.__T_END 或默认 6 秒）'),
+      transparent: z.boolean().optional().describe('true 导出透明通道 WebM'),
+      output_path: z.string().optional().describe('可选：指定输出文件路径'),
+      import_to_works: z.boolean().optional().describe('true 自动入当前公司成片库'),
+      title: z.string().optional().describe('入成片库时的名称'),
+      space: z.string().optional().describe('可选：公司 ID'),
+    },
+  }, async (args) => {
+    try {
+      return text(await post('/digital-human-studio/code-anim/render', (args ?? {}) as Record<string, unknown>, 300_000))
+    } catch (error) {
+      return text({ success: false, error: error instanceof Error ? error.message : String(error) })
+    }
+  })
+
   // ── Engine / Batch Render / QC / Matte / Drafts / Maintenance ─────────────
   registerPost('xiaocong_engine_start', '启动本机 Xiaocongcut 剪辑引擎（若离线时调用）', '/digital-human-studio/engine_start', 60_000)
   registerPost('xiaocong_engine_stop', '停止本机 Xiaocongcut 剪辑引擎', '/digital-human-studio/engine_stop')
