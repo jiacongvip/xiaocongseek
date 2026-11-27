@@ -1,11 +1,37 @@
 # 依赖与构建产物（克隆后按 README 重新构建）
 node_modules/
 lib/
+!digital-human-studio/lib/
+!digital-human-studio/lib/client.js
 dist/
+dist-releases/
 .cache/
 .pnpm-store/
 *.tsbuildinfo
 *.log
+deepseek-harness/.dsh-build/
+deepseek-harness/apps/desktop/.desktop-build/
+
+# Python 运行时与缓存
+**/.venv/
+**/venv/
+**/__pycache__/
+*.pyc
+digital-human-studio/vendor/runtime/
+digital-human-studio/vendor/xiaocongcut/font-pack/
+digital-human-studio/vendor/xiaocongcut/fonts/Full-*
+!digital-human-studio/vendor/xiaocongcut/fonts/Full-SourceHanSerifSC-Bold.otf
+!digital-human-studio/vendor/xiaocongcut/fonts/Full-LantingheiSC-Demibold.otf
+!digital-human-studio/vendor/xiaocongcut/fonts/Full-HelveticaNeue-Light.ttf
+digital-human-studio/vendor/xiaocongcut/recipes/
+digital-human-studio/artifacts/
+
+# 临时备份文件
+.backup-*/
+**/.backup-*/
+**/.backup-*
+*.deepseek.bak
+*.bak-*
 
 # 上游仓库的 .git（本仓库是拍平的工作快照）
 /deepseek-harness/.git/
@@ -16,6 +42,7 @@ harness-newapi-gateway/.local-admin.txt
 harness-newapi-gateway/data/
 harness-newapi-gateway/logs/
 harness-newapi-gateway/vendor/
+scripts/upload-fonts-cdn.py
 deepseek-harness/.storages/
 deepseek-harness/.sessions/
 **/.dsh-report/

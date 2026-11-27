@@ -21,16 +21,45 @@ import {
 import { dirname, join } from 'node:path'
 import { homedir } from 'node:os'
 import { randomUUID } from 'node:crypto'
-import { isMap, isSeq, parseDocument, Scalar, YAMLMap, YAMLSeq } from 'yaml'
+import type { YAMLMap, YAMLSeq, Scalar, parseDocument } from 'yaml'
+
+/** Runtime YAML API, loaded lazily because the packaged plugin carries its own copy. */
+type YamlModule = typeof import('yaml')
+
+let yamlModule: Promise<YamlModule | null> | undefined
+
+/**
+ * Resolve the YAML parser: host node_modules first, then the copy vendored beside dist.
+ * @returns the module, or null when neither copy loads.
+ */
+export function loadYamlModule(): Promise<YamlModule | null> {
+  yamlModule ??= (async () => {
+    try {
+      return await import('yaml')
+    } catch {
+      // Packaged plugin: there is no node_modules, so fall through to the vendored copy.
+    }
+    try {
+      const href = new URL('../vendor/yaml/dist/index.js', import.meta.url).href
+      return await import(href) as YamlModule
+    } catch {
+      return null
+    }
+  })()
+  return yamlModule
+}
+import { isChatModelId } from './image-models.js'
 
 export const NEWAPI_PROVIDER = 'newapi'
 export const PREFERRED_DEFAULT_MODELS = ['deepseek-chat', 'deepseek-flash'] as const
-export const DEFAULT_NEWAPI_BASE_URL = 'http://127.0.0.1:3000/v1'
+export const DEFAULT_NEWAPI_BASE_URL = 'https://xiaocongapi.azheteng.cn/v1'
 export const DEFAULT_DISPLAY_NAME = 'XiaocongAPI'
 export const NEWAPI_API_KEY_ENV = 'NEW_API_TOKEN'
 export const NEWAPI_API = 'openai-completions'
 
-export type ModelEntry = { id: string; name: string }
+export const CHAT_INPUT = ['text', 'image'] as const
+
+export type ModelEntry = { id: string; name: string; input: Array<(typeof CHAT_INPUT)[number]> }
 
 export type SyncNewApiModelsResult = {
   models: string[]
@@ -87,7 +116,7 @@ export function pickDefaultModel(ids: readonly string[], current?: string | null
 }
 
 export function toModelEntries(ids: readonly string[]): ModelEntry[] {
-  return ids.map((id) => ({ id, name: id }))
+  return ids.map((id) => ({ id, name: id, input: [...CHAT_INPUT] }))
 }
 
 /** Full provider object for live settings.update / patch upsert. */
@@ -100,6 +129,7 @@ export function buildNewApiProvider(
     apiKeyEnv: NEWAPI_API_KEY_ENV,
     api: NEWAPI_API,
     baseURL: resolveNewApiBaseURL(opts.baseURL),
+    defaultInput: [...CHAT_INPUT],
     models: toModelEntries(ids),
   }
 }
@@ -125,10 +155,15 @@ export function discoverNewApiPatchPaths(exclude?: string): string[] {
   return out
 }
 
+/**
+ * Bind the patch editor to one resolved YAML module.
+ * @param yaml - runtime YAML API.
+ */
+function createPatchEditor(yaml: YamlModule) {
 function findEntryMap(doc: ReturnType<typeof parseDocument>, id: string): YAMLMap | null {
-  if (!isSeq(doc.contents)) return null
+  if (!yaml.isSeq(doc.contents)) return null
   for (const item of doc.contents.items) {
-    if (!isMap(item)) continue
+    if (!yaml.isMap(item)) continue
     const entryId = item.get('id')
     if (entryId === id) return item
   }
@@ -141,11 +176,11 @@ function forceBlock(node: YAMLMap | YAMLSeq): void {
 
 function ensureMap(parent: YAMLMap, key: string): YAMLMap {
   const existing = parent.get(key, true)
-  if (isMap(existing)) {
+  if (yaml.isMap(existing)) {
     forceBlock(existing)
     return existing
   }
-  const next = new YAMLMap()
+  const next = new yaml.YAMLMap()
   forceBlock(next)
   parent.set(key, next)
   return next
@@ -158,16 +193,23 @@ function ensurePatchEntry(
 ): YAMLMap {
   const existing = findEntryMap(doc, id)
   if (existing) return existing
-  if (!isSeq(doc.contents)) throw new Error('invalid patch')
-  const entry = new YAMLMap()
+  if (!yaml.isSeq(doc.contents)) throw new Error('invalid patch')
+  const entry = new yaml.YAMLMap()
   forceBlock(entry)
   entry.set('id', id)
   entry.set('name', name)
-  const config = new YAMLMap()
+  const config = new yaml.YAMLMap()
   forceBlock(config)
   entry.set('config', config)
   doc.contents.add(entry)
   return entry
+}
+
+function stringSeq(values: readonly string[]): YAMLSeq {
+  const seq = new yaml.YAMLSeq()
+  forceBlock(seq)
+  for (const value of values) seq.add(value)
+  return seq
 }
 
 function setProviderFields(newapi: YAMLMap, opts: NewApiProviderOpts): void {
@@ -175,19 +217,20 @@ function setProviderFields(newapi: YAMLMap, opts: NewApiProviderOpts): void {
   newapi.set('apiKeyEnv', NEWAPI_API_KEY_ENV)
   newapi.set('api', NEWAPI_API)
   newapi.set('baseURL', resolveNewApiBaseURL(opts.baseURL))
+  newapi.set('defaultInput', stringSeq(CHAT_INPUT))
   forceBlock(newapi)
 }
 
 /** Upsert providers.newapi (+ agent-default-model) in a patch file as block YAML. */
-export function mergeNewApiModelsIntoPatch(
+function mergeNewApiModelsIntoPatch(
   path: string,
   ids: readonly string[],
   opts: NewApiProviderOpts = {},
 ): { wrote: boolean; previousIds: string[] } {
   if (!ids.length) return { wrote: false, previousIds: [] }
   const original = readFileSync(path, 'utf8')
-  const doc = parseDocument(original)
-  if (doc.errors.length || !isSeq(doc.contents)) throw new Error('invalid patch')
+  const doc = yaml.parseDocument(original)
+  if (doc.errors.length || !yaml.isSeq(doc.contents)) throw new Error('invalid patch')
 
   const llm = ensurePatchEntry(doc, 'llm-pi-ai', '@deepseek-ai/dsh-llm-pi-ai')
   const config = ensureMap(llm, 'config')
@@ -199,21 +242,22 @@ export function mergeNewApiModelsIntoPatch(
 
   const previousIds: string[] = []
   const prevModels = newapi.get('models', true)
-  if (isSeq(prevModels)) {
+  if (yaml.isSeq(prevModels)) {
     for (const item of prevModels.items) {
-      if (isMap(item) && typeof item.get('id') === 'string') previousIds.push(String(item.get('id')))
-      else if (item instanceof Scalar && typeof item.value === 'string') previousIds.push(item.value)
+      if (yaml.isMap(item) && typeof item.get('id') === 'string') previousIds.push(String(item.get('id')))
+      else if (item instanceof yaml.Scalar && typeof item.value === 'string') previousIds.push(item.value)
       else if (typeof item === 'string') previousIds.push(item)
     }
   }
 
-  const seq = new YAMLSeq()
+  const seq = new yaml.YAMLSeq()
   forceBlock(seq)
   for (const id of ids) {
-    const row = new YAMLMap()
+    const row = new yaml.YAMLMap()
     forceBlock(row)
     row.set('id', id)
     row.set('name', id)
+    row.set('input', stringSeq(CHAT_INPUT))
     seq.add(row)
   }
   newapi.set('models', seq)
@@ -249,6 +293,9 @@ export function mergeNewApiModelsIntoPatch(
   return { wrote: true, previousIds }
 }
 
+  return { mergeNewApiModelsIntoPatch }
+}
+
 type SettingsLike = {
   update: (ns: string, patch: object) => Promise<void>
   documentPath?: string
@@ -271,7 +318,7 @@ export async function syncNewApiModels(
   },
 ): Promise<SyncNewApiModelsResult> {
   const payload = await opts.fetchModels()
-  const ids = parseModelIds(payload)
+  const ids = parseModelIds(payload).filter(isChatModelId)
   if (!ids.length) {
     return {
       models: [],
@@ -324,17 +371,21 @@ export async function syncNewApiModels(
   if (livePath && existsSync(livePath) && !paths.includes(livePath)) paths.unshift(livePath)
 
   const unique = [...new Set(paths)]
-  for (const path of unique) {
-    try {
-      const result = mergeNewApiModelsIntoPatch(path, ids, {
-        defaultModel: defaultModel,
-        displayName: DEFAULT_DISPLAY_NAME,
-        baseURL,
-      })
-      if (result.wrote) patchedFiles.push(path)
-      if (needDefaultUpdate && result.wrote) defaultChanged = true
-    } catch {
-      // Keep going; live apply may already have succeeded.
+  const yamlApi = await loadYamlModule()
+  if (yamlApi) {
+    const editor = createPatchEditor(yamlApi)
+    for (const path of unique) {
+      try {
+        const result = editor.mergeNewApiModelsIntoPatch(path, ids, {
+          defaultModel: defaultModel,
+          displayName: DEFAULT_DISPLAY_NAME,
+          baseURL,
+        })
+        if (result.wrote) patchedFiles.push(path)
+        if (needDefaultUpdate && result.wrote) defaultChanged = true
+      } catch {
+        // Keep going; live apply may already have succeeded.
+      }
     }
   }
 

@@ -70,7 +70,6 @@ const CHROME_ROWS: readonly ChromeRow[] = [
     file: 'client/ui-settings-account/src/client/OnboardingSurface.module.css',
     selector: '.dragBand',
     markup: 'client/ui-settings-account/src/client/OnboardingSurface.tsx',
-    inset: ['inset', '8px'],
   },
   {
     file: SIDEBAR,

@@ -430,6 +430,26 @@ describe('withFileLock', () => {
     expect(await readFile(`${target}.lock`, 'utf8')).toBe(held)
   })
 
+  it('re-claims a takeover left behind by a claimant that exited', async () => {
+    // The dead holder's record never changes, so the claim named after it is the
+    // only thing between a successor and the lock. When the claimant that wrote
+    // that claim died too, the orphan must not block the takeover forever.
+    const dir = await scratch()
+    const target = join(dir, 'document')
+    const deadClaimant = EXITED_PID + 1
+    probeExited([EXITED_PID, deadClaimant])
+    const held = record(EXITED_PID)
+    await writeFile(`${target}.lock`, held)
+    const claim = `${target}.lock.takeover-${createHash('sha256').update(held).digest('hex').slice(0, 16)}`
+    await writeFile(claim, record(deadClaimant))
+    const operation = vi.fn(async () => {})
+
+    await withFileLock(target, operation, { waitMs: 200 })
+
+    expect(operation).toHaveBeenCalledTimes(1)
+    expect(await readdir(dir)).toEqual([])
+  })
+
   it('keeps a lock that another contender acquired while this one claimed the exited record', async () => {
     probeExited()
     const dir = await scratch()

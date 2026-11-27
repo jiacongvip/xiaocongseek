@@ -5,15 +5,15 @@
 
 services:
   new-api:
-    image: calciumion/new-api:latest
+    image: xiaocongapi/new-api:2026-11-26-autodl
     container_name: harness-new-api
     restart: unless-stopped
     command: --log-dir /app/logs
     ports:
       - "${NEW_API_PORT:-3000}:3000"
     volumes:
-      - ./data:/data
-      - ./logs:/app/logs
+      - /Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/harness-newapi-gateway/data:/data
+      - /Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/harness-newapi-gateway/logs:/app/logs
     environment:
       - SQL_DSN=postgresql://${POSTGRES_USER:-root}:${POSTGRES_PASSWORD:-change_me_local}@postgres:5432/${POSTGRES_DB:-new-api}
       - REDIS_CONN_STRING=redis://:${REDIS_PASSWORD:-change_me_local}@redis:6379

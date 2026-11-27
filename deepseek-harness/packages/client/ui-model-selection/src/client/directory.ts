@@ -45,6 +45,7 @@ export class ModelDirectory {
   /** Latest selection operation wins; an older response never overwrites a newer one. */
   private generation = 0
   private disposed = false
+  private healKey: string | null = null
   private readonly unsubscribeCatalog: () => void
   private readonly unsubscribeSelection: () => void
 
@@ -134,6 +135,7 @@ export class ModelDirectory {
   resetConnected(): void {
     if (this.disposed) return
     ++this.generation
+    this.healKey = null
     this.store.update((state) => {
       if (state.status === 'selecting') state.status = 'idle'
       state.pending = null
@@ -177,9 +179,14 @@ export class ModelDirectory {
       })
       return
     }
-    const selection = projected.next ?? catalog.value.default
-    const routable = catalog.value.groups.some(group => group.id === selection.provider
-      && group.models.some(model => model.id === selection.model))
+    const recorded = projected.next
+    const selection = recorded ?? catalog.value.default
+    const groups = catalog.value.groups
+    const inCatalog = (value: ModelSelection | null | undefined): value is ModelSelection =>
+      value !== null && value !== undefined
+      && groups.some(group => group.id === value.provider
+        && group.models.some(model => model.id === value.model))
+    const routable = inCatalog(selection)
     this.store.set({
       current: selection,
       ...retainedEffort === undefined ? {} : { retainedEffort },
@@ -192,6 +199,16 @@ export class ModelDirectory {
       pending: this.store.getSnapshot().pending,
       error: null,
     })
+    const fallback = catalog.value.default
+    const shouldHeal = inCatalog(fallback) && this.available()
+      && ((recorded === null && this.isBlank()) || (recorded !== null && !inCatalog(recorded)))
+    if (shouldHeal) {
+      const key = `${fallback.provider}/${fallback.model}`
+      if (this.healKey !== key) {
+        this.healKey = key
+        queueMicrotask(() => { void this.select(fallback) })
+      }
+    }
   }
 }
 

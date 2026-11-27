@@ -51,7 +51,7 @@ export async function prepareDesktopPublication(env: NodeJS.ProcessEnv, verifySi
   const environment = source.preset === 'test'
     ? { DSH_DESKTOP_AUTO_UPDATE_ENV: 'test', DOWNLOAD_TEST_ORIGIN: config.origin,
       DOWNLOAD_TEST_RELEASE_ID: source.testReleaseId ?? '', DOWNLOAD_TEST_COS_BUCKET: config.bucket }
-    : { DSH_DESKTOP_AUTO_UPDATE_ENV: 'production', DOWNLOAD_PROD_COS_BUCKET: config.bucket }
+    : { DSH_DESKTOP_AUTO_UPDATE_ENV: 'production', DOWNLOAD_PROD_ORIGIN: config.origin, DOWNLOAD_PROD_COS_BUCKET: config.bucket }
   const plan = await createDesktopUploadPlan(source.target, { artifactsRoot: directory,
     stagingPercentage,
     packagedProductVersion: source.productVersion, environment: { ...environment, DSH_DESKTOP_UPDATE_CHANNEL: source.channel } })

@@ -25,7 +25,7 @@
 
 ### 仓库位置
 
-- 路径：`/Users/jiacong/Desktop/开发文件/数字人混剪工作台/harness-newapi-gateway`
+- 路径：`/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/harness-newapi-gateway`
 - 按 Jamie：「本地开发的东西放在开发文件文件夹下新建一个项目目录，并做好 md 记忆文档」。
 - 2026-11-06 再按 Jamie 要求：插件 / Harness / New API 收进同一父目录 `数字人混剪工作台`，下分三子项目。
 
@@ -44,7 +44,7 @@
 
 ## 2026-11-06 — 目录重排
 
-- 父目录：`/Users/jiacong/Desktop/开发文件/数字人混剪工作台`
+- 父目录：`/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台`
 - 子项目：`digital-human-studio`、`deepseek-harness`、`harness-newapi-gateway`
 - 旧路径留了软链，避免工具仍解析旧位置。
 - VectCutAPI 仍在 `/Users/jiacong/VectCutAPI`，未迁入。

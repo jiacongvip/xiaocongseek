@@ -2,7 +2,7 @@
 
 ## 结论（下次直接按这个做）
 
-1. **改代码只改 fork**：`/Users/jiacong/Desktop/开发文件/dsh-newapi-fork/`
+1. **改代码只改 fork**：`/Users/jiacong/Desktop/开发文件/小葱/dsh-newapi-fork/`
 2. **跑 web 只用 fork 本地编译**：`pnpm dsh --profile web` 或 `./scripts/start-web.sh`
 3. **禁止**把 fork 的 `lib/` / `dist/` 同步进 `~/.npm/_npx/...`
 4. **禁止**手改 npx 里压缩后的 `index-*.js` / `client.js` 换 logo
@@ -35,12 +35,12 @@
 # deepseek-harness/packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx
 # digital-human-studio 静态小葱：GET /digital-human-studio/assets/xiaocong-only.png
 
-cd "/Users/jiacong/Desktop/开发文件/dsh-newapi-fork/deepseek-harness"
+cd "/Users/jiacong/Desktop/开发文件/小葱/dsh-newapi-fork/deepseek-harness"
 pnpm exec tsdown --config-loader native --env.DSH_BUILD_FACE client
 pnpm run build:web
 
 # 启动（不要 npx）
-"/Users/jiacong/Desktop/开发文件/dsh-newapi-fork/scripts/start-web.sh"
+"/Users/jiacong/Desktop/开发文件/小葱/dsh-newapi-fork/scripts/start-web.sh"
 # 日志里的 token：
 grep "dsh web: http" /tmp/xiaocongseek-web-local.log | tail -1
 ```

@@ -1,0 +1,19 @@
+[Unit]
+Description=MediaCrawler API
+After=network.target
+
+[Service]
+Type=simple
+User=mediacrawler
+Group=mediacrawler
+WorkingDirectory=/opt/mediacrawler
+EnvironmentFile=/etc/mediacrawler/mediacrawler.env
+ExecStart=/usr/local/bin/uv run uvicorn api.main:app --host 127.0.0.1 --port 8080 --workers 1
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

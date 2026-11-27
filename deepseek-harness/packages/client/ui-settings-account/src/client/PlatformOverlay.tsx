@@ -5,6 +5,7 @@ import { Button, IconChevronLeftOutlineRegular } from '@deepseek-ai/dsh-client-u
 import type { PlatformPage } from './platform-pages.ts'
 import css from './PlatformOverlay.module.css'
 import { acquireOverlayInert } from './overlay-inert.ts'
+import { xiaocongApiSiteLinks } from './xiaocong-api-site.ts'
 
 /** Non-secret commands supplied by the desktop application preload. */
 export interface PlatformBridge {
@@ -17,13 +18,15 @@ export interface PlatformBridge {
 }
 
 /** @param props - native commands, localized copy, and return action. @returns full-window Platform container. */
-export function PlatformOverlay({ bridge, page, backLabel, loadingLabel, failureLabel, retryLabel, onClose }: {
+export function PlatformOverlay({ bridge, page, backLabel, loadingLabel, failureLabel, retryLabel, openInBrowserLabel, onClose }: {
   bridge: PlatformBridge
   page: PlatformPage
   backLabel: string
   loadingLabel: string
   failureLabel: string
   retryLabel: string
+  /** Fallback action shown when the embedded page cannot open. */
+  openInBrowserLabel: string
   onClose: () => void
 }) {
   const layer = useRef<HTMLDivElement>(null)
@@ -80,6 +83,11 @@ export function PlatformOverlay({ bridge, page, backLabel, loadingLabel, failure
         {status === 'failed' ? <>
           <span className={css.failure}>{failureLabel}</span>
           <Button variant="outline" className={css.retry} onClick={() => { setAttempt(value => value + 1) }}>{retryLabel}</Button>
+          <Button variant="primary" className={css.retry} onClick={() => {
+            // The desktop shell turns a cross-origin navigation into the system browser.
+            const links = xiaocongApiSiteLinks()
+            window.location.href = page === 'usage' ? links.usageUrl : links.topUpUrl
+          }}>{openInBrowserLabel}</Button>
         </> : <span className={css.spinner} aria-hidden="true" />}
       </div>}
     </div>

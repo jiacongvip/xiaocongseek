@@ -66,7 +66,7 @@ export async function publishWebsiteCi(mode: 'upload' | 'purge', env: NodeJS.Pro
   const credentials = await readDesktopUploadCredentials(config)
   if (mode === 'upload') {
     const installer = await prepareWebsiteInstaller(retainedDesktopPath(root, route.runId, route.attempt), manifest, route,
-      env.GITHUB_REPOSITORY || '', config.bucket)
+      env.GITHUB_REPOSITORY || '', config.bucket, { ...env, DOWNLOAD_PROD_ORIGIN: config.origin })
     try {
       const outcome = await withDesktopChannelLock(join(dirname(root), 'publish-locks'), `${config.bucket}/${installer.plan.artifacts[0]!.key}`, async () => {
         const previouslyUploaded = state.uploadConfirmed === true || state.upload === 'uploaded'
@@ -86,7 +86,7 @@ export async function publishWebsiteCi(mode: 'upload' | 'purge', env: NodeJS.Pro
   }
   if (state.upload !== 'uploaded') throw new Error('website publication: upload completion is not confirmed; recover the upload job first')
   const { desktopWebsiteInstallerUrl } = await import('./desktop-auto-update-environment.mjs')
-  const publicUrl = desktopWebsiteInstallerUrl(route.target)
+  const publicUrl = desktopWebsiteInstallerUrl(route.target, { ...env, DOWNLOAD_PROD_ORIGIN: config.origin })
   const { teo } = await import('tencentcloud-sdk-nodejs-teo')
   const client = new teo.v20220901.Client({ credential: credentials, region: '',
     profile: { httpProfile: { endpoint: 'teo.tencentcloudapi.com', reqTimeout: 30 } } })

@@ -9,11 +9,12 @@ import {
   realpathSync,
   closeSync,
   readFileSync,
+  symlinkSync,
   unlinkSync,
   writeFileSync,
   writeSync,
 } from 'node:fs'
-import { join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import {
   DESKTOP_HOST_PACKAGE,
   desktopCorePackageOverrides,
@@ -25,6 +26,7 @@ import { readDesktopRuntime } from './runtime-tree.ts'
 import { initProfile, removeLinkProjections, sanitizeProfile } from '@deepseek-ai/dsh-app-boot'
 import { PROFILE_TEMPLATES, type ProfileTemplate } from '@deepseek-ai/dsh-official-bundles'
 
+const XIAOCONG_PLUGINS = ['digital-human-studio', 'publish-studio'] as const
 const PROJECT_NAME = '@deepseek-ai/dsh-desktop-runtime'
 const DSH_PACKAGE = '@deepseek-ai/dsh'
 const CORE_BUILD_PACKAGE = '@deepseek-ai/dsh-subprocess-local'
@@ -65,6 +67,8 @@ export class DesktopProjectManager {
   constructor(
     readonly paths: DesktopPaths,
     readonly runtime: { readonly dsh: string },
+    /** Directory that contains digital-human-studio and publish-studio. Omitted in tests that must stay byte-stable. */
+    readonly pluginSource?: string,
   ) {}
 
   /**
@@ -85,6 +89,7 @@ export class DesktopProjectManager {
       readDesktopRuntime(this.runtime.dsh)
       migrateProfileSettings(this.paths.profile)
       createPluginProfile(this.paths.profile)
+      ensureXiaocongPlugins(this.paths.profile, this.pluginSource)
       removeLinkProjections(this.paths.profile)
     })
   }
@@ -172,4 +177,80 @@ export function createDevelopmentProjectMetadata(projectDir: string, release: De
 /** Create the first external plugin profile without running a package manager. */
 export function createPluginProfile(projectDir: string): void {
   initProfile(projectDir, WEB_PROFILE.bundles)
+}
+
+/** First candidate that actually contains both product plugins. */
+export function resolveXiaocongPluginSource(candidates: readonly string[]): string | undefined {
+  for (const root of candidates) {
+    if (!root) continue
+    const ready = XIAOCONG_PLUGINS.every(name => existsSync(join(root, name, 'package.json')))
+    if (ready) return root
+  }
+  return undefined
+}
+
+function isPackagedPluginPath(targetPath: string): boolean {
+  const normalized = targetPath.replaceAll('\\', '/')
+  return /\.app\/Contents\/Resources\/xiaocong-plugins(?:\/|$)/i.test(normalized)
+    || /\/resources\/xiaocong-plugins(?:\/|$)/i.test(normalized)
+    || /\/\.desktop-build\//i.test(normalized)
+}
+
+/**
+ * Link the staged plugins into the desktop profile.
+ * In unpackaged development mode, an existing developer checkout link is left alone.
+ * When launching a packaged app (or replacing a stale packaged app link), the symlink is
+ * retargeted to the active bundle unless XIAOCONG_KEEP_PLUGIN_LINKS=1 is set.
+ * A broken link is always retargeted. A real directory is left alone.
+ */
+function ensureXiaocongPlugins(profileDir: string, sourceRoot: string | undefined): void {
+  if (!sourceRoot) return
+  const manifestPath = join(profileDir, 'package.json')
+  if (!existsSync(manifestPath)) return
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
+    dependencies?: Record<string, string>
+    dsh?: { profile?: { bundles?: string[] } }
+  }
+  const bundles = manifest.dsh?.profile?.bundles
+  if (!Array.isArray(bundles)) return
+  manifest.dependencies ??= {}
+  let changed = false
+  mkdirSync(join(profileDir, 'node_modules'), { recursive: true, mode: 0o700 })
+  for (const name of XIAOCONG_PLUGINS) {
+    const src = join(sourceRoot, name)
+    if (!existsSync(join(src, 'package.json'))) continue
+    const retargeted = ensureDirectoryLink(join(profileDir, 'node_modules', name), src)
+    if (!bundles.includes(name)) {
+      bundles.push(name)
+      changed = true
+    }
+    const wantDep = `link:${src}`
+    if (manifest.dependencies[name] === undefined || (retargeted && manifest.dependencies[name] !== wantDep)) {
+      manifest.dependencies[name] = wantDep
+      changed = true
+    }
+  }
+  if (changed) writeJson(manifestPath, manifest)
+}
+
+function ensureDirectoryLink(dest: string, src: string): boolean {
+  const want = existsSync(src) ? realpathSync(src) : resolve(src)
+  const keepDevLinks = process.env.XIAOCONG_KEEP_PLUGIN_LINKS === '1'
+  try {
+    const stat = lstatSync(dest)
+    if (!stat.isSymbolicLink()) return false
+    let current = ''
+    try { current = realpathSync(dest) } catch { current = '' }
+    if (current) {
+      if (current === want) return false
+      const shouldRetarget = !keepDevLinks && (isPackagedPluginPath(want) || isPackagedPluginPath(current))
+      if (!shouldRetarget) return false
+    }
+    unlinkSync(dest)
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+  }
+  mkdirSync(dirname(dest), { recursive: true })
+  symlinkSync(want, dest, process.platform === 'win32' ? 'junction' : undefined)
+  return true
 }

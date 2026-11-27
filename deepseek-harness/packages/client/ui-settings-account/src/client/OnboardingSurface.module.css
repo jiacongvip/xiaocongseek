@@ -29,9 +29,15 @@
 }
 
 /* First child: later content and dialogs subtract their interactive regions. */
+/* A caption-height band, not the whole face: Electron composes app-regions by
+   geometry, so a full-window band turns every portal layer over the welcome
+   stage — including the login-success dialog — into window drag surface. */
 :global(html[data-platform='darwin']) .dragBand {
   position: absolute;
-  inset: 8px;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
   pointer-events: none;
 }
 

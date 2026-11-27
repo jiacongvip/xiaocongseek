@@ -30,6 +30,10 @@ export function AccountQuotaNotice({ matched, openPlatformPage, useAccount, useP
   const { dismiss, keepOpen, message } = matched
   const accountStatus = useAccount(snapshot => snapshot.view?.status)
   const accountFailed = useAccount(snapshot => snapshot.failed)
+  // A fresh claim usually has no credit yet. Keep the notice mounted but out of
+  // the way until the sign-in confirmation is dismissed, so its modal never
+  // covers the dialog the account feature is showing.
+  const loginSuccessVisible = useAccount(snapshot => snapshot.loginSuccessVisible === true)
   const signedIn = accountStatus === 'credential-stored'
   const platformPage = usePlatformPage(current => current)
   const [opened, setOpened] = useState(false)
@@ -59,6 +63,8 @@ export function AccountQuotaNotice({ matched, openPlatformPage, useAccount, useP
   // notice before the native account action becomes available. A terminal stream
   // failure ends that wait and leaves the generic warning available.
   if (accountStatus === undefined && !accountFailed && openPlatformPage !== undefined) return null
+  // Sign-in confirmation owns the screen until the user acknowledges it.
+  if (loginSuccessVisible) return null
   // Signed out, unavailable, or without the native host, use generic notice copy.
   if (!signedIn || openPlatformPage === undefined) {
     return <Toast text={message} icon={<IconWarningOutlineRegular size={18} />} onDone={dismiss} />

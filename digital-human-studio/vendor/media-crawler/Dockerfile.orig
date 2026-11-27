@@ -1,0 +1,63 @@
+# MediaCrawler API — Docker image
+# Single uvicorn worker; Playwright Chromium; Node for PyExecJS.
+# Build: docker compose build
+# Run:   docker compose up -d
+
+# ---------- stage: WebUI ----------
+FROM node:20-bookworm-slim AS webui-builder
+WORKDIR /src/webui
+COPY webui/package.json webui/package-lock.json ./
+RUN npm ci
+COPY webui/ ./
+RUN npm run build
+
+# ---------- stage: runtime ----------
+FROM python:3.11-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
+    MEDIA_CRAWLER_DATA_DIR=/app/data \
+    MEDIA_CRAWLER_TASK_DB=/app/data/tasks.db \
+    PATH="/app/.venv/bin:/root/.local/bin:$PATH"
+
+# System deps: Node (PyExecJS), curl, and Playwright OS libs via install-deps later
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        nodejs \
+        libgl1 \
+        libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:0.10.9 /uv /uvx /usr/local/bin/
+
+WORKDIR /app
+
+# Dependencies first (better layer cache)
+COPY pyproject.toml uv.lock .python-version ./
+RUN uv sync --frozen --no-dev \
+    && uv run playwright install --with-deps chromium \
+    && chmod -R a+rX /ms-playwright
+
+# Application code
+COPY . .
+COPY --from=webui-builder /src/api/webui /app/api/webui
+
+# Container defaults: headless on; CDP off (no host Chrome)
+RUN sed -i 's/^HEADLESS = False/HEADLESS = True/' config/base_config.py \
+    && sed -i 's/^ENABLE_CDP_MODE = True/ENABLE_CDP_MODE = False/' config/base_config.py \
+    && sed -i 's/headless: bool = False/headless: bool = True/' api/schemas/crawler.py \
+    && mkdir -p /app/data /app/browser_data \
+    && useradd --create-home --shell /usr/sbin/nologin --uid 10001 mediacrawler \
+    && chown -R mediacrawler:mediacrawler /app /ms-playwright
+
+USER mediacrawler
+
+EXPOSE 8080
+
+# Must stay at 1 worker (in-memory task/log state)
+CMD ["uv", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1"]

@@ -7,11 +7,11 @@
 整套可修改、可测试的代码栈在本目录，**用 fork 本地 `pnpm dsh` 跑 web**，不要再用 `npx dsh`，也不要把 fork 的 `lib/` rsync 进 `~/.npm/_npx/...`（模块表会对不上，出现 Failed to load plugins / 输入框丢失）。
 
 ## 路径
-- 栈根：`/Users/jiacong/Desktop/开发文件/dsh-newapi-fork/`
+- 栈根：`/Users/jiacong/Desktop/开发文件/小葱/dsh-newapi-fork/`
 - Harness 源码：`dsh-newapi-fork/deepseek-harness/`
 - Studio 插件：`dsh-newapi-fork/digital-human-studio/`（profile `~/.dsh/profiles/web` 已 link 到这里）
 - Gateway：`dsh-newapi-fork/harness-newapi-gateway/`
-- **不要动**：`/Users/jiacong/Desktop/开发文件/数字人混剪工作台/`、`/Applications/DeepSeek Harness.app`
+- **不要动**：`/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/`、`/Applications/DeepSeek Harness.app`
 
 ## 启动（本地 CLI，非 npx）
 ```bash
@@ -20,7 +20,7 @@
 
 # 或手动：
 pkill -f 'dsh --profile web --no-open --port 3080' || true
-cd "/Users/jiacong/Desktop/开发文件/dsh-newapi-fork/deepseek-harness"
+cd "/Users/jiacong/Desktop/开发文件/小葱/dsh-newapi-fork/deepseek-harness"
 pnpm dsh --profile web --no-open --port 3080
 ```
 - 使用同一 profile 名 `web` → XiaocongAPI 登录 + digital-human-studio 0.7.9 仍在
@@ -46,7 +46,7 @@ pnpm exec tsdown --config-loader native --env.DSH_BUILD_FACE client`
 依赖已装好时，常用重建路径：
 
 ```bash
-cd "/Users/jiacong/Desktop/开发文件/dsh-newapi-fork/deepseek-harness"
+cd "/Users/jiacong/Desktop/开发文件/小葱/dsh-newapi-fork/deepseek-harness"
 
 # A. 边改边测（推荐）：一次构建 + 监听 + 本地 web
 pnpm run dev:web -- --profile web --no-open --port 3080
@@ -109,10 +109,28 @@ curl -sI http://127.0.0.1:3080/digital-human-studio/assets/xiaocong-only.png | h
 open 'http://127.0.0.1:3080/digital-human-studio/auth/authorize'
 ```
 
+## 账号余额（0.8.1+）
+
+登录 XiaocongAPI 后，设置 →「账号与余额」显示网关里的真实余额：
+
+- 接口：`GET /digital-human-studio/account/balance`（只读，带 Origin/Host 同源校验）
+- 数据源：studio 用保存的 sk- 调 New API `/api/usage/token/` + `/api/status`（必须带尾斜杠，裸路径会 301，而 `newApiRequest` 拒绝重定向）
+- 换算：按 `quota_display_type` / `quota_per_unit` / `usd_exchange_rate`；账户余额取 `user_quota.total_available`，Key 余额取 `total_available`
+- 缓存 15s；接口只返回换算后的金额，不返回令牌
+- 壳侧在 `newApiSignedIn` 时用它覆盖 `details.balance`；读取失败显示「余额不可用」链接
+
+PWA/浏览器品牌：`apps/web/public/manifest.webmanifest`（name Xiaocongseek / short_name Xiaocong）与 `apps/web/index.html`（初始标题、favicon）也已改为小葱图标。
+
+验证：
+```bash
+curl -s http://127.0.0.1:3080/digital-human-studio/account/balance | head -c 400
+# 期望 success:true 且 account.available 为金额字符串；跨源请求应 403
+```
+
 # dsh-newapi-fork（独立改码目录）
 
 此目录是**单独下载/拷贝**的工作副本，用来改 XiaocongAPI 登录，**不要动**  
-`/Users/jiacong/Desktop/开发文件/数字人混剪工作台/` 里的原本地工程。
+`/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/` 里的原本地工程。
 
 ## 内容
 - `deepseek-harness/`：从 GitHub shallow clone，已改 `ui-settings-account` 登录入口 → `http://127.0.0.1:3000/login`

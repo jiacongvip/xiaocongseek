@@ -1,0 +1,285 @@
+{
+ "generatedAt": null,
+ "fonts": [
+  {
+   "file": "Full-BaoliSC-Regular.otf",
+   "family": "Baoli SC",
+   "kind": "书法手写",
+   "label": "报隶",
+   "weight": "Regular",
+   "size": 41501320
+  },
+  {
+   "file": "Full-HannotateSC-Bold.otf",
+   "family": "Hannotate SC Bold",
+   "kind": "书法手写",
+   "label": "手札体",
+   "weight": "Bold",
+   "size": 41992356
+  },
+  {
+   "file": "Full-HanziPenSC-Bold.otf",
+   "family": "HanziPen SC Bold",
+   "kind": "书法手写",
+   "label": "翩翩体",
+   "weight": "Bold",
+   "size": 35480496
+  },
+  {
+   "file": "Full-HanziPenSC-Regular.otf",
+   "family": "HanziPen SC",
+   "kind": "书法手写",
+   "label": "翩翩体",
+   "weight": "Regular",
+   "size": 36268924
+  },
+  {
+   "file": "Full-HelveticaNeue-Light.ttf",
+   "family": "Helvetica Neue Light",
+   "kind": "其他",
+   "label": "Helvetica Neue",
+   "weight": "Light",
+   "size": 254592
+  },
+  {
+   "file": "Full-HiraginoMinchoProN-W6.ttf",
+   "family": "Hiragino Mincho ProN",
+   "kind": "其他",
+   "label": "Hiragino Mincho ProN",
+   "weight": "W6",
+   "size": 9688748
+  },
+  {
+   "file": "Full-HuiwenMincho.ttf",
+   "family": "Huiwen Mincho",
+   "kind": "其他",
+   "label": "Huiwen Mincho",
+   "weight": "Regular",
+   "size": 24866292
+  },
+  {
+   "file": "Full-KaitiSC-Black.otf",
+   "family": "Kaiti SC Black",
+   "kind": "书法手写",
+   "label": "楷体",
+   "weight": "Black",
+   "size": 38383124
+  },
+  {
+   "file": "Full-KaitiSC-Bold.otf",
+   "family": "Kaiti SC Bold",
+   "kind": "书法手写",
+   "label": "楷体",
+   "weight": "Bold",
+   "size": 37714360
+  },
+  {
+   "file": "Full-LantingheiSC-Demibold.otf",
+   "family": "Lantinghei SC Demibold",
+   "kind": "现代黑体",
+   "label": "兰亭黑",
+   "weight": "Demibold",
+   "size": 7689340
+  },
+  {
+   "file": "Full-LantingheiSC-Heavy.otf",
+   "family": "Lantinghei SC Heavy",
+   "kind": "现代黑体",
+   "label": "兰亭黑",
+   "weight": "Heavy",
+   "size": 7965344
+  },
+  {
+   "file": "Full-LibianSC-Regular.otf",
+   "family": "Libian SC",
+   "kind": "书法手写",
+   "label": "隶变",
+   "weight": "Regular",
+   "size": 35365784
+  },
+  {
+   "file": "Full-LingWaiSC-Medium.otf",
+   "family": "LingWai SC",
+   "kind": "书法手写",
+   "label": "凌慧体",
+   "weight": "Medium",
+   "size": 23935440
+  },
+  {
+   "file": "Full-NotoSerifSC-Black.ttf",
+   "family": "??????",
+   "kind": "其他",
+   "label": "??????",
+   "weight": "Black",
+   "size": 14854708
+  },
+  {
+   "file": "Full-NotoSerifSC-Bold.ttf",
+   "family": "??????",
+   "kind": "其他",
+   "label": "??????",
+   "weight": "Bold",
+   "size": 14853684
+  },
+  {
+   "file": "Full-NotoSerifSC-Medium.ttf",
+   "family": "??????",
+   "kind": "其他",
+   "label": "??????",
+   "weight": "Medium",
+   "size": 14854716
+  },
+  {
+   "file": "Full-STFANGSO.ttf",
+   "family": "STFangsong",
+   "kind": "传统",
+   "label": "仿宋",
+   "weight": "Regular",
+   "size": 15888000
+  },
+  {
+   "file": "Full-STSong.ttf",
+   "family": "STSong",
+   "kind": "其他",
+   "label": "STSong",
+   "weight": "Regular",
+   "size": 20752276
+  },
+  {
+   "file": "Full-SongtiSC-Bold.ttf",
+   "family": "Songti SC Bold",
+   "kind": "其他",
+   "label": "Songti SC",
+   "weight": "Bold",
+   "size": 22595576
+  },
+  {
+   "file": "Full-SongtiSC-Regular.ttf",
+   "family": "Songti SC",
+   "kind": "其他",
+   "label": "Songti SC",
+   "weight": "Regular",
+   "size": 20856472
+  },
+  {
+   "file": "Full-SourceHanSerifSC-Bold.otf",
+   "family": "Source Han Serif SC Bold",
+   "kind": "其他",
+   "label": "Source Han Serif SC",
+   "weight": "Bold",
+   "size": 25521668
+  },
+  {
+   "file": "Full-SourceHanSerifSC-ExtraLight.otf",
+   "family": "?????????",
+   "kind": "其他",
+   "label": "?????????",
+   "weight": "ExtraLight",
+   "size": 21406296
+  },
+  {
+   "file": "Full-SourceHanSerifSC-Heavy.otf",
+   "family": "?????????",
+   "kind": "其他",
+   "label": "?????????",
+   "weight": "Heavy",
+   "size": 24063232
+  },
+  {
+   "file": "Full-SourceHanSerifSC-Light.otf",
+   "family": "?????????",
+   "kind": "其他",
+   "label": "?????????",
+   "weight": "Light",
+   "size": 24501252
+  },
+  {
+   "file": "Full-SourceHanSerifSC-Medium.otf",
+   "family": "?????????",
+   "kind": "其他",
+   "label": "?????????",
+   "weight": "Medium",
+   "size": 24805532
+  },
+  {
+   "file": "Full-SourceHanSerifSC-Regular.otf",
+   "family": "Source Han Serif SC Regular",
+   "kind": "其他",
+   "label": "Source Han Serif SC Regular",
+   "weight": "Regular",
+   "size": 24543340
+  },
+  {
+   "file": "Full-SourceHanSerifSC-SemiBold.otf",
+   "family": "?????????",
+   "kind": "其他",
+   "label": "?????????",
+   "weight": "SemiBold",
+   "size": 24700480
+  },
+  {
+   "file": "Full-WawaSC-Regular.otf",
+   "family": "Wawati SC",
+   "kind": "圆润",
+   "label": "娃娃体",
+   "weight": "Regular",
+   "size": 17439564
+  },
+  {
+   "file": "Full-WeibeiSC-Bold.otf",
+   "family": "Weibei SC Bold",
+   "kind": "书法手写",
+   "label": "魏碑",
+   "weight": "Bold",
+   "size": 24061884
+  },
+  {
+   "file": "Full-XingkaiSC-Bold.otf",
+   "family": "Xingkai SC Bold",
+   "kind": "书法手写",
+   "label": "行楷",
+   "weight": "Bold",
+   "size": 40819112
+  },
+  {
+   "file": "Full-XingkaiSC-Light.otf",
+   "family": "Xingkai SC Light",
+   "kind": "书法手写",
+   "label": "行楷",
+   "weight": "Light",
+   "size": 47100988
+  },
+  {
+   "file": "Full-YuantiSC-Bold.otf",
+   "family": "Yuanti SC Bold",
+   "kind": "圆润",
+   "label": "圆体",
+   "weight": "Bold",
+   "size": 27374032
+  },
+  {
+   "file": "Full-YuantiSC-Regular.otf",
+   "family": "Yuanti SC",
+   "kind": "圆润",
+   "label": "圆体",
+   "weight": "Regular",
+   "size": 26833976
+  },
+  {
+   "file": "Full-YuppySC-Regular.otf",
+   "family": "Yuppy SC",
+   "kind": "圆润",
+   "label": "雅痞体",
+   "weight": "Regular",
+   "size": 16117492
+  },
+  {
+   "file": "NotoSansSC-Black.otf",
+   "family": "Noto Sans SC",
+   "kind": "现代黑体",
+   "label": "思源黑",
+   "weight": "Black",
+   "size": 8855916
+  }
+ ]
+}

@@ -86,11 +86,83 @@ export interface DesktopAccountBackend {
 export function desktopAccountBackend(origin: string, invoke: AccountInvoke, cookie: string): DesktopAccountBackend {
   const call = async (method: string, args: Record<string, unknown> = {}): Promise<AccountView> =>
     accountView(await invoke({ namespace: 'account', method, args }))
+  // Shell-owned Xiaocong sign-in. The desktop welcome page speaks to the harness' own
+  // /auth/xiaocong routes, so a missing, inactive or crashing digital-human-studio plugin
+  // can never break the login path. Platform links stay on the loopback Host.
+  const links = { usageUrl: `${origin}/`, topUpUrl: `${origin}/` }
+  const accountListeners = new Set<(state: AccountView) => void>()
+  let xiaocongPoll: ReturnType<typeof setInterval> | undefined
+  let xiaocongAttemptId: SignInAttemptId | undefined
+  const stopXiaocongPoll = (): void => {
+    if (xiaocongPoll !== undefined) clearInterval(xiaocongPoll)
+    xiaocongPoll = undefined
+  }
+  const xiaocongTokenStored = async (): Promise<boolean> => {
+    try {
+      const response = await fetch(new URL('/auth/xiaocong/status', origin).href, { headers: { cookie } })
+      if (!response.ok) return false
+      const status: unknown = await response.json()
+      return typeof status === 'object' && status !== null
+        && (status as { success?: unknown }).success === true
+        && (status as { hasToken?: unknown }).hasToken === true
+    } catch {
+      return false
+    }
+  }
+  const startXiaocongPoll = (id: SignInAttemptId): void => {
+    stopXiaocongPoll()
+    xiaocongAttemptId = id
+    const deadline = Date.now() + 10 * 60 * 1000
+    xiaocongPoll = setInterval(() => {
+      void xiaocongTokenStored().then((stored) => {
+        if (xiaocongAttemptId !== id) return
+        if (!stored) {
+          if (Date.now() > deadline) stopXiaocongPoll()
+          return
+        }
+        stopXiaocongPoll()
+        const settled: AccountView = { status: 'credential-stored', links, attempt: { id, phase: 'succeeded' } }
+        for (const listener of accountListeners) listener(settled)
+      }).catch(() => undefined)
+    }, 2000)
+  }
+  const xiaocongAuthorizeUrl = (): string => {
+    // The shell names the window first: the console only returns its token to a
+    // window called `dsh-newapi-login`, which an external browser cannot be given directly.
+    const url = new URL('/auth/xiaocong/bootstrap', origin)
+    url.searchParams.set('return', `${origin}/`)
+    return url.href
+  }
   return {
-    state: () => call('getState'),
-    start: client => call('startSignIn', { client, callbackOrigin: new URL(origin).origin, loginSource: 'desktop' }),
-    cancel: attemptId => call('cancelSignIn', { attemptId }), signOut: client => call('signOut', { client }),
+    state: async () => {
+      const base = await call('getState')
+      if (xiaocongAttemptId === undefined) return base
+      return {
+        ...base,
+        attempt: { id: xiaocongAttemptId, phase: 'waiting-browser', authorizeUrl: xiaocongAuthorizeUrl(), expiresAt: Date.now() + 10 * 60 * 1000 },
+      }
+    },
+    start: async () => {
+      const id = randomUUID() as SignInAttemptId
+      startXiaocongPoll(id)
+      const view = {
+        status: 'signed-out',
+        links,
+        attempt: { id, phase: 'waiting-browser', authorizeUrl: xiaocongAuthorizeUrl(), expiresAt: Date.now() + 10 * 60 * 1000 },
+      } as AccountView
+      // Local starts never surface on the remote account stream, so notify the
+      // watchers here: the desktop shell listens for `waiting-browser` to open
+      // the login page in the system browser.
+      for (const listener of accountListeners) listener(view)
+      return view
+    },
+    cancel: async () => {
+      stopXiaocongPoll()
+      xiaocongAttemptId = undefined
+      return { status: 'signed-out', links, attempt: null }
+    }, signOut: client => call('signOut', { client }),
     watch(listener, failed, expired, onAnalyticsEnabledChanged) {
+      accountListeners.add(listener)
       let closed = false
       let socket: WebSocket | undefined
       let retry: ReturnType<typeof setTimeout> | undefined
@@ -125,7 +197,13 @@ export function desktopAccountBackend(origin: string, invoke: AccountInvoke, coo
         socket.on('close', () => { if (!closed) { onAnalyticsEnabledChanged?.(false); failed(); retry = setTimeout(connect, 1000) } })
       }
       connect()
-      return () => { closed = true; onAnalyticsEnabledChanged?.(false); clearTimeout(retry); socket?.close() }
+      return () => {
+        closed = true
+        accountListeners.delete(listener)
+        onAnalyticsEnabledChanged?.(false)
+        clearTimeout(retry)
+        socket?.close()
+      }
     },
   }
 }

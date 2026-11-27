@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "authEnforced": false,
+  "permissionsEnforced": false,
+  "aid": 0,
+  "authBaseUrl": "",
+  "productKey": "",
+  "allowPublish": true,
+  "dailyPublishLimit": null
+}

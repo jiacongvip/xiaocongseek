@@ -1,0 +1,18 @@
+# 引擎运行环境与字体：随安装包分发，但不进版本库（字体 805MB、venv 200MB）
+vendor/xiaocongcut/.venv/
+vendor/xiaocongcut/fonts/
+
+# 采集运行环境：首次安装时由插件生成（vendor/venv），不进版本库
+vendor/venv/
+
+# 采集运行产物：抓取数据、扫码登录态、旧 cookie 文件，都不能进仓库/安装包
+vendor/media-crawler/data/
+vendor/media-crawler/browser_data/
+vendor/media-crawler/.douyin_cookies.txt
+
+# Python 缓存
+**/__pycache__/
+*.pyc
+
+vendor/xiaocongcut/output/
+vendor/xiaocongcut/font-pack/

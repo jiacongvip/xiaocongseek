@@ -1,0 +1,47 @@
+{
+  "name": "publish-studio",
+  "version": "0.1.0",
+  "description": "Independent company publishing plugin for Xiaocongseek — controlled platform adapters without the original GEO process.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "dist",
+    "publishing",
+    "scripts",
+    "cordis.patch.yml",
+    "README.md",
+    "CAPABILITY-MATRIX.md",
+    "ENABLE.md",
+    "locale"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node tests/independence.mjs && node tests/service.mjs && node tests/inbox-patrol.mjs && python3 tests/test_inbox_dom_adapter.py",
+    "prepare": "node ./scripts/ensure-runtime.mjs",
+    "postinstall": "node ./scripts/ensure-runtime.mjs",
+    "ensure-runtime": "node ./scripts/ensure-runtime.mjs",
+    "runtime-status": "node ./scripts/ensure-runtime.mjs --status"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.1.0",
+    "@deepseek-ai/dsh-tools": "0.2.2-rc.1"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.1.0",
+    "@deepseek-ai/dsh-tools": "0.2.2-rc.1",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.6.0"
+  }
+}

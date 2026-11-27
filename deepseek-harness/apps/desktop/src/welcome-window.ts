@@ -23,6 +23,7 @@ export function welcomeWindowOptions(platform: NodeJS.Platform, locale: DesktopL
     maximizable: false,
     fullscreenable: false,
     show: false,
+    acceptFirstMouse: true,
     title: locale.messages.welcomeTitle,
     backgroundColor: platform === 'darwin' || platform === 'win32' ? '#00000000' : '#FFFFFF',
     ...(platform === 'darwin' ? {

@@ -13,6 +13,7 @@
 | `scripts/` | `start-web.sh` 等本地启动脚本 |
 | `patches/` | `deepseek-harness-xiaocongseek.patch`：相对上游的完整改动，便于日后 rebase 上游 |
 | `README.md` / `MEMORY-稳定结论.md` / `LESSONS-*.md` | 启动流程、稳定结论、踩坑记录 |
+| `docs/2026-11-08-数字人工作台/记忆文档.md` | 工作台产品接力（公司空间、档案、素材柜、记录、预览） |
 
 ## 不含（克隆后需自行生成 / 本地自备）
 
@@ -38,4 +39,4 @@ pnpm dsh --profile web --no-open --port 3080
 
 ## 与上游的关系
 
-`deepseek-harness/` 来自上游 MIT 项目，本地改动共 40 个文件（品牌、`ui-settings-account` 登录链路、图标、构建脚本）。完整 diff 见 `patches/deepseek-harness-xiaocongseek.patch`。
+`deepseek-harness/` 来自上游 MIT 项目，本地改动共 54 个文件（品牌、账号余额、`ui-settings-account` 登录链路、图标、PWA/构建脚本）。完整 diff（含二进制图标）见 `patches/deepseek-harness-xiaocongseek.patch`。

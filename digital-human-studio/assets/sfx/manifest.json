@@ -1,0 +1,271 @@
+{
+  "sampleRate": 48000,
+  "channels": 1,
+  "count": 33,
+  "items": [
+    {
+      "id": "whoosh",
+      "file": "whoosh.wav",
+      "dur": 0.42,
+      "peak": 0.8,
+      "use": "卡片滑入、版面整体切走",
+      "gain": 0.28
+    },
+    {
+      "id": "swoosh",
+      "file": "swoosh.wav",
+      "dur": 0.28,
+      "peak": 0.64,
+      "use": "轻量滑动、标签掠过",
+      "gain": 0.22
+    },
+    {
+      "id": "suck",
+      "file": "suck.wav",
+      "dur": 0.5,
+      "peak": 0.8,
+      "use": "吸进/收拢，元素被吸走",
+      "gain": 0.26
+    },
+    {
+      "id": "send",
+      "file": "send.wav",
+      "dur": 0.25,
+      "peak": 0.8,
+      "use": "信息发出、推送",
+      "gain": 0.28
+    },
+    {
+      "id": "hit",
+      "file": "hit.wav",
+      "dur": 0.7,
+      "peak": 0.95,
+      "use": "重音落地，强调一句话",
+      "gain": 0.32
+    },
+    {
+      "id": "pop",
+      "file": "pop.wav",
+      "dur": 0.09,
+      "peak": 0.6,
+      "use": "小元素弹出、数字跳动",
+      "gain": 0.2
+    },
+    {
+      "id": "blip",
+      "file": "blip.wav",
+      "dur": 0.05,
+      "peak": 0.45,
+      "use": "轻提示、计数器变化",
+      "gain": 0.16
+    },
+    {
+      "id": "tick",
+      "file": "tick.wav",
+      "dur": 0.006,
+      "peak": 0.5,
+      "use": "计时、进度推进",
+      "gain": 0.14
+    },
+    {
+      "id": "type",
+      "file": "type.wav",
+      "dur": 0.02,
+      "peak": 0.5,
+      "use": "打字、代码逐字出现",
+      "gain": 0.18
+    },
+    {
+      "id": "cut",
+      "file": "cut.wav",
+      "dur": 0.03,
+      "peak": 0.55,
+      "use": "切断、切换镜头",
+      "gain": 0.22
+    },
+    {
+      "id": "click",
+      "file": "click.wav",
+      "dur": 0.015,
+      "peak": 0.6,
+      "use": "点击、选中",
+      "gain": 0.18
+    },
+    {
+      "id": "clap",
+      "file": "clap.wav",
+      "dur": 0.12,
+      "peak": 0.95,
+      "use": "拍手、收尾强调",
+      "gain": 0.3
+    },
+    {
+      "id": "stamp",
+      "file": "stamp.wav",
+      "dur": 0.35,
+      "peak": 0.95,
+      "use": "印章砸下、结论定版",
+      "gain": 0.34
+    },
+    {
+      "id": "rip",
+      "file": "rip.wav",
+      "dur": 0.4,
+      "peak": 0.8,
+      "use": "撕开、揭晓前后对比",
+      "gain": 0.24
+    },
+    {
+      "id": "ding",
+      "file": "ding.wav",
+      "dur": 0.9,
+      "peak": 0.5,
+      "use": "正确答案、达成",
+      "gain": 0.22
+    },
+    {
+      "id": "sparkle",
+      "file": "sparkle.wav",
+      "dur": 0.5,
+      "peak": 0.45,
+      "use": "闪光、亮点强调",
+      "gain": 0.18
+    },
+    {
+      "id": "error",
+      "file": "error.wav",
+      "dur": 0.28,
+      "peak": 0.6,
+      "use": "报错、否定、踩坑",
+      "gain": 0.26
+    },
+    {
+      "id": "glitch",
+      "file": "glitch.wav",
+      "dur": 0.2,
+      "peak": 0.55,
+      "use": "故障、数据异常",
+      "gain": 0.22
+    },
+    {
+      "id": "riser",
+      "file": "riser.wav",
+      "dur": 0.6,
+      "peak": 0.7,
+      "use": "蓄势、进入高潮前 1 秒",
+      "gain": 0.26
+    },
+    {
+      "id": "rewind",
+      "file": "rewind.wav",
+      "dur": 0.45,
+      "peak": 0.35,
+      "use": "倒回、重来一次",
+      "gain": 0.2
+    },
+    {
+      "id": "door",
+      "file": "door.wav",
+      "dur": 0.5,
+      "peak": 0.6,
+      "use": "开门、进入场景",
+      "gain": 0.24
+    },
+    {
+      "id": "outro",
+      "file": "outro.wav",
+      "dur": 1.5,
+      "peak": 0.8,
+      "use": "结尾收束，全片只用一次",
+      "gain": 0.3
+    },
+    {
+      "id": "n1",
+      "file": "n1.wav",
+      "dur": 0.7,
+      "peak": 0.5,
+      "use": "正面提示，音阶第 1 级",
+      "gain": 0.18
+    },
+    {
+      "id": "n2",
+      "file": "n2.wav",
+      "dur": 0.7,
+      "peak": 0.5,
+      "use": "正面提示，音阶第 2 级",
+      "gain": 0.18
+    },
+    {
+      "id": "n3",
+      "file": "n3.wav",
+      "dur": 0.7,
+      "peak": 0.5,
+      "use": "正面提示，音阶第 3 级",
+      "gain": 0.18
+    },
+    {
+      "id": "n4",
+      "file": "n4.wav",
+      "dur": 0.7,
+      "peak": 0.5,
+      "use": "正面提示，音阶第 4 级",
+      "gain": 0.18
+    },
+    {
+      "id": "n5",
+      "file": "n5.wav",
+      "dur": 0.7,
+      "peak": 0.5,
+      "use": "正面提示，音阶第 5 级",
+      "gain": 0.18
+    },
+    {
+      "id": "count",
+      "file": "count.wav",
+      "dur": 0.55,
+      "peak": 0.5,
+      "use": "数字滚动上升，讲数据/统计",
+      "gain": 0.22
+    },
+    {
+      "id": "progress",
+      "file": "progress.wav",
+      "dur": 0.92,
+      "peak": 0.55,
+      "use": "进度条走满、从 A 走到 B",
+      "gain": 0.24
+    },
+    {
+      "id": "check",
+      "file": "check.wav",
+      "dur": 0.32,
+      "peak": 0.5,
+      "use": "打勾、清单逐项完成",
+      "gain": 0.2
+    },
+    {
+      "id": "toggle",
+      "file": "toggle.wav",
+      "dur": 0.17,
+      "peak": 0.5,
+      "use": "开关切换、参数开关",
+      "gain": 0.18
+    },
+    {
+      "id": "pad_low",
+      "file": "pad_low.wav",
+      "dur": 2.0,
+      "peak": 0.34,
+      "use": "低频垫音，讲解板满屏时压场（可循环）",
+      "gain": 0.14
+    },
+    {
+      "id": "loading",
+      "file": "loading.wav",
+      "dur": 1.5,
+      "peak": 0.36,
+      "use": "等待提示（可循环）",
+      "gain": 0.16
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import { teo } from 'tencentcloud-sdk-nodejs-teo'
 import { purgeDesktopInstaller, resolveDesktopPurgeConfig } from '../scripts/desktop-edgeone.ts'
 
 const environment = {
-  DSH_DESKTOP_AUTO_UPDATE_ENV: 'production', DOWNLOAD_PROD_COS_BUCKET: 'fixture-bucket',
+  DSH_DESKTOP_AUTO_UPDATE_ENV: 'production', DOWNLOAD_PROD_ORIGIN: 'https://download.deepseek.com', DOWNLOAD_PROD_COS_BUCKET: 'fixture-bucket',
   DOWNLOAD_PROD_COS_SECRET_ID: 'fixture-secret-id', DOWNLOAD_PROD_COS_SECRET_KEY: 'fixture-secret-key',
   DOWNLOAD_PROD_EO_ZONE_ID: 'zone-fixture',
 }

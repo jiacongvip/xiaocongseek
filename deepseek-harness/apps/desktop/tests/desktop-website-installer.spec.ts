@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { afterEach, expect, it } from 'vitest'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { createDesktopCos } from '../scripts/desktop-cos.ts'
 import { desktopPublishCos } from '../scripts/desktop-publish-cos.ts'
 import { answer, cosError, startCosLoopback } from './cos-loopback.ts'
@@ -11,14 +11,18 @@ import type { DesktopRetainedManifest } from '../scripts/desktop-release-store.t
 import type { DesktopPublishRoute } from '../scripts/desktop-publish-route.ts'
 
 const roots: string[] = []
-afterEach(async () => { await Promise.all(roots.splice(0).map(root => rm(root, { recursive: true, force: true }))) })
+beforeEach(() => { vi.stubEnv('DOWNLOAD_PROD_ORIGIN', 'https://download.deepseek.com') })
+afterEach(async () => {
+  vi.unstubAllEnvs()
+  await Promise.all(roots.splice(0).map(root => rm(root, { recursive: true, force: true })))
+})
 async function fixture(target: DesktopPublishRoute['target'] = 'mac-arm64') {
   const directory = await mkdtemp(join(tmpdir(), 'website-installer-'))
   roots.push(directory)
   const bytes = Buffer.from('final installer bytes')
   const route: DesktopPublishRoute = { runId: '12', attempt: '1', commit: 'a'.repeat(40), sourceRef: 'master',
     channel: 'nightly', runnerName: 'mini', runnerLabel: 'dsh-mini', target, preset: 'production' }
-  const filename = `deepseek-harness-0.2.1-rc.5-${target}.${target === 'win-x64' ? 'exe' : 'dmg'}`
+  const filename = `xiaocongseek-0.2.1-rc.5-${target}.${target === 'win-x64' ? 'exe' : 'dmg'}`
   await writeFile(join(directory, filename), bytes)
   const manifest: DesktopRetainedManifest = { schemaVersion: 1, source: {
     runId: route.runId, attempt: route.attempt, commit: route.commit, sourceRef: route.sourceRef,

@@ -9,7 +9,7 @@ const home = mkdtempSync(join(tmpdir(), 'dh-auth-smoke-'))
 process.env.HOME = home
 mkdirSync(join(home, '.dsh'))
 const cfgPath = join(home, '.dsh', 'digital-human-studio.json')
-writeFileSync(cfgPath, JSON.stringify({ vectcutBaseUrl: 'http://127.0.0.1:9001', vectcutRoot: '/mock/vectcut', customField: 'preserve-me' }))
+writeFileSync(cfgPath, JSON.stringify({ xiaocongcutBaseUrl: 'http://127.0.0.1:9001', xiaocongcutRoot: '/mock/xiaocongcut', customField: 'preserve-me' }))
 const routes = new Map(), tools = []
 let tokenName, legacy = false, modelsFail = false, createCount = 0
 const mockKey = 'sk-mock-inference-only-1234567890'
@@ -55,7 +55,7 @@ try {
     assert(!JSON.stringify(login).includes(mockKey))
     const stored = JSON.parse(readFileSync(cfgPath))
     assert.equal(parse(readFileSync(join(home, '.dsh/.credentials.yaml'), 'utf8')).refs.NEW_API_TOKEN, mockKey)
-    assert.equal(stored.newApiToken, mockKey); assert.equal(stored.vectcutRoot, '/mock/vectcut')
+    assert.equal(stored.newApiToken, mockKey); assert.equal(stored.xiaocongcutRoot, '/mock/xiaocongcut')
     assert.equal(stored.customField, 'preserve-me'); assert(!JSON.stringify(stored).includes('mock-password'))
   }
   assert.equal(createCount, 1, 'second login must reuse local sk-, not create another New API token')
@@ -77,7 +77,7 @@ try {
   assert.equal((await call('auth/logout', {}, 'POST', { origin: 'http://evil.invalid' })).status, 403)
   const config = await call('config', null, 'GET')
   assert(!JSON.stringify(config).includes(mockKey))
-  await call('config', { vectcutBaseUrl: 'http://127.0.0.1:9001' })
+  await call('config', { xiaocongcutBaseUrl: 'http://127.0.0.1:9001' })
   assert.equal(JSON.parse(readFileSync(cfgPath)).newApiToken, mockKey)
   assert.equal((await call('auth/save', { baseUrl: 'https://example.com' })).data.hasToken, false)
   assert.equal(tools.length, 13)

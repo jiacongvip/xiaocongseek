@@ -1,0 +1,104 @@
+{
+  "sourceRepo": "https://github.com/git-rumengai/MediaMate",
+  "sourceCommit": "5504d3374f9294c3dfbc2c3077413d9e8216dbe7",
+  "sourceCommitTimeAsiaShanghai": "2024-09-11 13:13:40 Asia/Shanghai",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2024 RuMengAI",
+  "licenseFile": "https://github.com/git-rumengai/MediaMate/blob/5504d3374f9294c3dfbc2c3077413d9e8216dbe7/LICENSE",
+  "authorization": "Upstream ships an actual MIT LICENSE. Only read-only official-page comment selectors are excerpted. BiliGo authorization does not apply here and is not claimed.",
+  "excluded": [
+    "reply/send/textarea locators as send actions",
+    "auto-reply or any real send",
+    "cookie or login-store files or tokens",
+    "private APIs, signatures, XHR sniffing",
+    "anti-detection or CAPTCHA bypass",
+    "installing or running MediaMate",
+    "launching a real browser against a live account"
+  ],
+  "platforms": {
+    "douyin": {
+      "commentsPage": "https://creator.douyin.com/creator-micro/interactive/comment",
+      "commentsPageSource": "Official Douyin creator center 互动管理/评论管理. MediaMate creator.yaml uses #comment_manage on this creator-center surface.",
+      "sourceFile": "mediamate/static/elements/douyin/creator.yaml",
+      "sourceFileUrl": "https://github.com/git-rumengai/MediaMate/blob/5504d3374f9294c3dfbc2c3077413d9e8216dbe7/mediamate/static/elements/douyin/creator.yaml",
+      "allowHosts": [
+        "creator.douyin.com",
+        "www.douyin.com"
+      ],
+      "listSelectors": {
+        "heading": {
+          "css": "div",
+          "text": "评论管理",
+          "xpath": "//div[text()=\"评论管理\"]"
+        },
+        "noWorksHint": {
+          "xpath": "//span[contains(text(),\"你还没有\")]",
+          "textContains": "你还没有"
+        },
+        "selectWork": {
+          "xpath": "//button/span[contains(text(),\"选择作品\")]",
+          "textContains": "选择作品"
+        },
+        "commentList": {
+          "css": "ul[class*='cmt-ul'] > li",
+          "xpath": "//ul[contains(@class,\"cmt-ul\")]/li"
+        },
+        "author": {
+          "css": "h4",
+          "xpath": "./div/div[2]/h4"
+        },
+        "content": {
+          "css": "pre",
+          "xpath": "./div/div[2]/pre"
+        },
+        "innerComment": {
+          "xpath": "./div/div[2]/div[2]/ul/li"
+        }
+      },
+      "emptyHints": [
+        "暂无评论",
+        "还没有评论",
+        "你还没有"
+      ],
+      "verification": "pending_page_check"
+    },
+    "xiaohongshu": {
+      "commentsPage": "https://www.xiaohongshu.com/notification?type=comment",
+      "commentsPageSource": "Official www.xiaohongshu.com URL. Fetched 2026-11-10 Asia/Shanghai: page exists and shows official Notifications chrome when logged out. Also cited as a public URL fact in Fisher0012/xhs-auto-reply (no LICENSE; URL fact only, no code copied). Notification-list selectors are not taken from unlicensed projects and stay pending live verification.",
+      "workPageCommentSource": "MediaMate MIT official note-page comment list, not the notification inbox.",
+      "sourceFile": "mediamate/static/elements/xiaohongshu/home.yaml",
+      "sourceFileUrl": "https://github.com/git-rumengai/MediaMate/blob/5504d3374f9294c3dfbc2c3077413d9e8216dbe7/mediamate/static/elements/xiaohongshu/home.yaml",
+      "allowHosts": [
+        "www.xiaohongshu.com"
+      ],
+      "listSelectors": {
+        "container": {
+          "css": "div.comments-container",
+          "xpath": "//div[@class=\"comments-container\"]"
+        },
+        "commentList": {
+          "css": "div.comments-container div.author, div.comments-container div.content",
+          "xpath": "//div[@class=\"comments-container\"]/div[2]/div"
+        },
+        "author": {
+          "css": "div.author a",
+          "xpath": ".//div[@class=\"author\"]/a"
+        },
+        "content": {
+          "css": "div.content",
+          "xpath": ".//div[@class=\"content\"]"
+        },
+        "empty": {
+          "css": "p.no-comments-text",
+          "xpath": "//p[@class=\"no-comments-text\"]"
+        }
+      },
+      "emptyHints": [
+        "暂无评论",
+        "还没有评论"
+      ],
+      "emptyClass": "no-comments-text",
+      "verification": "pending_page_check"
+    }
+  }
+}

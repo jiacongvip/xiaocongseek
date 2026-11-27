@@ -1,0 +1,642 @@
+[
+  {
+    "key": "xiaohongshu",
+    "type": 1,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": true,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "tencent",
+    "type": 2,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": true,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "douyin",
+    "type": 3,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": true,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "kuaishou",
+    "type": 4,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": true,
+      "title": false,
+      "textbox": true,
+      "tags": true,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "tiktok",
+    "type": 5,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": false,
+      "title": false,
+      "textbox": true,
+      "tags": true,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "instagram",
+    "type": 6,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": true,
+      "title": false,
+      "textbox": true,
+      "tags": true,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "facebook",
+    "type": 7,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": true,
+      "title": true,
+      "textbox": false,
+      "tags": true,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "bilibili",
+    "type": 8,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": true,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "baijiahao",
+    "type": 9,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": true,
+      "thumbnail": true,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "sohu",
+    "type": 10,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "login_stealth": false,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "toutiao_mp",
+    "type": 11,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": true,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "wechat_official",
+    "type": 12,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "csdn",
+    "type": 13,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "login_stealth": false,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "jianshu",
+    "type": 14,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "login_stealth": false,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": true,
+      "browser_lang": "zh-CN"
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "zhihu",
+    "type": 15,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "login_stealth": false,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ],
+      "manual_verification": true
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "x",
+    "type": 16,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "login_stealth": false,
+      "image_publish": true,
+      "title": false,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "browser_lang": "en-US",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "weibo",
+    "type": 17,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "login_stealth": false,
+      "image_publish": true,
+      "title": false,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ],
+      "manual_verification": true
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "douban",
+    "type": 18,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "login_stealth": false,
+      "image_publish": true,
+      "title": false,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "tieba",
+    "type": 19,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "login_stealth": false,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": true,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "omqq",
+    "type": 20,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "login_stealth": false,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": true,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "wangyi_mp",
+    "type": 21,
+    "kind": "publisher-adapter",
+    "features": {
+      "skip_cookie_verify": true,
+      "login_stealth": false,
+      "image_publish": true,
+      "title": true,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": true,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "doubao",
+    "type": 22,
+    "kind": "geo-monitor-not-publisher",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": false,
+      "title": false,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": true,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "qianwen",
+    "type": 23,
+    "kind": "geo-monitor-not-publisher",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": false,
+      "title": false,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": true,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "yuanbao",
+    "type": 24,
+    "kind": "geo-monitor-not-publisher",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": false,
+      "title": false,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": true,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "yiyan",
+    "type": 25,
+    "kind": "geo-monitor-not-publisher",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": false,
+      "title": false,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": true,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "kimi",
+    "type": 26,
+    "kind": "geo-monitor-not-publisher",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": false,
+      "title": false,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": true,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "deepseek",
+    "type": 27,
+    "kind": "geo-monitor-not-publisher",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": false,
+      "title": false,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": true,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "zhipu",
+    "type": 28,
+    "kind": "geo-monitor-not-publisher",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": false,
+      "title": false,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": true,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  },
+  {
+    "key": "douyin_ai",
+    "type": 29,
+    "kind": "geo-monitor-not-publisher",
+    "features": {
+      "skip_cookie_verify": true,
+      "image_publish": false,
+      "title": false,
+      "textbox": true,
+      "tags": false,
+      "thumbnail": false,
+      "location": false,
+      "schedule": false,
+      "stealth": false,
+      "strict_login_check": false,
+      "browser_lang": "zh-CN",
+      "browser_args": [
+        "--start-maximized"
+      ],
+      "login_browser_args": [
+        "--start-maximized"
+      ]
+    },
+    "execution": "disabled",
+    "validation": "source-preserved-not-live-tested"
+  }
+]

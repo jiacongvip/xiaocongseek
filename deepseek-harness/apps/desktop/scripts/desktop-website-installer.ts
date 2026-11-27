@@ -10,6 +10,7 @@ import { cosOperation } from './cos-operation.ts'
 import type { DesktopObjectDigest, DesktopPublishTransport } from './desktop-publish.ts'
 import { DesktopCosOperationError } from './desktop-publication-failure.ts'
 import type { DesktopUploadPlan } from './desktop-upload-plan.ts'
+import { DESKTOP_ARTIFACT_PREFIX } from './product-identity.mjs'
 
 /** Verified file and destination; the caller closes the handle after publication. */
 export interface DesktopWebsiteInstaller {
@@ -30,7 +31,7 @@ export interface DesktopWebsiteInstaller {
  * @returns An open verified installer; callers must close its handle in finally.
  */
 export async function prepareWebsiteInstaller(directory: string, manifest: DesktopRetainedManifest,
-  route: DesktopPublishRoute, repository: string, bucket: string): Promise<DesktopWebsiteInstaller> {
+  route: DesktopPublishRoute, repository: string, bucket: string, env: NodeJS.ProcessEnv = process.env): Promise<DesktopWebsiteInstaller> {
   const source = manifest.source
   if (route.preset !== 'production' || source.preset !== 'production'
     || source.repository !== repository || source.runId !== route.runId || source.attempt !== route.attempt
@@ -41,7 +42,7 @@ export async function prepareWebsiteInstaller(directory: string, manifest: Deskt
     throw new Error('website installer: build identity or production qualification mismatch')
   }
   const windows = route.target === 'win-x64'
-  const filename = `deepseek-harness-${source.version}-${route.target}.${windows ? 'exe' : 'dmg'}`
+  const filename = `${DESKTOP_ARTIFACT_PREFIX}-${source.version}-${route.target}.${windows ? 'exe' : 'dmg'}`
   const file = manifest.files.find(item => item.name === filename)
   if (!file) throw new Error('website installer: selected installer is absent from build manifest')
   const path = join(directory, file.name)
@@ -63,7 +64,7 @@ export async function prepareWebsiteInstaller(directory: string, manifest: Deskt
     const contentDisposition = `attachment; filename="${file.name}"`
     return { handle, digest, contentDisposition, md5: md5.digest('base64'), plan: {
       environment: 'production', target: route.target, version: source.version, commit: source.commit, dirty: false,
-      bucket, publicUrl: desktopWebsiteInstallerUrl(route.target),
+      bucket, publicUrl: desktopWebsiteInstallerUrl(route.target, env),
       secretIdEnvName: 'DOWNLOAD_PROD_COS_SECRET_ID', secretKeyEnvName: 'DOWNLOAD_PROD_COS_SECRET_KEY',
       artifacts: [{ path, filename: file.name, key, channelMetadata: false,
         contentDisposition,

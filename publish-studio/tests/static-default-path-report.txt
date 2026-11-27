@@ -1,0 +1,9 @@
+OK-msg index.js:1399: console.warn('[digital-human-studio] publish-studio 未注入或无效；发布执行保持 blocked，不会回退原GEO /postVideo');
+OK-msg index.js:3509: // Compatibility path renamed in behavior: independent publish-studio auth only; original GEO /postVideo bridge stays di
+OK-msg publication-service.js:274: throw new Error('原GEO /postVideo 委托默认关闭；请启用独立 publish-studio');
+OK-msg publish-studio-bridge.js:16: reasons: ['未启用独立发布插件 publish-studio。不会回退原GEO /postVideo。请按 publish-studio/ENABLE.md 链接到 web profile 后重启加载。'],
+OK publicationGeoAction throws
+OK configurePublishStudio wired in dist/index.js
+OK publish-studio independent flags
+OK executor.py no /postVideo
+STATIC PASS

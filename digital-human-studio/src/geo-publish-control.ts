@@ -1,0 +1,55 @@
+import { randomBytes, createHash } from 'node:crypto'
+import { existsSync, readFileSync, writeFileSync, mkdirSync, unlinkSync, mkdtempSync, realpathSync, constants } from 'node:fs'
+import { copyFile, unlink, rmdir } from 'node:fs/promises'
+import { join, extname } from 'node:path'
+import { createReadStream } from 'node:fs'
+import { GeoPublishClient, GeoPublishError } from './geo-publish-client.js'
+import { spaceAssetRoot } from './spaces.js'
+type Repo={get(space:string,id:string):any;list(space:string):any[];validate(space:string,id:string):Promise<any>;patch(space:string,id:string,changes:Record<string,unknown>,code:string):any}
+const hash=(v:string)=>createHash('sha256').update(v).digest('hex')
+async function checksum(path:string){const h=createHash('sha256');for await(const data of createReadStream(path))h.update(data);return h.digest('hex')}
+/** One local controller. Upstream /postVideo alone enforces its original shared entitlement and usage ledger. */
+export function createGeoPublishControl(repo:Repo,client:GeoPublishClient){
+ const grants=new Map<string,{space:string;id:string;session:string;csrf:string;expires:number;fingerprint:string;connectionRevision:string;accountRevision:string;purpose:'send'|'release'}>(),active=new Set<string>();let settingsBusy=false
+ const key=(space:string,id:string)=>space+':'+id
+ const locks=()=>{const root=join(spaceAssetRoot('default'),'geo-delegation-locks');mkdirSync(root,{recursive:true,mode:0o700});return root}
+ const lockFile=(service:string)=>join(locks(),'service-'+service+'.json')
+ const markerFile=(space:string,id:string)=>join(locks(),'task-'+hash(key(space,id))+'.json')
+ function runtime(){const s=client.state();return {enabled:s.connected && s.authenticated,mode:'original-geo-delegation',schedulerEnabled:false,connectedModes:[],connection:s,reasons:!s.connected?['尚未连接原GEO；不会自动启动服务、读取配置或假定授权关闭']:!s.authenticated?['原GEO要求授权登录，请按原流程登录']:[]}}
+ function recover(space:string){for(const t of repo.list(space))if(!active.has(key(space,t.id))){let held=false;const sid=t.snapshot.geoServiceId;if(typeof sid==='string' && /^[a-f0-9]{32}$/.test(sid))try{const lock=JSON.parse(readFileSync(lockFile(sid),'utf8'));held=lock.space===space && lock.id===t.id}catch{}if(['queued','running'].includes(t.state) || held && (t.state==='unconfirmed' || !t.receipt?.lockHeld))repo.patch(space,t.id,{state:'unknown',receipt:{...t.receipt,serviceId:sid,lockHeld:held}},'process-interrupted-no-retry')}}
+
+ async function connectionAction(input:Record<string,unknown>){if(active.size || settingsBusy)throw new Error('正在处理发布或连接设置，暂不能更换连接/授权');settingsBusy=true;try{const op=input.action;if(op==='connect')await client.connect(String(input.baseUrl || 'http://127.0.0.1:5409'));else if(op==='login')await client.login({username:String(input.username || ''),password:String(input.password || ''),authCode:String(input.authCode || ''),productKey:String(input.productKey || '')});else if(op==='renew')await client.renew();else if(op==='logout')client.logout();else if(op!=='status')throw new Error('未知原GEO连接操作');grants.clear();return {success:true,connection:client.state()}}finally{settingsBusy=false}}
+ async function ready(space:string,id:string){recover(space);const t=repo.get(space,id);if(t.state!=='unconfirmed')return {blocked:true,reasons:['任务已执行/取消或结果未知，不能重复发送']};if(settingsBusy || !runtime().enabled)return {blocked:true,reasons:runtime().reasons.length?runtime().reasons:['连接设置尚未完成']}
+  if(repo.list(space).some(x=>x.id!==id && ['unknown','accepted','running','queued','waiting_human'].includes(x.state) && x.snapshot.geoServiceId===t.snapshot.geoServiceId && x.snapshot.geoAccountId===t.snapshot.geoAccountId && x.snapshot.videoHash===t.snapshot.videoHash))return {blocked:true,reasons:['此视频在所选账号有未核实任务，不能换版本盲目重发']}
+  try{const revision=client.revision(),job=await repo.validate(space,id),s=job.snapshot;if(!s.geoServiceId || !Number.isSafeInteger(s.geoAccountId) || !s.geoAccountId)return {blocked:true,reasons:['请明确选择原GEO账号并保存公司绑定']};const matrix=JSON.parse(readFileSync(new URL('../publishing/platforms.json',import.meta.url),'utf8')),platform=matrix.find((p:any)=>p.key===s.platform && p.kind==='publisher-adapter');if(!platform || [12,13,14,15,18,19,20,21].includes(platform.type))return {blocked:true,reasons:['当前发布包只接视频模式，此平台图文/文章模式尚未接入']};await client.permissions();const account=await client.resolve(s.geoServiceId,s.geoAccountId,platform.type);if(account.label!==s.geoAccountLabel)return {blocked:true,reasons:['原账号名称已变化，请同步账号摘要后重新准备']};if(revision!==client.revision())throw new Error();return {blocked:false,job,platformType:platform.type,accountRevision:account.revision,connectionRevision:revision,reasons:[]}}catch(e){return {blocked:true,reasons:[e instanceof GeoPublishError?e.message:'发布包、绑定或本地媒体已变化，请重新检查并准备']}}
+ }
+ async function challenge(space:string,id:string,session:string,purpose:'send'|'release'='send'){
+  let fingerprint:string,connectionRevision=client.revision(),accountRevision=''
+  if(purpose==='send'){const r=await ready(space,id);if(r.blocked || !r.job)return {success:false,blocked:true,error:r.reasons.join('；')};fingerprint=r.job.scope.fingerprint;connectionRevision=r.connectionRevision!;accountRevision=r.accountRevision!}
+  else{const t=repo.get(space,id);if(t.state!=='unknown' || active.has(key(space,id)) || !t.receipt?.lockHeld)throw new Error('没有可人工核对释放的本机占用');fingerprint=t.fingerprint}
+  for(const [n,g] of grants)if(g.expires<Date.now() || g.space===space && g.id===id && g.session===session)grants.delete(n)
+  const nonce=randomBytes(32).toString('base64url'),csrf=randomBytes(32).toString('base64url'),expires=Date.now()+120000;grants.set(nonce,{space,id,session,csrf:hash(csrf),expires,fingerprint,connectionRevision,accountRevision,purpose});return {success:true,spaceId:space,id,challenge:nonce,csrf,expiresAt:expires,purpose}
+ }
+ async function submit(space:string,id:string,session:string,nonce:string,csrf:string){const g=grants.get(nonce);if(!g || g.space!==space || g.id!==id || g.session!==session || g.expires<Date.now() || hash(csrf)!==g.csrf)throw new Error('确认凭证无效、过期、跨公司/会话或已使用');grants.delete(nonce)
+  if(g.purpose==='release'){const t=repo.get(space,id);if(t.state!=='unknown' || active.has(key(space,id)) || !t.receipt?.lockHeld || t.fingerprint!==g.fingerprint)throw new Error('任务占用状态已变化');const file=lockFile(t.snapshot.geoServiceId),lock=JSON.parse(readFileSync(file,'utf8'));if(lock.space!==space || lock.id!==id)throw new Error('本机占用不属于此任务');unlinkSync(file);return {success:true,spaceId:space,item:repo.patch(space,id,{receipt:{...t.receipt,lockHeld:false}},'human-reconciled-local-lock-only')}}
+  const r=await ready(space,id);if(r.blocked || !r.job)return {success:false,blocked:true,error:r.reasons.join('；')};const job=r.job,s=job.snapshot;if(g.expires<Date.now() || g.fingerprint!==job.scope.fingerprint || g.connectionRevision!==r.connectionRevision || g.accountRevision!==r.accountRevision)throw new Error('内容、账号或授权会话变化，请重新确认')
+  const taskKey=key(space,id);if(active.size || settingsBusy)return {success:false,blocked:true,error:'同一原GEO委托执行串行进行，请稍后明确重试确认'}
+  const lock=lockFile(s.geoServiceId),marker=markerFile(space,id);try{writeFileSync(lock,JSON.stringify({space,id}),{flag:'wx',mode:0o600})}catch{return {success:false,blocked:true,error:'原GEO有正在执行或结果未核实的委托，不能重复提交'}}
+  active.add(taskKey);let dispatched=false,completed=false,knownRefusal=false,inputDir='',files:string[]=[]
+  try{
+   if(existsSync(marker)){const old=JSON.parse(readFileSync(marker,'utf8'));if(old.state!=='rejected-before-send')throw new Error('duplicate-marker')}
+   writeFileSync(marker,JSON.stringify({state:'preparing',space,id}),{mode:0o600});repo.patch(space,id,{state:'queued',receipt:{lockHeld:true,serviceId:s.geoServiceId}},'human-confirmed')
+   const root=realpathSync(spaceAssetRoot(space));inputDir=mkdtempSync(join(root,'.geo-input-'+id+'-'));const video=join(inputDir,'video'+extname(job.video)),cover=join(inputDir,'cover'+extname(job.cover));files=[video,cover];await copyFile(job.video,video,constants.COPYFILE_EXCL);await copyFile(job.cover,cover,constants.COPYFILE_EXCL);if(await checksum(video)!==s.videoHash || await checksum(cover)!==s.coverHash)throw new Error('changed-media')
+   if(repo.get(space,id).state==='cancelled'){knownRefusal=true;return {success:true,spaceId:space,item:repo.get(space,id)}}
+   await repo.validate(space,id);if(g.expires<Date.now() || g.connectionRevision!==client.revision())throw new Error('stale-confirmation')
+   repo.patch(space,id,{state:'running',dispatchStartedAt:Date.now(),receipt:{lockHeld:true,serviceId:s.geoServiceId}},'geo-request-starting');dispatched=true
+   const result=await client.post({platformType:r.platformType!,platform:s.platform,serviceId:s.geoServiceId,accountId:s.geoAccountId,accountRevision:r.accountRevision!,title:s.title,body:s.body,topics:s.topics,video,cover},()=>repo.patch(space,id,{},'geo-original-checks-and-execution'))
+   completed=result.completed;writeFileSync(marker,JSON.stringify({state:'completed',space,id}),{mode:0o600});repo.patch(space,id,{state:result.state,executionFinishedAt:Date.now(),receipt:{upstreamTaskId:result.upstreamTaskId,serviceId:s.geoServiceId,lockHeld:false}},'upstream-finished-unverified')
+   return {success:true,spaceId:space,item:repo.get(space,id)}
+  }catch(e){const duplicate=e instanceof Error && e.message==='duplicate-marker';knownRefusal=!duplicate && (e instanceof GeoPublishError && (!e.publishRequested || ['auth','permission','invalid'].includes(e.code)) || !dispatched);completed=duplicate || e instanceof GeoPublishError && e.completed
+   const cancelled=repo.get(space,id).state==='cancelled',state=cancelled?'cancelled':knownRefusal?'unconfirmed':'unknown';writeFileSync(marker,JSON.stringify({state:knownRefusal?'rejected-before-send':'unknown',space,id}),{mode:0o600});repo.patch(space,id,{state,...(knownRefusal?{dispatchStartedAt:undefined}:{}),receipt:{serviceId:s.geoServiceId,lockHeld:!knownRefusal && !completed}},knownRefusal?'original-policy-or-resource-blocked':'result-unknown-no-retry');return {success:false,spaceId:space,blocked:knownRefusal,error:knownRefusal?(e instanceof GeoPublishError?e.message:'内容或账号变化，未提交原GEO'): '原GEO结果未知，请核对原工作台，禁止盲目重发',item:repo.get(space,id)}
+  }finally{active.delete(taskKey);if(!dispatched || completed || knownRefusal){try{unlinkSync(lock)}catch{}for(const f of files)try{await unlink(f)}catch{}if(inputDir)try{await rmdir(inputDir)}catch{}}}
+ }
+ function cancel(space:string,id:string){const t=repo.get(space,id);if(!['unconfirmed','queued'].includes(t.state) || t.dispatchStartedAt)throw new Error('只能取消尚未执行任务，不代表撤回平台内容');for(const [n,g] of grants)if(g.space===space && g.id===id)grants.delete(n);return {success:true,spaceId:space,item:repo.patch(space,id,{state:'cancelled',receipt:{...t.receipt,lockHeld:false}},'cancelled-before-execution')}}
+ return {runtime,recover,ready,challenge,submit,cancel,connectionAction,client,verifyResult:async(_space?:string,_id?:string)=>({success:false,blocked:true,error:'原GEO成功文本不是平台最终发表证据，请在原工作台/平台核对；不会重发或自动标记日历'})}
+}

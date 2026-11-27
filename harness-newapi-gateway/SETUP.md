@@ -5,7 +5,7 @@
 ## 1. 环境文件
 
 ```bash
-cd "/Users/jiacong/Desktop/开发文件/数字人混剪工作台/harness-newapi-gateway"
+cd "/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/harness-newapi-gateway"
 cp .env.example .env
 # 本地开发可暂用示例密码；任何外网暴露前必须改 POSTGRES_PASSWORD / REDIS_PASSWORD
 ```

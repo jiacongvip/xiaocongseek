@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MediaCrawler 开发者门户</title>
+  <style>
+    :root {
+      --bg: #0b1220; --card: #121a2b; --border: #243049; --text: #e8eefc;
+      --muted: #93a4c3; --accent: #3b82f6; --ok: #22c55e; --warn: #f59e0b; --err: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, #1e293b 0%, var(--bg) 55%); color: var(--text); min-height: 100vh; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); backdrop-filter: blur(8px); }
+    header h1 { font-size: 18px; margin: 0; letter-spacing: .02em; }
+    header a { color: var(--muted); text-decoration: none; margin-left: 14px; font-size: 13px; }
+    header a:hover { color: var(--text); }
+    main { max-width: 980px; margin: 24px auto; padding: 0 16px 48px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    h2 { margin: 0 0 12px; font-size: 16px; }
+    .muted { color: var(--muted); font-size: 13px; line-height: 1.5; }
+    label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 6px; }
+    input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+      background: #0a1020; color: var(--text); outline: none; }
+    input:focus { border-color: var(--accent); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
+    button { border: 0; border-radius: 10px; padding: 10px 14px; background: var(--accent); color: white; font-weight: 600; cursor: pointer; }
+    button.secondary { background: #1f2937; border: 1px solid var(--border); }
+    button.danger { background: #7f1d1d; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; background: #1e293b; }
+    .badge.running, .badge.queued { color: var(--warn); }
+    .badge.succeeded { color: var(--ok); }
+    .badge.failed, .badge.cancelled, .badge.error { color: var(--err); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; word-break: break-all; }
+    .toast { position: fixed; right: 16px; bottom: 16px; background: #111827; border: 1px solid var(--border); padding: 12px 14px; border-radius: 10px; max-width: 420px; display: none; }
+    .hidden { display: none !important; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+    .tabs button { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+    .tabs button.active { background: #1d4ed8; color: white; border-color: #1d4ed8; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>MediaCrawler 开发者门户</h1>
+      <span class="muted">注册登录 · API Key · 任务查询（爬虫批处理阶段）</span>
+    </div>
+    <div>
+      <a href="/hub/">产品首页</a>
+      <a href="/hub/login">Hub 登录</a>
+      <a href="/hub/account">个人中心</a>
+      <a href="/console">运维 WebUI</a>
+      <a href="/map">地图获客</a>
+      <a href="/docs" target="_blank">API Docs</a>
+      <a href="#" id="logoutBtn" class="hidden">退出</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="authCard" class="card">
+      <div class="tabs">
+        <button type="button" class="active" data-tab="login">登录</button>
+        <button type="button" data-tab="register">注册</button>
+      </div>
+      <div id="loginPane">
+        <h2>登录</h2>
+        <label>用户名</label>
+        <input id="loginUser" autocomplete="username" />
+        <label>密码</label>
+        <input id="loginPass" type="password" autocomplete="current-password" />
+        <div class="actions"><button id="loginBtn">登录</button></div>
+      </div>
+      <div id="registerPane" class="hidden">
+        <h2>注册</h2>
+        <div class="row">
+          <div>
+            <label>用户名</label>
+            <input id="regUser" />
+          </div>
+          <div>
+            <label>邮箱</label>
+            <input id="regEmail" type="email" />
+          </div>
+        </div>
+        <label>密码（至少 6 位）</label>
+        <input id="regPass" type="password" />
+        <div class="actions"><button id="regBtn">创建账号</button></div>
+      </div>
+      <p class="muted" style="margin-top:14px">Master Key（环境变量 MEDIA_CRAWLER_API_KEY）仍可用于调用 /api/tasks；门户账号可创建自己的 API Key。</p>
+    </section>
+
+    <section id="appCard" class="card hidden">
+      <h2>当前用户</h2>
+      <p class="muted" id="userInfo">-</p>
+
+      <h2 style="margin-top:20px">API Keys</h2>
+      <p class="muted">创建后请立刻复制完整 Key。请求头：<span class="mono">Authorization: Bearer &lt;key&gt;</span> 或 <span class="mono">X-API-Key</span></p>
+      <div class="row">
+        <div>
+          <label>Key 名称</label>
+          <input id="keyName" placeholder="default" />
+        </div>
+      </div>
+      <div class="actions">
+        <button id="createKeyBtn">创建 API Key</button>
+        <button class="secondary" id="refreshKeysBtn">刷新</button>
+      </div>
+      <div id="newKeyBox" class="hidden" style="margin-top:12px;padding:12px;border:1px dashed var(--warn);border-radius:10px">
+        <div class="muted">新 Key（仅显示一次）</div>
+        <div class="mono" id="newKeyValue"></div>
+      </div>
+      <div style="overflow:auto;margin-top:12px">
+        <table>
+          <thead><tr><th>ID</th><th>名称</th><th>前缀</th><th>状态</th><th>创建时间</th><th></th></tr></thead>
+          <tbody id="keysBody"></tbody>
+        </table>
+      </div>
+
+      <h2 style="margin-top:28px">我的爬虫任务</h2>
+      <p class="muted">状态沿用现有任务模型：queued / running / stopping / succeeded / failed / cancelled。同一时间全局仍只跑一个任务。</p>
+      <div class="row">
+        <div>
+          <label>按 task_id 查询</label>
+          <input id="taskIdInput" placeholder="uuid" />
+        </div>
+      </div>
+      <div class="actions">
+        <button id="lookupTaskBtn">查询</button>
+        <button class="secondary" id="refreshTasksBtn">刷新列表</button>
+      </div>
+      <pre class="mono" id="taskDetail" style="white-space:pre-wrap;background:#0a1020;padding:12px;border-radius:10px;border:1px solid var(--border);min-height:48px"></pre>
+      <div style="overflow:auto;margin-top:12px">
+        <table>
+          <thead><tr><th>Task ID</th><th>平台</th><th>类型</th><th>状态</th><th>创建时间</th></tr></thead>
+          <tbody id="tasksBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const TOKEN_KEY = 'mc_portal_token';
+    const $ = (id) => document.getElementById(id);
+    let token = localStorage.getItem(TOKEN_KEY) || '';
+
+    function toast(msg, ms = 3200) {
+      const el = $('toast');
+      el.textContent = msg;
+      el.style.display = 'block';
+      clearTimeout(window.__t);
+      window.__t = setTimeout(() => { el.style.display = 'none'; }, ms);
+    }
+
+    async function api(path, opts = {}) {
+      const headers = Object.assign({ 'Content-Type': 'application/json' }, opts.headers || {});
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      const res = await fetch(path, { ...opts, headers });
+      let data = null;
+      try { data = await res.json(); } catch (_) {}
+      if (!res.ok) {
+        const detail = (data && (data.detail || data.message)) || res.statusText;
+        throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
+      }
+      return data;
+    }
+
+    function setAuthed(yes) {
+      $('authCard').classList.toggle('hidden', yes);
+      $('appCard').classList.toggle('hidden', !yes);
+      $('logoutBtn').classList.toggle('hidden', !yes);
+    }
+
+    async function refreshMe() {
+      const me = await api('/api/portal/me');
+      if (me.is_master) {
+        $('userInfo').textContent = 'Master Key 会话（可看全部任务）';
+      } else {
+        $('userInfo').textContent = `${me.user.username} · ${me.user.email} · auth=${me.auth_type}`;
+      }
+    }
+
+    async function refreshKeys() {
+      const data = await api('/api/portal/keys');
+      const body = $('keysBody');
+      body.innerHTML = '';
+      (data.keys || []).forEach((k) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${k.id}</td><td>${escapeHtml(k.name)}</td><td class="mono">${escapeHtml(k.key_prefix)}…</td>
+          <td><span class="badge ${k.status}">${k.status}</span></td><td class="mono">${escapeHtml(k.created_at || '')}</td>
+          <td>${k.status === 'active' ? `<button class="danger" data-revoke="${k.id}">吊销</button>` : ''}</td>`;
+        body.appendChild(tr);
+      });
+      body.querySelectorAll('[data-revoke]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          if (!confirm('确认吊销该 Key？')) return;
+          await api('/api/portal/keys/' + btn.dataset.revoke + '/revoke', { method: 'POST' });
+          toast('已吊销');
+          refreshKeys();
+        });
+      });
+    }
+
+    function statusBadge(s) {
+      return `<span class="badge ${s || ''}">${s || '-'}</span>`;
+    }
+
+    async function refreshTasks() {
+      const data = await api('/api/portal/tasks?limit=50');
+      const body = $('tasksBody');
+      body.innerHTML = '';
+      (data.tasks || []).forEach((t) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="mono">${escapeHtml(t.task_id)}</td><td>${escapeHtml(t.platform)}</td>
+          <td>${escapeHtml(t.crawler_type)}</td><td>${statusBadge(t.status)}</td>
+          <td class="mono">${escapeHtml(t.created_at || '')}</td>`;
+        tr.style.cursor = 'pointer';
+        tr.addEventListener('click', () => {
+          $('taskIdInput').value = t.task_id;
+          $('taskDetail').textContent = JSON.stringify(t, null, 2);
+        });
+        body.appendChild(tr);
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    async function bootApp() {
+      setAuthed(true);
+      await refreshMe();
+      await refreshKeys();
+      await refreshTasks();
+    }
+
+    // tabs
+    document.querySelectorAll('.tabs button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tabs button').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        $('loginPane').classList.toggle('hidden', tab !== 'login');
+        $('registerPane').classList.toggle('hidden', tab !== 'register');
+      });
+    });
+
+    $('loginBtn').onclick = async () => {
+      try {
+        const data = await api('/api/portal/login', {
+          method: 'POST',
+          body: JSON.stringify({ username: $('loginUser').value.trim(), password: $('loginPass').value })
+        });
+        token = data.token; localStorage.setItem(TOKEN_KEY, token);
+        toast('登录成功');
+        await bootApp();
+      } catch (e) { toast(e.message); }
+    };
+
+    $('regBtn').onclick = async () => {
+      try {
+        const data = await api('/api/portal/register', {
+          method: 'POST',
+          body: JSON.stringify({
+            username: $('regUser').value.trim(),
+            email: $('regEmail').value.trim(),
+            password: $('regPass').value
+          })
+        });
+        token = data.token; localStorage.setItem(TOKEN_KEY, token);
+        toast('注册成功');
+        await bootApp();
+      } catch (e) { toast(e.message); }
+    };
+
+    $('logoutBtn').onclick = async (e) => {
+      e.preventDefault();
+      try { await api('/api/portal/logout', { method: 'POST' }); } catch (_) {}
+      token = ''; localStorage.removeItem(TOKEN_KEY);
+      setAuthed(false);
+      toast('已退出');
+    };
+
+    $('createKeyBtn').onclick = async () => {
+      try {
+        const data = await api('/api/portal/keys', {
+          method: 'POST',
+          body: JSON.stringify({ name: $('keyName').value.trim() || 'default' })
+        });
+        $('newKeyBox').classList.remove('hidden');
+        $('newKeyValue').textContent = data.api_key;
+        toast(data.warning || 'Key 已创建');
+        await refreshKeys();
+      } catch (e) { toast(e.message); }
+    };
+    $('refreshKeysBtn').onclick = () => refreshKeys().catch((e) => toast(e.message));
+    $('refreshTasksBtn').onclick = () => refreshTasks().catch((e) => toast(e.message));
+    $('lookupTaskBtn').onclick = async () => {
+      const id = $('taskIdInput').value.trim();
+      if (!id) return toast('请输入 task_id');
+      try {
+        const t = await api('/api/portal/tasks/' + encodeURIComponent(id));
+        $('taskDetail').textContent = JSON.stringify(t, null, 2);
+      } catch (e) { toast(e.message); }
+    };
+
+    (async () => {
+      if (!token) { setAuthed(false); return; }
+      try { await bootApp(); }
+      catch (_) { token = ''; localStorage.removeItem(TOKEN_KEY); setAuthed(false); }
+    })();
+  </script>
+</body>
+</html>

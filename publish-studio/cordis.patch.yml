@@ -1,0 +1,5 @@
+# publish-studio host bundle layer — independent publishing service.
+# PITFALL: `name` is a PACKAGE NAME resolved via the profile node_modules.
+- insert:
+    - id: publish-studio
+      name: publish-studio

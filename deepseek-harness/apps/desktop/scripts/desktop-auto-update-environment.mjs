@@ -25,8 +25,8 @@ const UPDATE_ENVIRONMENTS = {
     secretKeyEnvName: 'DOWNLOAD_TEST_COS_SECRET_KEY',
   },
   production: {
-    originEnvName: undefined,
-    fixedOrigin: 'https://download.deepseek.com',
+    originEnvName: 'DOWNLOAD_PROD_ORIGIN',
+    fixedOrigin: undefined,
     bucketEnvName: 'DOWNLOAD_PROD_COS_BUCKET',
     secretIdEnvName: 'DOWNLOAD_PROD_COS_SECRET_ID',
     secretKeyEnvName: 'DOWNLOAD_PROD_COS_SECRET_KEY',
@@ -49,10 +49,12 @@ export function desktopLatestInstallerFilename(target) {
 /**
  * Resolve the production website installer URL shared by approval, upload and purge.
  * @param {'mac-arm64' | 'mac-x64' | 'win-x64'} target Supported Desktop target.
- * @returns {string} Fixed production download URL.
+ * @param {NodeJS.ProcessEnv} env Packaging environment. Production origin is DOWNLOAD_PROD_ORIGIN.
+ * @returns {string} Production download URL on the configured origin.
  */
-export function desktopWebsiteInstallerUrl(target) {
-  return `${UPDATE_ENVIRONMENTS.production.fixedOrigin}/desktop/${desktopLatestInstallerFilename(target)}`
+export function desktopWebsiteInstallerUrl(target, env = process.env) {
+  const origin = httpsOrigin(requiredEnvironmentValue(env, 'DOWNLOAD_PROD_ORIGIN'), 'DOWNLOAD_PROD_ORIGIN')
+  return `${origin}/desktop/${desktopLatestInstallerFilename(target)}`
 }
 
 /**

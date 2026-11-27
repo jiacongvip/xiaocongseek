@@ -28,6 +28,7 @@ it.each(['arm64', 'x64'] as const)('embeds stable in a prerelease macOS %s packa
   const config = createElectronBuilderConfig({
     DSH_DESKTOP_APP_ID: 'com.example.channel-test',
     DSH_DESKTOP_AUTO_UPDATE_ENV: 'production',
+    DOWNLOAD_PROD_ORIGIN: 'https://updates.example.com',
     DSH_DESKTOP_UPDATE_CHANNEL: 'stable',
     DSH_DESKTOP_BUILD_VERSION: version,
     DSH_DESKTOP_MANDATORY_UPDATE_PROD_ORIGIN: 'https://policy.example.com',
@@ -36,7 +37,7 @@ it.each(['arm64', 'x64'] as const)('embeds stable in a prerelease macOS %s packa
     APPLE_KEYCHAIN_PROFILE: 'channel-test',
   }, 'darwin', arch)
   expect(config.extraMetadata).toMatchObject({ version, dshDesktopUpdateChannel: 'stable' })
-  expect(config.publish).toEqual([{ provider: 'generic', url: `https://download.deepseek.com/dsh-desk/feeds/mac-${arch}/`, channel: 'stable' }])
+  expect(config.publish).toEqual([{ provider: 'generic', url: `https://updates.example.com/dsh-desk/feeds/mac-${arch}/`, channel: 'stable' }])
 })
 
 it('accepts a stable prerelease in an unsigned Windows x64 configuration', () => {

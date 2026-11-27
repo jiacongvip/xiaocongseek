@@ -37,7 +37,7 @@ flowchart TB
 ## 快速启动
 
 ```bash
-cd "/Users/jiacong/Desktop/开发文件/数字人混剪工作台/harness-newapi-gateway"
+cd "/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/harness-newapi-gateway"
 cp .env.example .env   # 本地可先用默认；上线前改密码
 ./scripts/start-local.sh
 # 浏览器打开 http://127.0.0.1:3000
@@ -47,10 +47,10 @@ cp .env.example .env   # 本地可先用默认；上线前改密码
 
 ## 相关本机路径
 
-- **工作台父目录**：`/Users/jiacong/Desktop/开发文件/数字人混剪工作台`
-- 工作室插件：`/Users/jiacong/Desktop/开发文件/数字人混剪工作台/digital-human-studio`（兼容软链：`/Users/jiacong/digital-human-studio`）
-- Harness 源码：`/Users/jiacong/Desktop/开发文件/数字人混剪工作台/deepseek-harness`
-- 本网关：`/Users/jiacong/Desktop/开发文件/数字人混剪工作台/harness-newapi-gateway`
+- **工作台父目录**：`/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台`
+- 工作室插件：`/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/digital-human-studio`（兼容软链：`/Users/jiacong/digital-human-studio`）
+- Harness 源码：`/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/deepseek-harness`
+- 本网关：`/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/harness-newapi-gateway`
 - 工作室运行配置：`/Users/jiacong/.dsh/digital-human-studio.json`（含 VectCut，勿整文件覆盖）
 - 本地剪辑 skill：`/Users/jiacong/.dsh/skills/vectcut-local`
 - VectCutAPI：`/Users/jiacong/VectCutAPI`（未迁入本工作台，保持独立）

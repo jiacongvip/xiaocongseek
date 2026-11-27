@@ -1,0 +1,86 @@
+import assert from 'node:assert/strict'
+import { mkdtempSync, rmSync, readFileSync, writeFileSync, symlinkSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { Readable, Writable } from 'node:stream'
+const oldHome=process.env.HOME,oldFetch=globalThis.fetch,home=mkdtempSync(join(tmpdir(),'xdh-pack-fixture-'))
+process.env.HOME=home
+globalThis.fetch=()=>{throw new Error('External calls forbidden in fixture')}
+const disposers=[]
+try {
+ const spaces=await import('../dist/spaces.js'),history=await import('../dist/studio-history.js'),materials=await import('../dist/studio-materials.js'),calendar=await import('../dist/publish-calendar.js'),packs=await import('../dist/publish-packs.js')
+ const created=spaces.createSpace(spaces.emptySpaceStore(),'公司A'),a=created.space.id,b='default';spaces.saveSpaceStore(created.store)
+ const media=materials.addStudioMaterial(a,'product','视频.mp4',Buffer.from('fixture-video-bytes'))
+ const cover=materials.addStudioMaterial(a,'logo','封面.png',Buffer.from('fixture-cover-bytes'))
+ const foreign=materials.addStudioMaterial(b,'logo','B封面.png',Buffer.from('foreign'))
+ const mediaUrl=materials.materialPublicUrl(a,media)
+ history.upsertStudioHistory(a,{id:'video-a',kind:'xdh-avatar-video',title:'A成片',at:1,status:'SUCCESS',mediaUrl})
+ history.upsertStudioHistory(b,{id:'video-b',kind:'xdh-avatar-video',title:'B成片',at:1,status:'SUCCESS',mediaUrl:materials.materialPublicUrl(b,foreign)})
+ const input={historyId:'video-a',title:'发布标题',body:'正文内容',topics:'#话题',platform:'抖音',scheduledAt:'2026-12-01T00:05',coverRef:`material:${cover.id}`,revision:0}
+ const first=packs.savePack(a,input)
+ assert.equal(packs.loadPacks(a).length,1);assert.deepEqual(packs.loadPacks(b),[])
+ assert.equal(packs.packView(a,first).checked,false)
+ assert.throws(()=>packs.getPack(b,first.id),/找不到/)
+ assert.throws(()=>packs.savePack(a,{...input,historyId:'video-b'}),/不属于/)
+ assert.throws(()=>packs.savePack(b,{...input,historyId:'video-b'}),/封面不属于/)
+ assert.throws(()=>packs.savePack(a,{...input,historyId:'new',path:'/etc/passwd'}))
+ assert.throws(()=>packs.savePack(a,{...first,path:'/etc/passwd'}),/不接受/)
+ assert.throws(()=>packs.savePack(a,{...first,mediaUrl:'http://169.254.169.254/'}),/不接受/)
+ assert.throws(()=>packs.savePack(a,{...first,coverRef:'../../private'}),/封面/)
+ assert.throws(()=>packs.savePack(a,{...first,scheduledAt:'2026-02-30T00:00'}),/日期/)
+ let checked=packs.checkPack(a,first.id,first.revision)
+ assert.equal(packs.packView(a,checked).checked,true)
+ writeFileSync(materials.materialAbsolutePath(a,cover),'changed-cover-content')
+ assert.equal(packs.packView(a,checked).checked,false,'local resource replacement invalidates check')
+ assert.throws(()=>packs.savePack(a,{...first,title:'陈旧写入'}),/已被修改/)
+ let changed=packs.savePack(a,{...checked,body:'新正文'})
+ assert.equal(packs.packView(a,changed).checked,false)
+ const plan=packs.syncPackCalendar(a,changed.id,changed.revision)
+ assert.equal(plan.status,'pending')
+ packs.syncPackCalendar(a,changed.id,changed.revision)
+ assert.equal(calendar.loadPublishCalendar(a).length,1)
+ assert.equal(calendar.loadPublishCalendar(a)[0].id,plan.id)
+ assert.deepEqual(calendar.loadPublishCalendar(b),[])
+ assert.equal(packs.packDownload(a,changed.id,'text').bytes.toString().includes('新正文'),true)
+ assert.equal(readFileSync(packs.packDownload(a,changed.id,'video').path,'utf8'),'fixture-video-bytes')
+ assert.equal(readFileSync(packs.packDownload(a,changed.id,'cover').path,'utf8'),'changed-cover-content')
+ assert.equal(calendar.loadPublishCalendar(a)[0].status,'pending','exports must not mark published')
+ assert.throws(()=>packs.packDownload(a,changed.id,'../../secret'),/类型/)
+ const remote=history.upsertStudioHistory(a,{id:'remote',kind:'xdh-avatar-video',title:'仅外链',at:2,status:'SUCCESS',mediaUrl:'https://example.invalid/output.mp4'})
+ const rp=packs.savePack(a,{...input,historyId:'remote',revision:0})
+ assert.equal(packs.packView(a,rp).videoDownload,false)
+ assert.throws(()=>packs.packDownload(a,rp.id,'video'),/仅有外链/)
+ history.upsertStudioHistory(a,{id:'bad-scope',kind:'xdh-avatar-video',title:'坏资源',at:3,status:'SUCCESS',mediaUrl:materials.materialPublicUrl(b,foreign)})
+ const bad=packs.savePack(a,{...input,historyId:'bad-scope',revision:0})
+ assert.equal(packs.packView(a,bad).mediaUrl,'')
+ assert.throws(()=>packs.packDownload(a,bad.id,'video'),/不能安全下载/)
+ const link=join(materials.spaceMaterialsRoot(a),'logo','linked.png')
+ symlinkSync(materials.materialAbsolutePath(b,foreign),link)
+ const linked=materials.listStudioMaterials(a).find(x=>x.name==='linked.png')
+ if(linked)assert.throws(()=>packs.savePack(a,{...changed,coverRef:`material:${linked.id}`}),/封面/)
+ const routes=new Map();let rejection
+ const ctx={get(name){return name==='connection'?{requestRejection(){return rejection}}:name==='credentials'?{async unset(){},async set(){}}:undefined},effect(run){const off=run();if(typeof off==='function')disposers.push(off)},webServer:{register(def){routes.set(def.path,def.handler);return()=>{}}},tools:{register(){return()=>{}}}}
+ const {apply}=await import('../dist/index.js');await apply(ctx)
+ async function call(method,body,query='',extra={}){
+  const req=Readable.from(body==null?[]:[Buffer.from(JSON.stringify(body))]);Object.assign(req,{method,url:`/digital-human-studio/publish-packs${query}`,headers:{host:'127.0.0.1:3080',origin:'http://127.0.0.1:3080','content-type':'application/json',...extra}})
+  return await new Promise((resolve,reject)=>{const chunks=[];class Response extends Writable{constructor(){super();this.headers={};this.status=200;this.headersSent=false}setHeader(k,v){this.headers[k]=v}writeHead(status,headers){this.status=status;this.headers={...this.headers,...headers};this.headersSent=true}_write(c,enc,cb){chunks.push(Buffer.from(c));cb()}}const res=new Response();res.on('finish',()=>resolve({status:res.status,headers:res.headers,bytes:Buffer.concat(chunks)}));res.on('error',reject);routes.get('/digital-human-studio/publish-packs')(req,res)})
+ }
+ rejection=401;assert.equal((await call('GET',null,`?space=${a}`)).status,401);rejection=undefined
+ assert.equal((await call('GET',null)).status,400)
+ assert.equal((await call('POST',{},'',{origin:'https://evil.invalid'})).status,403)
+ assert.equal((await call('POST',{},'',{'content-type':'text/plain'})).status,415)
+ const listing=await call('GET',null,`?space=${a}`);assert.equal(listing.status,200);assert.equal(JSON.parse(listing.bytes).spaceId,a)
+ const dl=await call('GET',null,`?space=${a}&id=${changed.id}&download=video`);assert.equal(dl.status,200);assert.equal(dl.bytes.toString(),'fixture-video-bytes');assert.match(dl.headers['content-disposition'],/attachment/)
+ const txt=await call('GET',null,`?space=${a}&id=${changed.id}&download=text`);assert.equal(txt.status,200);assert.match(txt.bytes.toString(),/新正文/)
+ assert.equal((await call('GET',null,`?space=${b}&id=${changed.id}&download=video`)).status,400)
+ const update=await call('POST',{space:a,action:'save',item:{...changed,title:'接口编辑'}});assert.equal(update.status,200)
+ const updated=JSON.parse(update.bytes).items.find(x=>x.id===changed.id)
+ assert.equal((await call('POST',{space:a,action:'delete',id:updated.id,revision:updated.revision})).status,200)
+ assert.throws(()=>packs.getPack(a,changed.id),/找不到/)
+ assert.ok(readFileSync(materials.materialAbsolutePath(a,media)).length)
+ assert.equal(calendar.loadPublishCalendar(a).length,1,'deleting pack preserves calendar')
+ writeFileSync(packs.packsPath(b),'{broken fixture')
+ assert.throws(()=>packs.savePack(b,{...input,historyId:'video-b',coverRef:''}),/损坏/)
+ assert.equal(readFileSync(packs.packsPath(b),'utf8'),'{broken fixture')
+ console.log('PASS: publish-pack CRUD/persistence/company and resource isolation/path fences/revisions/check invalidation/idempotent pending calendar/text and streamed download/authentication/corrupt-file preservation')
+} finally {for(const dispose of disposers.reverse())dispose();globalThis.fetch=oldFetch;rmSync(home,{recursive:true,force:true});if(oldHome===undefined)delete process.env.HOME;else process.env.HOME=oldHome}

@@ -1,0 +1,50 @@
+# VCS / IDE
+.git
+.github
+.idea
+.vscode
+*.iml
+.DS_Store
+
+# Local envs & secrets (pass via compose env_file at runtime)
+.env
+.env.*
+!.env.docker.example
+.venv
+venv
+ENV
+
+# Python junk
+__pycache__
+**/__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+*.egg-info
+
+# Node (WebUI rebuilt inside image; docs tooling not needed)
+node_modules
+webui/node_modules
+docs/.vitepress
+
+# Runtime mounts / bulky local state (mount instead of bake-in)
+data/
+browser_data/
+temp_image/
+
+# Tests / agent / misc not needed at runtime
+tests/
+test/
+.refer
+agent_zone
+debug_tools
+.omx
+.pre-commit-config.yaml
+package.json
+package-lock.json
+LICENSE
+README_en.md
+README_es.md

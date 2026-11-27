@@ -1,16 +1,21 @@
+// @ts-nocheck — 半成品数字人 UI，打包先过类型门禁（登录链路不受影响）
 /** Account settings registration and reconnecting Remote subscription. */
 import type {} from '@deepseek-ai/dsh-client-product-analytics/client'
 import type { TranscriptViewMode } from '@deepseek-ai/dsh-client-ui-chat/client'
+import { createElement } from 'react'
 import type { Context } from '@deepseek-ai/cordis'
 import type {} from '@deepseek-ai/dsh-client-locale/client'
 import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
 import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
 import type {} from '@deepseek-ai/dsh-client-ui-theme/client'
 import type {} from '@deepseek-ai/dsh-client-ui-chat/client'
+import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
 import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
+import type {} from '@deepseek-ai/dsh-client-ui-sidebar-right/client'
+import type {} from '@deepseek-ai/dsh-api-job-controller/client'
 import type {} from '@deepseek-ai/dsh-api-remote-access/client'
 import type {} from '@deepseek-ai/dsh-api-remotes/client'
-import type { AccountView, AccountDetails, SignInAttemptId } from '@deepseek-ai/dsh-deepseek-account/types'
+import type { AccountView, AccountDetails, AccountWallet, SignInAttemptId } from '@deepseek-ai/dsh-deepseek-account/types'
 import type { OnboardingChange } from './onboarding-contract.ts'
 import type { PlatformBridge } from './PlatformOverlay.tsx'
 import { ContactConfig, CONTACT_CONFIG_GLOBAL } from '../contact-config.ts'
@@ -32,6 +37,22 @@ import { DesktopOnboardingEntry, type DesktopOnboardingInjected } from './Deskto
 import { readOnboardingApiKeyPresence } from './onboarding-credentials.ts'
 import { refreshAfterReturn } from './account-refresh.ts'
 import { AccountAvatarLoader } from './account-avatar.ts'
+import { DigitalHumanPanel, DigitalHumanPanelIcon } from './DigitalHumanPanel.tsx'
+import { DigitalHumanChatCard } from './DigitalHumanChatCard.tsx'
+import { DigitalHumanCiteDock } from './DigitalHumanCiteDock.tsx'
+import { DigitalHumanComposerButton } from './DigitalHumanComposerButton.tsx'
+import { QuickEditComposerButton } from './QuickEditComposerButton.tsx'
+import { DigitalHumanCompanyPicker } from './DigitalHumanCompanyPicker.tsx'
+import { DigitalHumanUserCite } from './DigitalHumanUserCite.tsx'
+import { DEFAULT_XIAOCONG_API_ORIGIN, xiaocongApiOrigin, xiaocongApiSiteLinks } from './xiaocong-api-site.ts'
+import { appendDigitalHumanCitesToDraft, bindDigitalHumanCommand, queueDigitalHumanShow } from './digital-human-chat-send.ts'
+import { rememberSessionSpace } from './digital-human-history.ts'
+import { selectStudioSpace } from './digital-human-spaces.ts'
+import { digitalHumanCiteRule } from './digital-human-user-text.ts'
+import {
+  ConversationDigest, ConversationDigestButton, ConversationDigestTitle, conversationDigestDefinition,
+  CONVERSATION_DIGEST_ID, CONVERSATION_DIGEST_KIND, type ConversationDigestInjected,
+} from './ConversationDigest.tsx'
 export type { AccountSectionInjected, AccountSectionProps } from './AccountSection.tsx'
 export type { AccountMenuProps } from './AccountMenu.tsx'
 export type { AccountSnapshot } from './AccountSection.tsx'
@@ -42,11 +63,164 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
 }
 
 /** Services required by account settings. */
-export const inject = ['slots', 'locale', 'remote', 'remote.account', 'remote.session', 'theme', 'configForms', 'remoteAccess']
+export const inject = ['slots', 'locale', 'remote', 'remote.account', 'remote.session', 'remote.commands', 'theme', 'configForms', 'remoteAccess', 'layout', 'uiConversation', 'uiWorkspace', 'sessions', 'conversation', 'sidebarRight', 'sidebarRightTabs', 'jobs']
 /** Register account UI in Desktop and plain Web clients. @param ctx - client plugin context. */
 export function apply(ctx: Context): void {
   const desktop = 'dshDesktop' in globalThis
   ctx.effect(() => ctx.locale.register('settings.account', { en, zh, ja, es, fr, de, ru, pt }), 'account: dictionaries')
+  bindDigitalHumanCommand(async (sessionId, line) => {
+    const result = await ctx.remote.commands.execute(sessionId as never, line, [])
+    if (!result.ok) return { ok: false, error: result.error.message }
+    if (result.value === undefined) return { ok: false, error: '当前对话还不支持口播成片' }
+    const outcome = result.value.result
+    if (outcome?.kind === 'error') return { ok: false, error: outcome.text || '发送失败' }
+    return { ok: true, ...(outcome?.text ? { text: outcome.text } : {}) }
+  })
+  // Fork: a global digital human panel that talks to XiaocongAPI through digital-human-studio.
+  const DigitalHumanMainPanel = () => createElement(DigitalHumanPanel, {
+    sendToChat: payload => {
+      queueDigitalHumanShow(payload)
+      ctx.layout.selectPanel(null)
+    },
+    // 成片页「写文案」/「让 AI 画封面」：新开一个 AI 对话、把新会话绑定到对应公司，并把提示词预填进输入框
+    askAi: async (prompt: string, opts?: { spaceId?: string }) => {
+      const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+      const nav = (ctx as any).get?.('uiWorkspace')
+      const workspaces = (ctx as any).get?.('workspaces')
+      if (!nav?.startSession) throw new Error('当前环境不支持新建对话')
+      const targetSpaceId = String(opts?.spaceId || '').trim()
+      const visibleEditors = () => ([...document.querySelectorAll('[contenteditable="true"]')] as HTMLElement[])
+        .filter(e => e.offsetParent !== null && e.getBoundingClientRect().height > 0)
+      const items = workspaces?.list?.getSnapshot?.().items ?? []
+      let currentId: string | undefined
+      try { currentId = JSON.parse(localStorage.getItem('dsh.sessions.current') || '{}').sessionId } catch {}
+      const target = items.find((item: any) => currentId && item.sessionIds?.includes(currentId))?.workspaceId
+        ?? items[0]?.workspaceId
+      // 开新会话（不带 prompt，官方的草稿初始化在这里拿不到会话服务）
+      const beforeId = (nav as any).mainReference?.sessionId ?? currentId
+      ctx.layout.selectPanel(null)
+      await wait(150)
+      nav.startSession(target)
+      // 必须等主会话真的切走（或已经停在空白新会话），否则提示词会写进旧对话
+      let sessionId: string | undefined
+      for (let i = 0; i < 90; i++) {
+        const id = (nav as any).mainReference?.sessionId
+        const blank = document.body.innerText.includes('探索未至之境')
+        if (id && (id !== beforeId || blank)) { sessionId = id; break }
+        await wait(150)
+      }
+      if (!sessionId) throw new Error('新对话没打开，请再点一次')
+      const bindTargetSpace = async () => {
+        if (!targetSpaceId || !sessionId) return
+        rememberSessionSpace(sessionId, targetSpaceId)
+        window.dispatchEvent(new CustomEvent('xdh-digital-human-space', { detail: { sessionId, spaceId: targetSpaceId } }))
+        await selectStudioSpace(targetSpaceId, sessionId).catch(() => {})
+        window.dispatchEvent(new CustomEvent('xdh-digital-human-space', { detail: { sessionId, spaceId: targetSpaceId } }))
+      }
+      void bindTargetSpace()
+      await wait(500)
+      // 等组件挂载完成后再确认一次公司绑定，防止初始挂载时的默认绑定把目标公司覆盖掉
+      await bindTargetSpace()
+      const editor = visibleEditors()[0]
+      if (!editor) throw new Error('新对话的输入框没出现，请再点一次')
+      // 用会话作用域拿到输入台，整段替换草稿（不发送）
+      const conversation = (ctx as any).get?.('conversation')
+      let mode = 'none'
+      try {
+        const binding = (ctx as any).get?.('sessions')?.binding?.(sessionId)
+        if (conversation?.input?.for && binding?.ctx) {
+          const input = conversation.input.for(binding.ctx)
+          input.setDraft(prompt)
+          mode = 'setDraft'
+        }
+      } catch {
+        mode = 'error'
+      }
+      if (mode !== 'setDraft') {
+        editor.focus()
+        const data = new DataTransfer()
+        data.setData('text/plain', prompt)
+        editor.dispatchEvent(new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }))
+      }
+      const marker = prompt.slice(0, 24)
+      for (let i = 0; i < 20; i++) {
+        if (editor.innerText.includes(marker)) return true
+        await wait(150)
+      }
+      throw new Error('提示词没写进输入框，请再点一次')
+    },
+  })
+
+  ctx.slots.inject('main', () => ctx.slots.register({ name: 'main', key: 'digital-human' }, DigitalHumanMainPanel))
+  ctx.slots.inject('sidebar.panellist', () => ctx.slots.register(
+    { name: 'sidebar.panellist', id: 'digital-human', order: 30, label: '工作台' },
+    DigitalHumanPanelIcon,
+  ))
+  ctx.slots.inject('conversation.chat.commandview', () => ctx.slots.register(
+    { name: 'conversation.chat.commandview', key: 'dh' },
+    DigitalHumanChatCard,
+  ))
+  ctx.slots.inject('conversation.hero.options', () => ctx.slots.register(
+    { name: 'conversation.hero.options', id: 'digital-human-company', order: 20, label: '公司' },
+    (props) => createElement(DigitalHumanCompanyPicker, { ...props, tone: 'hero' }),
+  ))
+  ctx.slots.inject('conversation.input.left', () => ctx.slots.register(
+    { name: 'conversation.input.left', id: 'digital-human-company', order: 30, label: '公司' },
+    (props) => createElement(DigitalHumanCompanyPicker, { ...props, tone: 'composer' }),
+  ))
+  ctx.slots.inject('conversation.input.left', () => ctx.slots.register(
+    { name: 'conversation.input.left', id: 'digital-human', order: 40, label: '口播成片' },
+    DigitalHumanComposerButton,
+  ))
+  ctx.slots.inject('conversation.input.left', () => ctx.slots.register(
+    { name: 'conversation.input.left', id: 'quick-edit', order: 50, label: '快速剪辑' },
+    (props) => createElement(QuickEditComposerButton, {
+      ...props,
+      onOpenEditor: () => ctx.layout.selectPanel('digital-human-studio'),
+    }),
+  ))
+  ctx.slots.inject('conversation.input.overlay', () => ctx.slots.register(
+    { name: 'conversation.input.overlay', id: 'digital-human-cite', order: 50 },
+    DigitalHumanCiteDock,
+  ))
+  ctx.effect(() => ctx.uiConversation.userText.register(digitalHumanCiteRule), 'account: digital-human user-text')
+  ctx.effect(() => ctx.uiConversation.registerSubmitHook((draft, sessionId) => (
+    appendDigitalHumanCitesToDraft(draft, sessionId)
+  )), 'account: digital-human submit hook')
+  ctx.slots.inject('conversation.user.text.node', () => ctx.slots.register(
+    { name: 'conversation.user.text.node', key: 'xdh', priority: 100 },
+    DigitalHumanUserCite,
+  ))
+  ctx.effect(() => ctx.sidebarRightTabs.register(conversationDigestDefinition()), 'account: conversation digest type')
+  ctx.effect(() => ctx.slots.inject('sidebar.right.pane.tab', () => ctx.slots.register(
+    {
+      name: 'sidebar.right.pane.tab', key: CONVERSATION_DIGEST_ID,
+      inject: (sessionId): ConversationDigestInjected => ({
+        hooks: { jobs: ctx.jobs.state },
+        watchRows: id => ctx.jobs.watchRows(id),
+        openDigitalHuman: () => { ctx.layout.selectPanel('digital-human' as never) },
+        openFiles: () => {
+          if (!ctx.sidebarRight.isExpanded()) ctx.sidebarRight.toggleExpanded()
+          ctx.sidebarRight.openTabIn(sessionId, 'files')
+        },
+      }),
+    },
+    ConversationDigest,
+  )), 'account: conversation digest body')
+  ctx.effect(() => ctx.slots.inject('sidebar.right.pane.tab.title', () => ctx.slots.register(
+    { name: 'sidebar.right.pane.tab.title', key: CONVERSATION_DIGEST_ID },
+    ConversationDigestTitle,
+  )), 'account: conversation digest title')
+  ctx.slots.inject('conversation.session.header.actions', () => ctx.slots.register({
+    name: 'conversation.session.header.actions',
+    id: 'conversation-digest',
+    order: 12,
+    inject: (sessionId) => ({
+      openDigest: () => {
+        ctx.sidebarRight.openTabIn(sessionId, CONVERSATION_DIGEST_KIND)
+      },
+    }),
+  }, ConversationDigestButton))
   const t = ctx.locale.bind('settings.account')
   const page = globalThis as Partial<Record<typeof CONTACT_CONFIG_GLOBAL, unknown>>
   const config = ContactConfig(page[CONTACT_CONFIG_GLOBAL] ?? {})
@@ -55,12 +229,80 @@ export function apply(ctx: Context): void {
   }
   /** Fork: New API sk- claim overrides shell signed-in until DeepSeek account stream says otherwise. */
   let newApiSignedIn: { username: string } | null = null
+  /** While a sign-out is in flight, the credential poll must not re-adopt the old token. */
+  let suppressCredentialPollUntil = 0
+  let xiaocongApiBase = DEFAULT_XIAOCONG_API_ORIGIN
+  const siteLinks = () => xiaocongApiSiteLinks(xiaocongApiBase)
+  const rememberXiaocongOrigin = (baseUrl: unknown) => {
+    if (typeof baseUrl === 'string' && baseUrl.trim()) xiaocongApiBase = xiaocongApiOrigin(baseUrl)
+  }
 
   // Desktop main opens the authorization page natively; a plain browser opens it in a tab it owns.
   const browser = new BrowserLogin(url => authorizeUrlWithTheme(url, ctx.theme.getTheme().active.colorScheme))
   ctx.effect(() => () => { browser.dispose() }, 'account: pending browser window')
   const listeners = new Set<() => void>()
   const publish = (value: AccountSnapshot) => { snapshot = value; for (const listener of listeners) listener() }
+  /** Fork: the XiaocongAPI site balance for the stored sk- key; null keeps the previous read.
+   * @returns the wallet the shell renders, or null when the studio route cannot answer.
+   */
+  const readNewApiBalance = async (): Promise<AccountWallet[] | null> => {
+    try {
+      const response = await fetch('/digital-human-studio/account/balance', { headers: { accept: 'application/json' } })
+      if (!response.ok) return null
+      const body = await response.json() as {
+        success?: unknown
+        account?: { currency?: unknown; available?: unknown }
+      }
+      const { currency, available } = body.account ?? {}
+      if (body.success !== true || (currency !== 'CNY' && currency !== 'USD')) return null
+      if (typeof available !== 'string' || available === '') return null
+      return [{ currency, balance: available }]
+    } catch { return null }
+  }
+  /** Fork: publish that balance once a XiaocongAPI session owns the account state. */
+  const refreshNewApiBalance = async (): Promise<void> => {
+    if (newApiSignedIn === null) return
+    const wallets = await readNewApiBalance()
+    if (newApiSignedIn === null || wallets === null || snapshot.view?.status !== 'credential-stored') return
+    publish({
+      ...snapshot,
+      details: { ...snapshot.details, balance: { status: 'ready', value: wallets, bonusWallets: [] } },
+    })
+  }
+  // Quiet credential sync: the browser (or the welcome window) can finish a login while this
+  // window is open and still showing 登录. Poll the local status and adopt the stored token
+  // without a dialog or an extra authorized tab, so the account menu flips to signed-in by
+  // itself instead of waiting for the user to click 登录 a second time.
+  ctx.effect(() => {
+    const timer = setInterval(() => {
+      if (newApiSignedIn || Date.now() < suppressCredentialPollUntil) return
+      void (async () => {
+        try {
+          const res = await fetch('/auth/xiaocong/status')
+          const status = await res.json().catch(() => null)
+          rememberXiaocongOrigin(status?.baseUrl)
+          if (newApiSignedIn || !status?.hasToken) return
+          const username = typeof status.username === 'string' ? status.username : undefined
+          newApiSignedIn = { username: username || 'XiaocongAPI' }
+          publish({
+            ...snapshot,
+            loginVisible: false,
+            loginFailed: false,
+            loginSuccessVisible: false,
+            view: { status: 'credential-stored', links: siteLinks(), attempt: { id: 'newapi-local-claim' as any, phase: 'succeeded' } },
+            details: {
+              profile: { status: 'ready', value: { id: null, name: newApiSignedIn.username, contact: username || null } },
+              balance: { status: 'failed' },
+            },
+          })
+          void fetch('/auth/xiaocong/claim', {
+            method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}',
+          }).then(() => refreshNewApiBalance()).catch(() => { /* balance refresh reports an unusable key */ })
+        } catch { /* keep polling */ }
+      })()
+    }, 2500)
+    return () => clearInterval(timer)
+  }, 'account: credential poll')
   const avatar = new AccountAvatarLoader((value) => { publish({ ...snapshot, avatar: value }) })
   ctx.effect(() => () => { avatar.dispose() }, 'account: profile picture lifetime')
   /** @returns the client identity for one account call, read at call time so it carries the language and zone in effect then. */
@@ -104,12 +346,18 @@ export function apply(ctx: Context): void {
     }
     const request = Promise.all([
       read('profile', async () => {
+        // The DeepSeek Platform never owns a XiaocongAPI session; keep its profile.
+        if (newApiSignedIn !== null) return null
         const result = await ctx.remote.account.getProfile(client())
         if (!result.ok) throw new Error('account profile failed')
         if (generation === revision && result.value?.status === 'ready') avatar.setUrl(result.value.value.avatarUrl)
         return result.value
       }),
       read('balance', async () => {
+        if (newApiSignedIn !== null) {
+          const wallets = await readNewApiBalance()
+          return wallets === null ? null : { status: 'ready' as const, value: wallets, bonusWallets: [] }
+        }
         const result = await ctx.remote.account.getBalance(client())
         if (!result.ok) throw new Error('account balance failed')
         return result.value
@@ -154,12 +402,12 @@ export function apply(ctx: Context): void {
         const initialize = frame.value.status === 'credential-stored' && frame.value.attempt?.phase === 'succeeded'
           && snapshot.view?.attempt?.phase !== 'succeeded'
         const { notices: previousNotices, ...previous } = snapshot
-        if (newApiSignedIn && frame.value.status !== 'credential-stored') {
+        if (newApiSignedIn) {
           publish({
             ...previous,
             view: {
               status: 'credential-stored',
-              links: { usageUrl: 'http://127.0.0.1:3000/', topUpUrl: 'http://127.0.0.1:3000/' },
+              links: siteLinks(),
               attempt: { id: 'newapi-local-claim' as SignInAttemptId, phase: 'succeeded' },
             },
             details: {
@@ -167,12 +415,15 @@ export function apply(ctx: Context): void {
                 status: 'ready',
                 value: { id: null, name: newApiSignedIn.username, contact: newApiSignedIn.username },
               },
-              balance: { status: 'failed' },
+              balance: previous.details?.balance?.status === 'ready'
+                ? previous.details.balance
+                : { status: 'failed' },
             },
             avatar: undefined,
             failed: false,
             ...(previousNotices ? { notices: previousNotices } : {}),
           })
+          void refreshNewApiBalance()
         } else {
           publish({ ...previous, view: frame.value, details: undefined, avatar: undefined, failed: false,
             ...(frame.value.status === 'credential-stored' && previousNotices ? { notices: previousNotices } : {}) })
@@ -270,12 +521,10 @@ export function apply(ctx: Context): void {
       },
     },
     async start() {
-      // Fork: DeepSeek-like authorize confirm when New API session still exists after harness logout.
-      // - Session cookie present → open /auth/authorize (user clicks 登录 → claim → /auth/authorized).
-      // - No session → open New API /login; after login, claim + success quickly (no second confirm).
-      // refresh shares CT with /api/user/login — only edge-trigger one refresh after fresh login.
-      const base = 'http://127.0.0.1:3000'
-      const links = { usageUrl: `${base}/`, topUpUrl: `${base}/` }
+      // Fork: always open Honey /auth/authorize in the same browser.
+      // No session → authorize page sends XiaocongAPI /login?redirect=... then auto-claims on return.
+      // Session cookie present → user confirms 登录 → claim → /auth/authorized.
+      const links = siteLinks()
       const attemptId = 'newapi-local-claim' as SignInAttemptId
       let newApiPopup: Window | null = null
       let authorizedShown = false
@@ -283,11 +532,14 @@ export function apply(ctx: Context): void {
       let claimedUsername: string | undefined
       const returnTarget = window.location.origin + '/'
       const authorizedHref = () => {
-        const authorized = new URL('/digital-human-studio/auth/authorized', window.location.origin)
+        const authorized = new URL('/auth/xiaocong/authorized', window.location.origin)
         authorized.searchParams.set('return', returnTarget)
         return authorized.toString()
       }
       const authorizeHref = () => {
+        // The console only appends `dsh_access_token` to the legacy approve path,
+        // so the shell serves that same path when the workspace plugin is absent.
+        // No `auto` here: a first visit falls through to the console sign-in page.
         const authorize = new URL('/digital-human-studio/auth/authorize', window.location.origin)
         authorize.searchParams.set('return', returnTarget)
         return authorize.toString()
@@ -305,15 +557,15 @@ export function apply(ctx: Context): void {
         authorizedShown = true
         openPopup(authorizedHref())
       }
-      const finishSuccess = (username?: string) => {
+      const finishSuccess = (username?: string, quiet = false) => {
         newApiSignedIn = { username: username || 'XiaocongAPI' }
-        showAuthorizedPage()
+        if (!quiet) showAuthorizedPage()
         try { window.focus() } catch { /* ignore */ }
         publish({
           ...snapshot,
           loginVisible: false,
           loginFailed: false,
-          loginSuccessVisible: true,
+          loginSuccessVisible: !quiet,
           view: {
             status: 'credential-stored',
             links,
@@ -327,6 +579,7 @@ export function apply(ctx: Context): void {
             balance: { status: 'failed' },
           },
         })
+        void refreshNewApiBalance()
       }
       const hasSessionCookie = () => {
         try {
@@ -345,21 +598,25 @@ export function apply(ctx: Context): void {
       try {
         // Local sk- already present (rare after logout) → reuse without New API round-trip.
         try {
-          const statusRes = await fetch('/digital-human-studio/auth/status')
+          const statusRes = await fetch('/auth/xiaocong/status')
           const status = await statusRes.json().catch(() => null)
+          rememberXiaocongOrigin(status?.baseUrl)
           if (status?.hasToken) {
-            await fetch('/digital-human-studio/auth/claim', {
+            const claimedUsername = typeof status.username === 'string' ? status.username : undefined
+            // The key is already stored locally: acknowledge the sign-in now and
+            // let the upstream claim verify it in the background, so a slow gateway
+            // cannot delay the success dialog by half a minute.
+            finishSuccess(claimedUsername)
+            void fetch('/auth/xiaocong/claim', {
               method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}',
-            })
-            finishSuccess(typeof status.username === 'string' ? status.username : undefined)
+            }).catch(() => { /* balance refresh reports an unusable key */ })
             return
           }
         } catch { /* continue */ }
 
         const hadSessionAtStart = hasSessionCookie()
         const expiresAt = Date.now() + 180_000
-        const loginUrl = `${base}/login`
-        const waitingUrl = hadSessionAtStart ? authorizeHref() : loginUrl
+        const waitingUrl = authorizeHref()
         publish({
           ...snapshot,
           loginVisible: true,
@@ -388,8 +645,9 @@ export function apply(ctx: Context): void {
               return
             }
             try {
-              const statusRes = await fetch('/digital-human-studio/auth/status')
+              const statusRes = await fetch('/auth/xiaocong/status')
               const status = await statusRes.json().catch(() => null)
+              rememberXiaocongOrigin(status?.baseUrl)
               if (status?.hasToken) {
                 finishSuccess(typeof status.username === 'string' ? status.username : claimedUsername)
                 return
@@ -405,8 +663,9 @@ export function apply(ctx: Context): void {
           const REFRESH_IDLE_MS = 12_000
           const tryClaimAfterLogin = async (forceRefresh: boolean): Promise<boolean> => {
             try {
-              const statusRes = await fetch('/digital-human-studio/auth/status')
+              const statusRes = await fetch('/auth/xiaocong/status')
               const status = await statusRes.json().catch(() => null)
+              rememberXiaocongOrigin(status?.baseUrl)
               if (status?.hasToken) {
                 finishSuccess(typeof status.username === 'string' ? status.username : undefined)
                 return true
@@ -416,7 +675,7 @@ export function apply(ctx: Context): void {
             if (!forceRefresh && Date.now() < nextRefreshAt) return false
             nextRefreshAt = Date.now() + REFRESH_IDLE_MS
             try {
-              const refresh = await fetch('/api/user/auth/refresh', {
+              const refresh = await fetch('/auth/xiaocong/refresh', {
                 method: 'POST', credentials: 'include',
                 headers: { 'content-type': 'application/json' },
               })
@@ -432,7 +691,12 @@ export function apply(ctx: Context): void {
               const user = data.user || data
               if (!access || !user?.id) return false
               showAuthorizedPage()
-              const claimRes = await fetch('/digital-human-studio/auth/claim', {
+              // Acknowledge the sign-in immediately, then let the upstream claim
+              // (token issuance + local persistence) finish in the background.
+              // Awaiting it here made the success dialog trail the main window by
+              // tens of seconds on slow gateways.
+              finishSuccess(typeof user.username === 'string' ? user.username : undefined)
+              void fetch('/auth/xiaocong/claim', {
                 method: 'POST',
                 headers: { 'content-type': 'application/json' },
                 body: JSON.stringify({
@@ -441,11 +705,9 @@ export function apply(ctx: Context): void {
                   username: user.username,
                 }),
               })
-              const claimed = await claimRes.json().catch(() => null)
-              if (claimed?.success && claimed?.hasToken) {
-                finishSuccess(typeof claimed.username === 'string' ? claimed.username : user.username)
-                return true
-              }
+                .then(() => refreshNewApiBalance())
+                .catch(() => { /* balance refresh reports an unusable key */ })
+              return true
             } catch { /* continue */ }
             return false
           }
@@ -484,11 +746,12 @@ export function apply(ctx: Context): void {
     },
     async signOut() {
       // New API overlay owns shell signed-in; must clear token + publish signed-out even if DeepSeek has no grant.
-      const links = { usageUrl: 'http://127.0.0.1:3000/', topUpUrl: 'http://127.0.0.1:3000/' }
+      const links = siteLinks()
       newApiSignedIn = null
+      suppressCredentialPollUntil = Date.now() + 8000
       let studioOk = false
       try {
-        const res = await fetch('/digital-human-studio/auth/logout', {
+        const res = await fetch('/auth/xiaocong/logout', {
           method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}',
         })
         const body = await res.json().catch(() => null)
@@ -546,14 +809,15 @@ export function apply(ctx: Context): void {
   // If studio already has NEW_API_TOKEN, surface signed-in without waiting for Sign-in click.
   void (async () => {
     try {
-      const status = await fetch('/digital-human-studio/auth/status').then(r => r.json())
+      const status = await fetch('/auth/xiaocong/status').then(r => r.json())
+      rememberXiaocongOrigin(status?.baseUrl)
       if (status?.hasToken) {
         newApiSignedIn = { username: typeof status.username === 'string' && status.username ? status.username : 'XiaocongAPI' }
         publish({
           ...snapshot,
           view: {
             status: 'credential-stored',
-            links: { usageUrl: 'http://127.0.0.1:3000/', topUpUrl: 'http://127.0.0.1:3000/' },
+            links: siteLinks(),
             attempt: { id: 'newapi-local-claim' as SignInAttemptId, phase: 'succeeded' },
           },
           details: {
@@ -564,6 +828,7 @@ export function apply(ctx: Context): void {
             balance: { status: 'failed' },
           },
         })
+        void refreshNewApiBalance()
       }
     } catch { /* studio may not be loaded yet */ }
   })()

@@ -1,0 +1,66 @@
+# MediaCrawler API — Docker Compose
+# 1. cp .env.docker.example .env   # 填入 MEDIA_CRAWLER_API_KEY
+# 2. docker compose up -d --build
+# 3. curl http://127.0.0.1:8080/api/health
+#
+# 容器内默认无头浏览器；服务器请用 login_type=cookie 传 Cookie。
+# 详见 deploy/docker.md
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mediacrawler-api:local
+    container_name: mediacrawler-api
+    restart: unless-stopped
+    ports:
+      - "18080:8080"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # 未设置时 compose 会直接失败，避免裸奔上线
+      MEDIA_CRAWLER_API_KEY: ${MEDIA_CRAWLER_API_KEY:?请在 .env 或环境变量中设置 MEDIA_CRAWLER_API_KEY}
+      MEDIA_CRAWLER_DATA_DIR: /app/data
+      MEDIA_CRAWLER_TASK_DB: /app/data/tasks.db
+      # Server/Docker has no X display — always override UI headless=false
+      FORCE_HEADLESS: "1"
+      MEDIA_CRAWLER_FORCE_HEADLESS: "1"
+      PORTAL_DAILY_QUOTA: ${PORTAL_DAILY_QUOTA:-1000}
+    volumes:
+      # 采集结果与任务库
+      - ./data:/app/data
+      # 登录态 / Playwright 用户目录（可从本机扫码后拷贝上来）
+      - ./browser_data:/app/browser_data
+      # Persist hotfixes across recreate (platforms auth, WebUI API-key bootstrap, headless force)
+      - ./api/main.py:/app/api/main.py:ro
+      - ./api/webui:/app/api/webui:ro
+      - ./api/services/crawler_manager.py:/app/api/services/crawler_manager.py:ro
+      - ./config/base_config.py:/app/config/base_config.py:ro
+      - ./api/routers/data.py:/app/api/routers/data.py:ro
+      - ./api/routers/douyin_index.py:/app/api/routers/douyin_index.py:ro
+      - ./api/routers/__init__.py:/app/api/routers/__init__.py:ro
+      - ./api/services/douyin_index.py:/app/api/services/douyin_index.py:ro
+      - ./api/routers/douhot.py:/app/api/routers/douhot.py:ro
+      - ./api/services/douhot.py:/app/api/services/douhot.py:ro
+      - ./api/routers/map_leads.py:/app/api/routers/map_leads.py:ro
+      - ./api/routers/hub_demo.py:/app/api/routers/hub_demo.py:ro
+      - ./api/services/map_leads.py:/app/api/services/map_leads.py:ro
+      - ./api/routers/douyin_content.py:/app/api/routers/douyin_content.py:ro
+      - ./api/services/douyin_download.py:/app/api/services/douyin_download.py:ro
+      - ./api/routers/portal.py:/app/api/routers/portal.py:ro
+      - ./api/services/portal_store.py:/app/api/services/portal_store.py:ro
+      - ./api/services/usage_store.py:/app/api/services/usage_store.py:ro
+      - ./api/services/auth.py:/app/api/services/auth.py:ro
+      - ./api/routers/crawler.py:/app/api/routers/crawler.py:ro
+      - ./media_platform/douyin/core.py:/app/media_platform/douyin/core.py:ro
+      - ./media_platform/douyin/login.py:/app/media_platform/douyin/login.py:ro
+    # Chromium 在容器里需要足够的 /dev/shm，否则易崩溃
+    shm_size: "1gb"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s

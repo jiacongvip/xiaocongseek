@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict'
+import { isImageModelId, isChatModelId, ratioToImageSize, canonicalImageModelId } from '../dist/image-models.js'
+
+assert.equal(isImageModelId('grok-imagine-image'), true)
+assert.equal(isImageModelId('Web/grok-imagine-image-lite'), true)
+assert.equal(isImageModelId('gpt-image-1'), true)
+assert.equal(isImageModelId('qwen-image-plus'), true)
+assert.equal(isImageModelId('xdh-image'), false)
+assert.equal(isImageModelId('deepseek-flash'), false)
+assert.equal(isChatModelId('deepseek-flash'), true)
+assert.equal(isChatModelId('xdh-audio'), false)
+assert.equal(isChatModelId('grok-imagine-image'), false)
+assert.equal(ratioToImageSize('9:16'), '1024x1792')
+assert.equal(ratioToImageSize('16:9'), '1792x1024')
+assert.equal(ratioToImageSize('1:1'), '1024x1024')
+assert.equal(ratioToImageSize('9:16', 'grok-imagine-image-lite'), '9:16')
+assert.equal(isImageModelId('gpt-image-2.5-flare'), true)
+assert.equal(isImageModelId('gpt-image-2.5-sunburst'), true)
+assert.equal(ratioToImageSize('9:16', 'gpt-image-2.5-flare'), '9:16')
+assert.equal(canonicalImageModelId('Web/grok-imagine-image-lite'), 'grok-imagine-image-lite')
+console.log('PASS: image model identity')

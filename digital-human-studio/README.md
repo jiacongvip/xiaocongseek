@@ -97,15 +97,15 @@ per-theme CSS selectors. It also implements the
 
 Agent 大脑在用户目录（DSH 会自动发现，一般不必重启）：
 
-`~/.dsh/skills/vectcut-local/SKILL.md`
+`~/.dsh/skills/xiaocongcut-local/SKILL.md`
 
-仓库内同步副本：`skills/vectcut-local/`。对话里说「混剪 / 扫草稿 / 加片 / 保存进剪映」即可触发；只用 `dh_*`，不依赖 `VECTCUT_API_KEY`。
+仓库内同步副本：`skills/xiaocongcut-local/`。对话里说「混剪 / 扫草稿 / 加片 / 保存进剪映」即可触发；只用 `dh_*`，不依赖 `VECTCUT_API_KEY`。
 
 ## 本机位置 / Location (Jamie Mac)
 
 工作台父目录下的子项目：
 
-`/Users/jiacong/Desktop/开发文件/数字人混剪工作台/digital-human-studio`
+`/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/digital-human-studio`
 
 兼容软链：`/Users/jiacong/digital-human-studio` → 同上。
 `dsh plugin add` 时请在**该插件父目录**（工作台根）执行，或传绝对路径。
@@ -117,8 +117,8 @@ Agent 大脑在用户目录（DSH 会自动发现，一般不必重启）：
 
 ## XiaocongAPI 登录（0.6.0）
 
-面板顶部「XiaocongAPI 登录」支持账号密码登录并授权，或粘贴网关令牌；点击「探测连接」检查已保存设置。密码不保存，上游 Key 仅在 XiaocongAPI 控制台管理，VectCut 仍本机运行。退出仅清除本地授权，服务端撤销需去控制台。
+面板顶部「XiaocongAPI 登录」支持账号密码登录并授权，或粘贴网关令牌；点击「探测连接」检查已保存设置。密码不保存，上游 Key 仅在 XiaocongAPI 控制台管理，Xiaocongcut 仍本机运行。退出仅清除本地授权，服务端撤销需去控制台。
 
-授权配置与现有 VectCut / 草稿字段合并保存；聊天仅提供 `dh_auth_status` / `dh_auth_probe`，不接收密码。详情见兄弟项目 `../harness-newapi-gateway/docs/AUTH.md`。
+授权配置与现有 Xiaocongcut / 草稿字段合并保存；聊天仅提供 `dh_auth_status` / `dh_auth_probe`，不接收密码。详情见兄弟项目 `../harness-newapi-gateway/docs/AUTH.md`。
 
 验证：`npm run build && node tests/auth-smoke.mjs`；测试使用临时 HOME 和模拟网络，不读取真实凭据。

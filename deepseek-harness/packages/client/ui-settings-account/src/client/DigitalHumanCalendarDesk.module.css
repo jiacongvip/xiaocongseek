@@ -1,0 +1,630 @@
+/* Calendar desk — 参考自媒体工作台「排期」页：大号衬线月份 + 浅灰日历格 + 今日黑圈。 */
+.root {
+  --purple: #1b1b1d;
+  --purple-deep: #000000;
+  --purple-soft: #f4f4f5;
+  --purple-line: #e3e3e5;
+  --ink: var(--dsw-alias-label-primary, #17181a);
+  --ink2: var(--dsw-alias-label-secondary, #606269);
+  --ink3: var(--dsw-alias-label-tertiary, #9a9ca3);
+  --line: var(--dsw-alias-border-l2, #ececee);
+  --line-strong: var(--dsw-alias-border-l4, #e0e1e3);
+  --card: var(--dsw-alias-bg-layer-2, #fff);
+  --tool: #f5f5f6;
+  --success: #2fa36c;
+  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Songti SC', serif;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  color: var(--ink);
+  container-type: inline-size;
+  container-name: cal-desk;
+}
+
+/* 左侧「成片」托盘：把成片拖到日历上直接排期 */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.tray {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  order: -1;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.trayHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trayHead h2 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.trayHead span {
+  margin-left: auto;
+  color: var(--ink3);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.trayHint {
+  margin: 0;
+  color: var(--ink3);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.trayEmpty {
+  margin: 0;
+  padding: 12px 0;
+  color: var(--ink3);
+  font-size: 11.5px;
+  text-align: center;
+}
+
+.trayList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trayItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  max-width: 100%;
+  padding: 7px 8px;
+  border-radius: 7px;
+  background: var(--tool);
+  color: var(--ink2);
+  font-size: 12px;
+  text-align: left;
+  cursor: grab;
+  user-select: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.trayItem:hover {
+  background: #ececee;
+  color: var(--ink);
+}
+
+.trayItem[data-dragging='on'] {
+  opacity: 0.45;
+  cursor: grabbing;
+}
+
+.trayDot {
+  flex: none;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ink3);
+}
+
+.trayThumb {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  object-fit: cover;
+  background: #eee;
+}
+
+.railThumb {
+  width: 42px;
+  height: 42px;
+  border-radius: 7px;
+  object-fit: cover;
+  background: #eee;
+}
+
+.trayName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.day[data-drop='on'] {
+  background: #fff;
+  box-shadow: inset 0 0 0 1.5px #1b1b1d;
+}
+
+.sheet {
+  padding: 18px 20px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 6px 20px;
+}
+
+.monthBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.monthTop {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.monthNumber {
+  font-family: var(--serif);
+  font-size: 52px;
+  font-weight: 400;
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+}
+
+.monthYear {
+  padding-top: 6px;
+  color: var(--ink3);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.monthName {
+  color: var(--ink2);
+  font-family: var(--serif);
+  font-size: 19px;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  padding-top: 4px;
+  margin-right: auto;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat span {
+  color: var(--ink3);
+  font-size: 11px;
+}
+
+.stat b {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat em {
+  margin-left: 3px;
+  color: var(--ink3);
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.headActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.navBtn {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  color: var(--ink2);
+  font-size: 15px;
+  line-height: 1;
+}
+
+.navBtn:hover:not(:disabled) {
+  background: var(--tool);
+  color: var(--ink);
+}
+
+.todayBtn {
+  height: 26px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink2);
+  font-size: 12px;
+}
+
+.todayBtn:hover:not(:disabled) {
+  border-color: #1b1b1d;
+  color: var(--ink);
+}
+
+.status,
+.error {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.error {
+  color: var(--danger, #b4392b);
+}
+
+.cal {
+  margin-top: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.weekday {
+  padding: 0 2px 8px;
+  color: var(--ink3);
+  font-size: 11px;
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.pad {
+  min-height: 96px;
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  min-height: 96px;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: #f7f7f8;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.day:hover {
+  background: #f0f0f1;
+}
+
+.day[aria-pressed='true'] {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.dayNum {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-left: -2px;
+  color: var(--ink3);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.day[data-today='on'] .dayNum {
+  background: #1b1b1d;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.event {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  min-width: 0;
+  color: var(--ink2);
+  font-size: 10.5px;
+}
+
+.eventText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dot {
+  flex: 0 0 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #1b1b1d;
+}
+
+.event[data-done='on'] .dot {
+  background: var(--success);
+}
+
+.event[data-state='pending'] .dot {
+  background: #e0a12b;
+}
+
+.event[data-state='published'] .dot {
+  background: #2f9d6a;
+}
+
+.event[data-state='failed'] .dot {
+  background: #c8382c;
+}
+
+.overflow {
+  color: var(--ink3);
+  font-size: 10.5px;
+}
+
+.dayHint {
+  margin: 12px 0 0;
+  color: var(--ink3);
+  font-size: 11.5px;
+}
+
+/* 弹窗里的排期表单：两列，标题和备注通栏 */
+.editor {
+  display: grid;
+  gap: 14px;
+}
+
+.editorGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .editorGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  color: var(--ink2);
+  font-size: 12px;
+}
+
+.field textarea {
+  resize: none;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #1b1b1d;
+  box-shadow: 0 0 0 3px rgba(27, 27, 29, 0.07);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.actions .disclaimer {
+  margin-right: auto;
+}
+
+.disclaimer {
+  margin: 0;
+  color: var(--ink3);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@container cal-desk (max-width: 819px) {
+  .trayList {
+    flex-direction: row;
+    gap: 6px;
+    padding-bottom: 2px;
+    overflow-x: auto;
+  }
+
+  .trayList li {
+    flex: none;
+  }
+
+  .trayItem {
+    width: auto;
+    max-width: 190px;
+  }
+}
+
+@container cal-desk (min-width: 820px) {
+  .body {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    align-items: start;
+    gap: 14px;
+  }
+
+  .tray {
+    order: 0;
+  }
+
+  .sheet {
+    order: 0;
+  }
+}
+
+@container cal-desk (max-width: 620px) {
+  .sheet {
+    padding: 14px 12px 12px;
+  }
+
+  .head {
+    gap: 8px 12px;
+  }
+
+  .monthNumber {
+    font-size: 36px;
+  }
+
+  .monthName {
+    font-size: 15px;
+  }
+
+  .stats {
+    gap: 12px;
+  }
+
+  .day,
+  .pad {
+    min-height: 74px;
+  }
+
+  .day {
+    padding: 5px 5px;
+  }
+
+  .event {
+    font-size: 9.5px;
+  }
+}
+
+/* 排期卡片左侧的时间块 */
+.timeChip {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  border-radius: 10px;
+  background: linear-gradient(150deg, #fff4e0, #ffe6bf);
+  color: #a05a00;
+  font-variant-numeric: tabular-nums;
+}
+.timeChip b {
+  font-size: 13px;
+  font-weight: 750;
+  letter-spacing: 0.2px;
+}
+.timeChip i {
+  font-size: 8.5px;
+  font-style: normal;
+  font-weight: 600;
+  opacity: 0.75;
+}
+.timeChip[data-done="1"] {
+  background: linear-gradient(150deg, #e7f6ee, #d3ecdd);
+  color: #267f57;
+}
+
+.timeChip[data-state='published'] {
+  background: linear-gradient(150deg, #e7f6ee, #d3ecdd);
+  color: #1f7a51;
+}
+
+.timeChip[data-state='failed'] {
+  background: linear-gradient(150deg, #fdecea, #f9d9d4);
+  color: #b3362b;
+}
+
+/* 「现在发」小光点：飞向任务栏 */
+.flyDot {
+  position: fixed;
+  z-index: 420;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 32% 30%, #ffffff 0 18%, #1b1b1d 55%);
+  box-shadow: 0 0 0 7px rgba(27, 27, 29, .16), 0 10px 22px -8px rgba(27, 27, 29, .65);
+  pointer-events: none;
+  transition: transform .62s cubic-bezier(.22, .9, .28, 1), opacity .62s ease-out;
+  will-change: transform, opacity;
+}
+
+/* 任务面板入场 */
+.taskPanel {
+  animation-name: task-panel-in;
+  animation-duration: .34s;
+  animation-timing-function: cubic-bezier(.2, .9, .3, 1);
+  animation-fill-mode: both;
+  transform-origin: top right;
+}
+@keyframes task-panel-in {
+  from { opacity: 1; transform: translateY(-6px) scale(.985); }
+  to { opacity: 1; transform: none; }
+}
+
+
+.legendDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 2px 0 4px;
+  border-radius: 50%;
+  vertical-align: 1px;
+}
+
+.legendDot[data-state='pending'] { background: #e0a12b; }
+.legendDot[data-state='published'] { background: #2f9d6a; }
+.legendDot[data-state='failed'] { background: #c8382c; }

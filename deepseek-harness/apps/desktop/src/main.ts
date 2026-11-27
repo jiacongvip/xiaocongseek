@@ -7,8 +7,9 @@ import { DesktopUpdateSettings } from './update-settings.ts'
 import { isDesktopUpdateChannel } from './settings-file.ts'
 import type { ProductEventMap, ProductEvent } from '@deepseek-ai/dsh-client-product-analytics/types'
 import { WINDOWS_TITLEBAR_HEIGHT } from './windows-layout.ts'
+import { execFile } from 'node:child_process'
 import { access, readFile, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
   app,
@@ -27,7 +28,7 @@ import {
   type MenuItemConstructorOptions,
 } from 'electron'
 import { resolveDesktopPaths } from './paths.ts'
-import { DesktopProjectManager } from './project-manager.ts'
+import { DesktopProjectManager, resolveXiaocongPluginSource } from './project-manager.ts'
 import { DesktopHostFatalError, DesktopHostProcess, DesktopHostUncleanExitError } from './host-process.ts'
 import { DesktopPlatformView, PLATFORM_IPC, platformBounds } from './platform-view.ts'
 import { installDesktopFileDrag } from './file-drag.ts'
@@ -87,12 +88,23 @@ let windowsLanguage: string | undefined = readDesktopLocaleCache(app.getPath('us
  * failure while tearing down a ready backend still reads as `running`.
  */
 let backendReady = false
+/** Loopback Host origin, mirrored at module scope so createWindow can rewrite
+ *  shell-internal login popups (dsh-app://app/...) into the browser URL. */
+let shellHostUrl: string | undefined
 /** Error-level console output of the primary window, attached to crash reports. */
 const rendererConsole = new RendererConsoleTail()
 
 // Platform-conventional logs directory (macOS ~/Library/Logs/<name>, otherwise under userData);
 // set before ready so the first fatal report already resolves under it.
 app.setAppLogsPath()
+
+/** Packaged plugins live in Resources; an unpackaged app uses the fork three levels above apps/desktop. */
+function xiaocongPluginSource(): string | undefined {
+  return resolveXiaocongPluginSource([
+    join(process.resourcesPath, 'xiaocong-plugins'),
+    resolve(app.getAppPath(), '..', '..', '..'),
+  ])
+}
 
 function currentDesktopLocale(): ReturnType<typeof resolveDesktopLocale> {
   return resolveDesktopLocale(windowsLanguage ?? app.getLocale())
@@ -107,7 +119,7 @@ const recovery = new DesktopFatalRecovery({
   show: options => dialog.showMessageBox(options),
   stop: () => { shuttingDown = true; return stopForRecovery() },
   disablePlugins: async () => {
-    const manager = new DesktopProjectManager(resolveDesktopPaths(), runtimeResources())
+    const manager = new DesktopProjectManager(resolveDesktopPaths(), runtimeResources(), xiaocongPluginSource())
     const backupPath = await manager.disableAllPlugins()
     console.info('Desktop profile recovery completed:', { profilePatchBackup: backupPath ?? null, homePatch: 'unchanged' })
   },
@@ -260,13 +272,45 @@ function platformLoginUrl(authorizeUrl: string): string {
   return url.href
 }
 
+/** Opens a login page outside the app. macOS goes straight to the system `open`
+ *  because Electron's shell.openExternal can silently no-op on this machine
+ *  (no reject, no window), which left the sign-in modal stuck on "waiting". */
+function openExternalWithFallback(url: string): void {
+  console.log('[desktop] opening auth url in browser')
+  if (process.platform === 'darwin') {
+    try {
+      execFile('open', [url], (error) => {
+        if (error !== null) console.error('[desktop] system opener failed:', error?.message ?? String(error))
+        else console.log('[desktop] system opener ok')
+      })
+    } catch (error) {
+      console.error('[desktop] system opener threw:', error)
+    }
+    return
+  }
+  void shell.openExternal(url).catch((error: unknown) => {
+    console.warn('[desktop] shell.openExternal failed, falling back to the system opener:', error)
+    const opener = process.platform === 'win32' ? 'explorer' : 'xdg-open'
+    try {
+      execFile(opener, [url], (fallbackError) => {
+        if (fallbackError !== null) console.error('[desktop] system opener also failed:', fallbackError)
+      })
+    } catch (fallbackError) {
+      console.error('[desktop] system opener threw:', fallbackError)
+    }
+  })
+}
+
 function createWindow(preload: string, show = false, primary = false): BrowserWindow {
   const window = new BrowserWindow({
-    width: 1280,
-    height: 820,
-    minWidth: 520,
-    minHeight: 600,
+    width: 1400,
+    height: 860,
+    minWidth: 760,
+    minHeight: 620,
     show,
+    // macOS swallows the first click on an inactive window; onboarding dialogs
+    // and their confirm buttons must act on that click instead of only focusing.
+    acceptFirstMouse: true,
     ...(process.platform === 'win32' && primary ? {
       titleBarStyle: 'hidden' as const,
       titleBarOverlay: { height: WINDOWS_TITLEBAR_HEIGHT, color: chromeFallbackFill(),
@@ -294,7 +338,24 @@ function createWindow(preload: string, show = false, primary = false): BrowserWi
     },
   })
   window.webContents.setWindowOpenHandler(({ url }) => {
-    if (['http:', 'https:'].includes(new URL(url).protocol)) void shell.openExternal(url)
+    let parsed: URL
+    try { parsed = new URL(url) } catch { return { action: 'deny' } }
+    // Shell-internal login popups (dsh-app://app/digital-human-studio/auth/authorize and
+    // /auth/xiaocong/authorize) must leave the app: the console only returns its token to a
+    // window named `dsh-newapi-login`, which an in-app popup cannot carry across the site
+    // login. Route them through the bootstrap page in the system browser instead of denying
+    // them, which previously left the modal stuck on "waiting for browser".
+    if (parsed.protocol === `${SCHEME}:` && shellHostUrl !== undefined && (
+      parsed.pathname === '/digital-human-studio/auth/authorize' || parsed.pathname === '/auth/xiaocong/authorize')) {
+      const hostOrigin = new URL(shellHostUrl).origin
+      const bootstrap = new URL('/auth/xiaocong/bootstrap', shellHostUrl)
+      bootstrap.searchParams.set('return', `${hostOrigin}/`)
+      openExternalWithFallback(bootstrap.href)
+      return { action: 'deny' }
+    }
+    // System opener first: Electron's shell.openExternal silently no-ops on some Macs,
+    // which made the Settings balance links (usage / top-up) look unresponsive.
+    if (['http:', 'https:'].includes(parsed.protocol)) openExternalWithFallback(url)
     return { action: 'deny' }
   })
   if (process.platform === 'darwin' || process.platform === 'win32') {
@@ -363,7 +424,7 @@ function createWindow(preload: string, show = false, primary = false): BrowserWi
     if (destination.protocol !== `${SCHEME}:`
       && !(destination.protocol === 'http:' && destination.origin === current.origin)) {
       event.preventDefault()
-      if (['http:', 'https:'].includes(destination.protocol)) void shell.openExternal(url)
+      if (['http:', 'https:'].includes(destination.protocol)) openExternalWithFallback(url)
     }
   })
   return window
@@ -381,7 +442,7 @@ async function main(): Promise<void> {
     ? developmentPrimaryRuntime()
     : join(process.resourcesPath, 'runtime', 'primary-runtime')
   const activeProject = paths.profile
-  const manager = new DesktopProjectManager(paths, resources)
+  const manager = new DesktopProjectManager(paths, resources, xiaocongPluginSource())
   // Dock and Finder launches inherit only launchd's environment; every Host shares one login-shell read.
   const loginShellRead = new AbortController()
   // The probe runs in its own process group, which outlives Desktop unless the read is aborted.
@@ -539,6 +600,7 @@ async function main(): Promise<void> {
         const cookie = await authenticateWebHost(ready.url)
         hostCookie = cookie
         hostUrl = ready.url
+        shellHostUrl = ready.url
         void removeLegacyHostCookies(session.defaultSession.cookies, ready.url)
           .catch((error: unknown) => { console.error('desktop: legacy Host cookie cleanup failed', error) })
         if (ready.injections === undefined) throw new Error('Desktop Host did not provide boot injections')
@@ -554,7 +616,7 @@ async function main(): Promise<void> {
           const attempt = state.attempt
           if (attempt?.phase === 'waiting-browser' && attempt.authorizeUrl !== undefined && openedAttempt !== attempt.id) {
             openedAttempt = attempt.id
-            void shell.openExternal(platformLoginUrl(attempt.authorizeUrl)).catch(() => undefined)
+            openExternalWithFallback(platformLoginUrl(attempt.authorizeUrl))
           }
           if ((attempt?.phase === 'failed' || attempt?.phase === 'expired') && returnedAttempt !== attempt.id) {
             returnedAttempt = attempt.id
@@ -1382,7 +1444,13 @@ async function main(): Promise<void> {
         },
         startSignIn: async () => {
           if (welcomeBackend === undefined) throw new Error('desktop welcome: backend unavailable')
-          return welcomeBackend.account.start(desktopClientMetadata(locale.id))
+          const state = await welcomeBackend.account.start(desktopClientMetadata(locale.id))
+          const authorizeUrl = state.attempt?.authorizeUrl
+          if (authorizeUrl !== undefined) {
+            openedAttempt = state.attempt?.id ?? openedAttempt
+            openExternalWithFallback(platformLoginUrl(authorizeUrl))
+          }
+          return state
         },
         cancelSignIn: async (id) => {
           if (welcomeBackend === undefined) throw new Error('desktop welcome: backend unavailable')
@@ -1424,6 +1492,15 @@ async function main(): Promise<void> {
     })().finally(() => { openingWelcome = undefined })
     return openingWelcome
   }
+  /** XiaocongAPI token lives in the shared credential file; an existing token satisfies the account gate. */
+  const hasXiaocongCredential = async (): Promise<boolean> => {
+    try {
+      const text = await readFile(join(dirname(paths.profile), '.credentials.yaml'), 'utf8')
+      return /^\s+NEW_API_TOKEN\s*:\s*["']?[^\s"']/m.test(text)
+    } catch {
+      return false
+    }
+  }
   const openInitialWindow = async (): Promise<void> => {
     if (quitting || recovery.active) return
     const state = await readWelcomeState()
@@ -1432,7 +1509,7 @@ async function main(): Promise<void> {
     writeDesktopLocaleCache(app.getPath('userData'), locale.id)
     windowsLanguage = locale.id
     refreshApplicationMenu()
-    if (!enteredWorkspace && needsWelcome({ loggedIn: state.loggedIn, hasApiKey: state.hasApiKey })) {
+    if (!enteredWorkspace && !(await hasXiaocongCredential()) && needsWelcome({ loggedIn: state.loggedIn, hasApiKey: state.hasApiKey })) {
       // A later login must retain its own activation policy instead of replaying startup focus.
       raiseAfterUpdate = false
       await showWelcome()

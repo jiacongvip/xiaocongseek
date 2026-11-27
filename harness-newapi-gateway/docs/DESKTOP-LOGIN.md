@@ -1,6 +1,6 @@
 # Desktop / Web：New API 统一登录（工作室 0.7.0）
 
-更新：2026-11-06（Asia/Shanghai）。项目根目录：`/Users/jiacong/Desktop/开发文件/数字人混剪工作台/`。
+更新：2026-11-06（Asia/Shanghai）。项目根目录：`/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台/`。
 
 ## 数据流
 

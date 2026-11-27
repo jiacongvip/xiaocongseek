@@ -105,6 +105,15 @@
   background: var(--dsw-alias-bg-document-preview);
 }
 
+.body:has([data-media-preview]) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: var(--dsw-font, sans-serif);
+  white-space: normal;
+  background: var(--dsw-alias-bg-document-preview);
+}
+
 .wrap {
   white-space: pre-wrap;
   word-break: break-word;

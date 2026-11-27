@@ -29,5 +29,5 @@ export function AccountPlatformHost({ platform, usePage, closePage, t }: Account
   if (claim === null) return null
   return <PlatformOverlay bridge={platform} page={claim.page} backLabel={t('backToHarness')}
     loadingLabel={t('loading')} failureLabel={t('platformFailed')} retryLabel={t('platformRetry')}
-    onClose={closePage} />
+    openInBrowserLabel={t('openInBrowser')} onClose={closePage} />
 }

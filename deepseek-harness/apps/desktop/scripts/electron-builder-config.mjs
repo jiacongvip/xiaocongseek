@@ -28,12 +28,55 @@ import { desktopArtifactOutput, desktopTargetBuildPaths, resolveDesktopBuildTarg
 import { installWindowsDirectoryInstaller } from './windows-directory-installer.mjs'
 import { preserveWindowsRuntimeSignature, signWindowsCode } from './windows-runtime-signature.mjs'
 import { prepareWindowsAsarUnpack, verifyWindowsAsarUnpack } from './windows-asar-unpack.mjs'
+import { DESKTOP_ARTIFACT_PREFIX, DESKTOP_PRODUCT_NAME } from './product-identity.mjs'
 import { recordPackagingEvent } from './packaging-run.mjs'
 import {
   resolveMacOSAppUpdateFeed,
   verifyMacOSAppUpdateConfig,
   writeMacOSAppUpdateConfig,
 } from './macos-app-update-config.mjs'
+
+const XIAOCONG_PLUGIN_NAMES = ['digital-human-studio', 'publish-studio']
+
+/** Stage the two product plugins beside the app. The crawler source ships; its Python env is created on first use. */
+function xiaocongPluginResources() {
+  const skip = [
+    '!.backup-*',
+    '!.backup-*/**',
+    '!src',
+    '!src/**',
+    '!tests',
+    '!tests/**',
+    '!vendor/venv',
+    '!vendor/venv/**',
+    '!vendor/runtime/.temp',
+    '!vendor/runtime/.temp/**',
+    '!vendor/xiaocongcut/.venv',
+    '!vendor/xiaocongcut/.venv/**',
+    '!vendor/xiaocongcut/font-pack',
+    '!vendor/xiaocongcut/font-pack/**',
+    '!vendor/xiaocongcut/fonts/Full-*',
+    'vendor/xiaocongcut/fonts/Full-SourceHanSerifSC-Bold.otf',
+    'vendor/xiaocongcut/fonts/Full-LantingheiSC-Demibold.otf',
+    'vendor/xiaocongcut/fonts/Full-HelveticaNeue-Light.ttf',
+    '!vendor/xiaocongcut/tests',
+    '!vendor/xiaocongcut/tests/**',
+    '!vendor/xiaocongcut/examples',
+    '!vendor/xiaocongcut/examples/**',
+    '!artifacts',
+    '!artifacts/**',
+    '!**/.git',
+    '!**/.git/**',
+    '!**/__pycache__/**',
+    '!**/*.pyc',
+    '!**/.DS_Store',
+  ]
+  return XIAOCONG_PLUGIN_NAMES.map(name => ({
+    from: fileURLToPath(new URL(`../../../../${name}`, import.meta.url)),
+    to: `xiaocong-plugins/${name}`,
+    filter: ['**/*', ...skip],
+  }))
+}
 
 /**
  * Create electron-builder configuration from one release environment.
@@ -108,7 +151,7 @@ export function createElectronBuilderConfig(
   const packaged = resolveDesktopBuildCommit(env)
   return {
     appId,
-    protocols: [{ name: 'DeepSeek Harness', schemes: ['dsh'] }],
+    protocols: [{ name: DESKTOP_PRODUCT_NAME, schemes: ['dsh'] }],
     extraMetadata: {
       dshDesktopAppId: appId,
       dshDesktopUpdateChannel: update?.channel ?? 'nightly',
@@ -116,11 +159,11 @@ export function createElectronBuilderConfig(
       ...buildVersion === productVersion ? {} : { version: buildVersion },
       ...packaged === undefined ? {} : { dshBuildCommit: packaged.commit, dshBuildDirty: packaged.dirty },
     },
-    productName: 'DeepSeek Harness',
+    productName: DESKTOP_PRODUCT_NAME,
     // The default copyright uses author.name; this line names the product instead.
     copyright: `Copyright © ${new Date().getFullYear()} \${productName}`,
     // Unsigned builds carry their own suffix so a shared file can never pass for a release artifact.
-    artifactName: `deepseek-harness-\${version}-\${os}-\${arch}${output.suffix}.\${ext}`,
+    artifactName: `${DESKTOP_ARTIFACT_PREFIX}-\${version}-\${os}-\${arch}${output.suffix}.\${ext}`,
     directories: { output: output.directory },
     asar: true,
     electronDist: buildPaths.electron,
@@ -160,6 +203,9 @@ export function createElectronBuilderConfig(
     extraResources: [
       { from: buildPaths.runtime, to: 'runtime' },
       { from: fileURLToPath(new URL('../resources/icon-windows.png', import.meta.url)), to: 'icon.png' },
+      // Plugins stay outside the asar. The desktop profile links them on launch.
+      // vendor/media-crawler ships with the plugin. vendor/venv is this machine's Python env and stays out.
+      ...xiaocongPluginResources(),
       // Windows tray bitmaps; macOS keeps the Dock and ships no menu bar icon.
       ...(packagesWindows ? [{ from: fileURLToPath(new URL('../resources/tray-windows.ico', import.meta.url)), to: 'tray.ico' }] : []),
     ],
@@ -169,7 +215,7 @@ export function createElectronBuilderConfig(
       // macOS matches the application locale against this bundle, not Electron Framework resources.
       extendInfo: {
         CFBundleLocalizations: ['en', 'zh_CN', 'ja', 'es', 'fr', 'de', 'ru', 'pt'],
-        NSMicrophoneUsageDescription: 'DeepSeek Harness uses your microphone to transcribe speech into message drafts.',
+        NSMicrophoneUsageDescription: 'Xiaocongseek uses your microphone to transcribe speech into message drafts.',
       },
       // Ad-hoc signing keeps the modified Electron executable runnable without a Developer ID.
       identity: unsigned ? '-' : macOSSigning?.signingIdentity,

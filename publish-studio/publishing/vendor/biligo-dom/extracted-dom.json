@@ -1,0 +1,122 @@
+{
+  "sourceRepo": "https://github.com/Chiyang001/BiliGo",
+  "sourceCommit": "7b95f3057659b0febecc25f47940fc79e2c7e07d",
+  "sourceCommitTimeAsiaShanghai": "2026-11-05 21:57",
+  "authorization": "User confirmed authorization in t163/pt163u. Do not claim MIT.",
+  "verification": "pending_page_check",
+  "excluded": [
+    "private IM endpoints and response sniffing",
+    "cookie/token export",
+    "stealth/captcha bypass",
+    "send/auto-reply paths",
+    "Bilibili comment WBI/cookie APIs"
+  ],
+  "platforms": {
+    "douyin": {
+      "inboxPage": "https://www.douyin.com/message",
+      "homePage": "https://www.douyin.com",
+      "allowHosts": [
+        "www.douyin.com"
+      ],
+      "commentsPage": null,
+      "commentsReason": "Upstream comment module is Bilibili-only (comment_reply_system.py uses api.bilibili.com / WBI). Not ported.",
+      "loginHints": [
+        "扫码登录",
+        "密码登录",
+        "登录后免费畅享",
+        "登录后即可",
+        "请先登录",
+        "请登录",
+        "登录已过期"
+      ],
+      "loginUrlHints": [
+        "/login",
+        "passport"
+      ],
+      "emptyHints": [],
+      "skipTitles": [
+        "消息",
+        "搜索",
+        "下载",
+        "下载客户端",
+        "实时接收",
+        "投稿",
+        "通知",
+        "充钻石",
+        "客户端",
+        "壁纸"
+      ],
+      "listSelectors": [
+        "[class*='conversation']",
+        "[class*='Conversation']",
+        "[class*='session']",
+        "[class*='Session']",
+        "[class*='list'] [class*='item']",
+        "[class*='List'] [class*='Item']",
+        "[role='listitem']"
+      ],
+      "classTokens": [
+        "conversation",
+        "session"
+      ],
+      "roleListitem": true,
+      "parse": "visible inner text; first line is nickname (max 40 chars, not in skipTitles); remaining non-time lines are last_message preview. Rows without preview are ignored, matching upstream EXTRACT_PANEL_CONVERSATIONS_JS.",
+      "sourceSymbol": "EXTRACT_PANEL_CONVERSATIONS_JS in douyin_playwright.py",
+      "notes": [
+        "Existing product login is on creator.douyin.com; BiliGo inbox is www.douyin.com. Whether the same personal login applies must be checked on a real page.",
+        "Selectors are fuzzy class substring matches from upstream, not live-verified."
+      ]
+    },
+    "xiaohongshu": {
+      "inboxPage": "https://www.xiaohongshu.com/chat",
+      "homePage": "https://www.xiaohongshu.com/explore",
+      "allowHosts": [
+        "www.xiaohongshu.com"
+      ],
+      "commentsPage": null,
+      "commentsReason": "Upstream has no Xiaohongshu comment DOM patrol in the reviewed files.",
+      "loginHints": [
+        "请先登录",
+        "请登录",
+        "登录后查看",
+        "扫码登录",
+        "登录已过期"
+      ],
+      "loginUrlHints": [
+        "/login",
+        "website-login/error",
+        "passport"
+      ],
+      "emptyHints": [
+        "暂无消息",
+        "还没有私信",
+        "点击消息开启会话",
+        "暂无会话"
+      ],
+      "listShellSelectors": [
+        ".xhs-im-conv-list",
+        ".xhs-im-conv-item",
+        "[class*='im-conv']",
+        "[class*='conv-list']",
+        "[class*='chat-list']"
+      ],
+      "itemSelector": ".xhs-im-conv-item",
+      "nameSelector": ".xhs-im-conv-item__name",
+      "summarySelector": ".xhs-im-conv-item__summary",
+      "itemAttr": "data-conv-id",
+      "sourceSymbols": [
+        "EXTRACT_XHS_CONVERSATIONS_JS",
+        "XHS_CHAT_PANEL_STATE_JS",
+        "locator .xhs-im-conv-item / .xhs-im-conv-item__name"
+      ],
+      "notes": [
+        "Existing product login is on creator.xiaohongshu.com; BiliGo inbox is www.xiaohongshu.com. Cross-host login must be checked on a real page.",
+        "Upstream also contains private IM endpoints and API-first list fallback; those are not used here."
+      ]
+    }
+  },
+  "limits": {
+    "maxListItems": 20,
+    "visibleTextMaxChars": 500
+  }
+}

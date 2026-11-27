@@ -170,7 +170,14 @@ export class DesktopPlatformView {
     owner.contentView.addChildView(view)
     view.setBounds(bounds)
     try {
-      const url = new URL(page === 'usage' ? '/usage' : '/top_up', account.origin)
+      // DeepSeek Platform keeps console routes; every other deployment serves the
+      // XiaocongAPI (New API) console, whose wallet and usage pages use their own paths.
+      const platformHost = new URL(account.origin).hostname
+      const deepseekPlatform = platformHost === 'deepseek.com' || platformHost.endsWith('.deepseek.com')
+      const path = page === 'usage'
+        ? (deepseekPlatform ? '/usage' : '/usage-logs/common')
+        : (deepseekPlatform ? '/top_up' : '/wallet')
+      const url = new URL(path, account.origin)
       if (account.embeddedPageDist) url.searchParams.set('dist', account.embeddedPageDist)
       await view.webContents.loadURL(url.href)
     } catch (error) {

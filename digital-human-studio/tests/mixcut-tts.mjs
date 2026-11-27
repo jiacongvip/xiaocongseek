@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict'
+const { pickMixcutVoice, MIXCUT_VOICES, voiceChoiceMenu } = await import('../dist/mixcut-voices.js')
+
+assert.equal(MIXCUT_VOICES.length, 4)
+assert.equal(pickMixcutVoice('热心老板').id, 'warm_boss')
+assert.equal(pickMixcutVoice('避坑提醒').id, 'warn_friend')
+assert.equal(pickMixcutVoice('稳重师傅').id, 'steady_pro')
+assert.equal(pickMixcutVoice('带看效果').id, 'show_result')
+assert.equal(pickMixcutVoice(''), undefined)
+assert.equal(pickMixcutVoice('warm_boss').voiceId, '44')
+assert.equal(pickMixcutVoice('避坑提醒').voiceId, '60')
+assert.equal(pickMixcutVoice('稳重师傅').voiceId, '51')
+assert.equal(pickMixcutVoice('带看效果').voiceId, '79')
+assert.match(voiceChoiceMenu(), /用我的声音/)
+JSON.parse(JSON.stringify(pickMixcutVoice('热心老板')))
+console.log('mixcut-voices tests ok')

@@ -1,0 +1,279 @@
+{
+  "comment": "Official pages already in this repo, plus BiliGo-mapped personal inbox URLs/selectors and MediaMate MIT official-page comment list selectors. Xiaohongshu notification comment-list item selectors are not mapped: licensed sources give the official URL and visible tab labels, but not a copyable list-item DOM. Hidden app state and private mention APIs are not used. Fixture or mapping must not be treated as live-page verification.",
+  "source": {
+    "messages": {
+      "project": "https://github.com/Chiyang001/BiliGo",
+      "commit": "7b95f3057659b0febecc25f47940fc79e2c7e07d",
+      "excerpt": "publish-studio/publishing/vendor/biligo-dom/",
+      "authorization": "User confirmed upstream use authorization (t163/pt163u). No MIT is claimed for BiliGo."
+    },
+    "comments": {
+      "project": "https://github.com/git-rumengai/MediaMate",
+      "commit": "5504d3374f9294c3dfbc2c3077413d9e8216dbe7",
+      "license": "MIT",
+      "copyright": "Copyright (c) 2024 RuMengAI",
+      "excerpt": "publish-studio/publishing/vendor/mediamate-dom/",
+      "note": "Only official-page comment list selectors are used. Reply/send paths are not adopted. BiliGo authorization does not cover MediaMate; MediaMate is used because it ships an actual MIT LICENSE. comment_copilot and xhs-auto-reply have no LICENSE file and were not copied.",
+      "notificationChrome": {
+        "officialUrl": "https://www.xiaohongshu.com/notification?type=comment",
+        "tabSelector": ".reds-tab-item",
+        "tabLabels": [
+          "评论和@",
+          "赞和收藏",
+          "新增关注"
+        ],
+        "tabSource": "xpzouying/xiaohongshu-mcp Apache-2.0 xiaohongshu/notification.go (visible official tab labels and .reds-tab-item only; list data there is hidden page state and is not used)",
+        "urlAndFilterFacts": "lyzbcy/lyzbcy.github.io MIT design doc (official URL, tab 评论和@, login/empty discipline). It does not publish list-item CSS. It incorrectly calls Fisher0012/xhs-auto-reply MIT; that repo has no LICENSE and was not copied.",
+        "listItemSelectors": "not_copied_pending_live_check",
+        "rejected": "No use of /api/sns/web/v1/you/mentions, window hidden notification maps, network sniffing, or unlicensed repo selectors."
+      }
+    }
+  },
+  "platforms": {
+    "douyin": {
+      "pages": [
+        {
+          "kind": "login",
+          "url": "https://creator.douyin.com/login",
+          "source": "publish-studio/publishing/login-platforms.json"
+        },
+        {
+          "kind": "home",
+          "url": "https://creator.douyin.com/creator-micro/home",
+          "source": "publish-studio/publishing/login-platforms.json"
+        },
+        {
+          "kind": "publish-video",
+          "url": "https://creator.douyin.com/creator-micro/content/upload",
+          "source": "publish-studio/publishing/vendor/geo/newFileUpload/platform_configs.py"
+        },
+        {
+          "kind": "publish-image",
+          "url": "https://creator.douyin.com/creator-micro/content/upload?default-tab=3",
+          "source": "publish-studio/publishing/vendor/geo/newFileUpload/platform_configs.py"
+        },
+        {
+          "kind": "inbox-messages",
+          "url": "https://www.douyin.com/message",
+          "source": "BiliGo douyin_playwright.py DOUYIN_MESSAGES @ 7b95f3057659b0febecc25f47940fc79e2c7e07d",
+          "note": "已适配，待实页验证。来自授权上游的官方网页私信地址，尚未在本环境对真实登录页走查。现有登录页是 creator.douyin.com，与 www.douyin.com 是否同一登录态需走查。"
+        },
+        {
+          "kind": "inbox-comments",
+          "url": "https://creator.douyin.com/creator-micro/interactive/comment",
+          "source": "Official creator center 互动管理/评论管理; MediaMate MIT creator.yaml #comment_manage @ 5504d3374f9294c3dfbc2c3077413d9e8216dbe7",
+          "note": "已适配，待实页验证。官方创作者中心评论管理页。选择器来自 MediaMate MIT，夹具通过不代表已在真实网页读过。页面可能需要先选择作品才会出现评论列表。"
+        }
+      ],
+      "inboxPage": "https://www.douyin.com/message",
+      "inboxVerification": "pending_page_check",
+      "commentsPage": "https://creator.douyin.com/creator-micro/interactive/comment",
+      "commentsVerification": "pending_page_check",
+      "allowHosts": [
+        "www.douyin.com",
+        "creator.douyin.com"
+      ],
+      "maxListItems": 20,
+      "visibleListContract": {
+        "status": "pending_page_check",
+        "kind": "conversation-list",
+        "listSelectors": [
+          "[class*='conversation']",
+          "[class*='Conversation']",
+          "[class*='session']",
+          "[class*='Session']",
+          "[class*='list'] [class*='item']",
+          "[class*='List'] [class*='Item']",
+          "[role='listitem']"
+        ],
+        "classTokens": [
+          "conversation",
+          "session"
+        ],
+        "skipTitles": [
+          "消息",
+          "搜索",
+          "下载",
+          "下载客户端",
+          "实时接收",
+          "投稿",
+          "通知",
+          "充钻石",
+          "客户端",
+          "壁纸"
+        ],
+        "loginHints": [
+          "扫码登录",
+          "密码登录",
+          "登录后免费畅享",
+          "登录后即可",
+          "请先登录",
+          "请登录",
+          "登录已过期"
+        ],
+        "loginUrlHints": [
+          "/login",
+          "passport"
+        ],
+        "emptyHints": [],
+        "fields": [
+          "nickname",
+          "last_message"
+        ],
+        "sourceSymbol": "EXTRACT_PANEL_CONVERSATIONS_JS"
+      },
+      "visibleCommentsContract": {
+        "status": "pending_page_check",
+        "kind": "comment-list",
+        "pageUrl": "https://creator.douyin.com/creator-micro/interactive/comment",
+        "source": "MediaMate MIT mediamate/static/elements/douyin/creator.yaml @ 5504d3374f9294c3dfbc2c3077413d9e8216dbe7",
+        "listSelector": "ul[class*='cmt-ul'] > li",
+        "authorSelector": "h4",
+        "contentSelector": "pre",
+        "headingText": "评论管理",
+        "selectWorkText": "选择作品",
+        "emptyHints": [
+          "暂无评论",
+          "还没有评论",
+          "你还没有"
+        ],
+        "fields": [
+          "commentId",
+          "authorName",
+          "visibleText",
+          "workUrl",
+          "visibleTime"
+        ]
+      },
+      "commentsListMapped": true
+    },
+    "xiaohongshu": {
+      "pages": [
+        {
+          "kind": "login",
+          "url": "https://creator.xiaohongshu.com/login",
+          "source": "publish-studio/publishing/login-platforms.json"
+        },
+        {
+          "kind": "home",
+          "url": "https://creator.xiaohongshu.com/new/home",
+          "source": "publish-studio/publishing/login-platforms.json"
+        },
+        {
+          "kind": "publish-video",
+          "url": "https://creator.xiaohongshu.com/publish/publish?from=homepage&target=video&openFilePicker=true",
+          "source": "publish-studio/publishing/vendor/geo/newFileUpload/platform_configs.py"
+        },
+        {
+          "kind": "publish-image",
+          "url": "https://creator.xiaohongshu.com/publish/publish?from=homepage&target=image&openFilePicker=true",
+          "source": "publish-studio/publishing/vendor/geo/newFileUpload/platform_configs.py"
+        },
+        {
+          "kind": "note-manager",
+          "url": "https://creator.xiaohongshu.com/new/note-manager",
+          "source": "publish-studio/publishing/vendor/geo/newFileUpload/baseFileUploader.py",
+          "note": "内容管理页，未经证实为私信或评论页，不能当作已接入。"
+        },
+        {
+          "kind": "inbox-messages",
+          "url": "https://www.xiaohongshu.com/chat",
+          "source": "BiliGo xiaohongshu_playwright.py XHS_CHAT @ 7b95f3057659b0febecc25f47940fc79e2c7e07d",
+          "note": "已适配，待实页验证。来自授权上游的官方网页私信地址，尚未在本环境对真实登录页走查。现有登录页是 creator.xiaohongshu.com，与 www.xiaohongshu.com 是否同一登录态需走查。"
+        },
+        {
+          "kind": "inbox-comments",
+          "url": "https://www.xiaohongshu.com/notification?type=comment",
+          "source": "Official www.xiaohongshu.com URL confirmed to exist 2026-11-10 (logged-out Notifications chrome). Also cited as a public URL fact in Fisher0012/xhs-auto-reply (no LICENSE; URL only, no code copied).",
+          "note": "官方通知页地址已确认，可见分区为「评论和@」「赞和收藏」「新增关注」。通知列表条目选择器没有取得可独立编写的许可证据，不能把笔记页 comments-container 当作通知列表，也不能凭猜测宣称已接入。点赞、关注、系统通知不能当作评论。creator 登录态与 www 是否同一登录态仍未证实。",
+          "listMapped": false
+        }
+      ],
+      "inboxPage": "https://www.xiaohongshu.com/chat",
+      "inboxVerification": "pending_page_check",
+      "commentsPage": "https://www.xiaohongshu.com/notification?type=comment",
+      "commentsVerification": "awaiting_list_dom",
+      "allowHosts": [
+        "www.xiaohongshu.com"
+      ],
+      "maxListItems": 20,
+      "visibleListContract": {
+        "status": "pending_page_check",
+        "kind": "conversation-list",
+        "itemSelector": ".xhs-im-conv-item",
+        "nameSelector": ".xhs-im-conv-item__name",
+        "summarySelector": ".xhs-im-conv-item__summary",
+        "listShellSelectors": [
+          ".xhs-im-conv-list",
+          ".xhs-im-conv-item",
+          "[class*='im-conv']",
+          "[class*='conv-list']",
+          "[class*='chat-list']"
+        ],
+        "itemAttr": "data-conv-id",
+        "emptyHints": [
+          "暂无消息",
+          "还没有私信",
+          "点击消息开启会话",
+          "暂无会话"
+        ],
+        "loginHints": [
+          "请先登录",
+          "请登录",
+          "登录后查看",
+          "扫码登录",
+          "登录已过期"
+        ],
+        "loginUrlHints": [
+          "/login",
+          "website-login/error",
+          "passport"
+        ],
+        "fields": [
+          "nickname",
+          "last_message"
+        ],
+        "sourceSymbols": [
+          "EXTRACT_XHS_CONVERSATIONS_JS",
+          "XHS_CHAT_PANEL_STATE_JS"
+        ]
+      },
+      "visibleCommentsContract": {
+        "status": "awaiting_list_dom",
+        "kind": "notification-comment-list",
+        "pageUrl": "https://www.xiaohongshu.com/notification?type=comment",
+        "listMapped": false,
+        "listItemSelectors": "not_copied_pending_live_check",
+        "notificationChrome": {
+          "tabSelector": ".reds-tab-item",
+          "commentTabLabel": "评论和@",
+          "likeTabLabel": "赞和收藏",
+          "followTabLabel": "新增关注",
+          "source": "xpzouying/xiaohongshu-mcp Apache-2.0 visible official tab labels; public official UI labels"
+        },
+        "notePageCommentsContract": {
+          "status": "not_used_for_notification_inbox",
+          "kind": "note-page-comment-list",
+          "workPageSource": "MediaMate MIT mediamate/static/elements/xiaohongshu/home.yaml @ 5504d3374f9294c3dfbc2c3077413d9e8216dbe7",
+          "containerSelector": "div.comments-container",
+          "authorSelector": "div.author a",
+          "contentSelector": "div.content",
+          "emptySelector": "p.no-comments-text",
+          "note": "MediaMate MIT 笔记页评论区选择器。只用于说明来源，评论巡查通道不得用它解析通知页。"
+        },
+        "emptyHints": [
+          "暂无评论",
+          "还没有评论"
+        ],
+        "fields": [
+          "commentId",
+          "authorName",
+          "visibleText",
+          "workUrl",
+          "visibleTime"
+        ]
+      },
+      "commentsListMapped": false
+    }
+  }
+}

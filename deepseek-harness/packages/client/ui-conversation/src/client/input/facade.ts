@@ -28,6 +28,7 @@ import { SubmitMachine } from './machine.ts'
 import { resolveDraftInput, snapshotDraft } from '../draft.ts'
 import { DraftEditorRuntime } from './editor/runtime.ts'
 import type { EditorProjection } from './editor/projection.ts'
+import { applyComposerSubmitHooks } from './submit-hooks.ts'
 
 /** Popup face the shell needs (dismissal only; typed structurally to avoid a value import). */
 export interface PopupDismissFace {
@@ -42,6 +43,8 @@ export interface PopupDismissFace {
 export interface SessionInputDeps {
   /** Session-scope ctx handed to claim.submit transactions. */
   actx: Context
+  /** Owning session id, used by submit-time draft transforms. */
+  sessionId?: string
   /** Snapshot the Session facts before asynchronous command arbitration. */
   submissionState?: () => MessageSubmissionState
   /** Notify one ordinary message attempt before reference serialization. */
@@ -412,7 +415,7 @@ export class SessionInputShell implements SessionInput {
       type: 'enter',
       ...allowEmpty ? { allowEmpty: true } : {},
       mode,
-      draft: this.projection.clipboardText,
+      draft: applyComposerSubmitHooks(this.projection.clipboardText, this.deps.sessionId),
       occurrences: [...this.projection.occurrences],
       quotes: [...this.projection.quotes],
       attachmentIds: [...this.attachmentIds],

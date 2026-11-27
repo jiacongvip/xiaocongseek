@@ -6,4 +6,4 @@
 
 **桌面只认 New API；剪辑仍本机 VectCut；上游 Key 只存在 New API 渠道里。**
 
-工作台父目录：`/Users/jiacong/Desktop/开发文件/数字人混剪工作台`（本仓库为其子项目之一）。
+工作台父目录：`/Users/jiacong/Desktop/开发文件/小葱/数字人混剪工作台`（本仓库为其子项目之一）。

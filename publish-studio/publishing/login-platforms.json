@@ -1,0 +1,170 @@
+[
+  {
+    "key": "baijiahao",
+    "loginUrl": "https://baijiahao.baidu.com/builder/theme/bjh/login",
+    "personalUrl": "https://baijiahao.baidu.com/builder/rc/home",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "bilibili",
+    "loginUrl": "https://passport.bilibili.com/login",
+    "personalUrl": "https://member.bilibili.com/platform/home",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "csdn",
+    "loginUrl": "https://passport.csdn.net/login?code=applets",
+    "personalUrl": "https://mp.csdn.net/mp_blog/manage/article",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "douban",
+    "loginUrl": "https://www.douban.com/",
+    "personalUrl": "https://www.douban.com/",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "douyin",
+    "loginUrl": "https://creator.douyin.com/login",
+    "personalUrl": "https://creator.douyin.com/creator-micro/home",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "facebook",
+    "loginUrl": "https://www.facebook.com/login",
+    "personalUrl": "https://www.facebook.com/profile.php",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "instagram",
+    "loginUrl": "https://www.instagram.com/accounts/login/",
+    "personalUrl": "https://www.instagram.com",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "jianshu",
+    "loginUrl": "https://www.jianshu.com/sign_in",
+    "personalUrl": "https://www.jianshu.com/writer",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "kuaishou",
+    "loginUrl": "https://passport.kuaishou.com/pc/account/login",
+    "personalUrl": "https://cp.kuaishou.com/profile",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "omqq",
+    "loginUrl": "https://om.qq.com/main/creation/article",
+    "personalUrl": "https://om.qq.com/main",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "sohu",
+    "loginUrl": "https://mp.sohu.com/mpfe/v4/login",
+    "personalUrl": "https://mp.sohu.com/mpfe/v4/contentManagement/first/page",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "tencent",
+    "loginUrl": "https://channels.weixin.qq.com/login.html",
+    "personalUrl": "https://channels.weixin.qq.com/platform/",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "tieba",
+    "loginUrl": "https://tieba.baidu.com/index.html",
+    "personalUrl": "https://tieba.baidu.com/index.html",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "tiktok",
+    "loginUrl": "https://www.tiktok.com/login?lang=en",
+    "personalUrl": "https://www.tiktok.com/setting",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "toutiao_mp",
+    "loginUrl": "https://mp.toutiao.com/auth/page/login?redirect_url=JTJGcHJvZmlsZV92NCUyRmluZGV4",
+    "personalUrl": "https://mp.toutiao.com/profile_v4/index",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "wangyi_mp",
+    "loginUrl": "https://mp.163.com/subscribe_v4/index.html#/article-publish",
+    "personalUrl": "https://mp.163.com/subscribe_v4/index.html#/article-publish",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "wechat_official",
+    "loginUrl": "https://mp.weixin.qq.com/cgi-bin/loginpage?t=wxm2-login&lang=zh_CN",
+    "personalUrl": "https://mp.weixin.qq.com/",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "weibo",
+    "loginUrl": "https://weibo.com/",
+    "personalUrl": "https://weibo.com/",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "x",
+    "loginUrl": "https://x.com/i/flow/login",
+    "personalUrl": "https://x.com/home",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "xiaohongshu",
+    "loginUrl": "https://creator.xiaohongshu.com/login",
+    "personalUrl": "https://creator.xiaohongshu.com/new/home",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  },
+  {
+    "key": "zhihu",
+    "loginUrl": "https://www.zhihu.com/signin?next=http%3A%2F%2Fzhuanlan.zhihu.com%2Fwrite",
+    "personalUrl": "https://zhuanlan.zhihu.com/write",
+    "method": "browser_official_login",
+    "supportsQrProbe": true,
+    "note": "官方登录页；成功以登录态/创作者页可达性判定，不是关闭窗口即成功"
+  }
+]
