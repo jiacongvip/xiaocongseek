@@ -16,6 +16,7 @@
 import type { Context } from '@deepseek-ai/cordis'
 // Empty type import: merges `webServer` into the Context interface.
 import type {} from '@deepseek-ai/dsh-host-webserver'
+import { randomBytes } from 'node:crypto'
 import { createServer } from 'node:http'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
@@ -41,6 +42,16 @@ const SERVER_NAME = 'xiaocongseek'
 const SERVER_VERSION = '0.2.2'
 
 const LOOPBACK_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+const MCP_BRIDGE_TOKEN_SYMBOL = Symbol.for('xiaocong.mcp.bridgeToken')
+
+function ensureBridgeToken(): string {
+  const store = globalThis as Record<symbol, unknown>
+  const existing = store[MCP_BRIDGE_TOKEN_SYMBOL]
+  if (typeof existing === 'string' && existing.length >= 32) return existing
+  const token = randomBytes(32).toString('hex')
+  store[MCP_BRIDGE_TOKEN_SYMBOL] = token
+  return token
+}
 
 interface XcyMcpState {
   running: boolean
@@ -76,8 +87,9 @@ function portFromEnv(): number {
 }
 
 /** Build the local MCP server with one tool per plugin bridge route. */
-function buildMcpServer(shellPort: () => number | undefined): McpServer {
+function buildMcpServer(shellPort: () => number | undefined, bridgeToken: string): { server: McpServer; toolCount: number } {
   const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION })
+  let toolCount = 0
 
   /** The plugin bridge lives on the shell web server; its port is resolved through the reference captured at apply time. */
   const bridge = (): string => {
@@ -95,18 +107,34 @@ function buildMcpServer(shellPort: () => number | undefined): McpServer {
   const get = async (path: string, query?: Record<string, string>, timeoutMs = 60_000) => {
     const url = new URL(`${bridge()}${path}`)
     for (const [key, value] of Object.entries(query ?? {})) url.searchParams.set(key, value)
-    const response = await fetch(url, { method: 'GET', signal: AbortSignal.timeout(timeoutMs) })
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'x-xiaocong-mcp-bridge': bridgeToken },
+      signal: AbortSignal.timeout(timeoutMs),
+    })
     return response.json() as Promise<unknown>
   }
 
   const post = async (path: string, body: Record<string, unknown>, timeoutMs = 60_000) => {
     const response = await fetch(`${bridge()}${path}`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        'x-xiaocong-mcp-bridge': bridgeToken,
+      },
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(timeoutMs),
     })
     return response.json() as Promise<unknown>
+  }
+
+  const addTool = <T extends Record<string, z.ZodTypeAny>>(
+    tool: string,
+    config: { title: string; description: string; inputSchema: T },
+    handler: (args: { [K in keyof T]: z.infer<T[K]> }) => Promise<{ content: { type: 'text'; text: string }[] }>,
+  ) => {
+    toolCount += 1
+    server.registerTool(tool, config, handler as never)
   }
 
   const registerGet = (
@@ -122,7 +150,7 @@ function buildMcpServer(shellPort: () => number | undefined): McpServer {
         ? z.string().optional().describe(meta.description)
         : z.string().describe(meta.description)
     }
-    server.registerTool(tool, { title: tool, description, inputSchema: shape }, async (args) => {
+    addTool(tool, { title: tool, description, inputSchema: shape }, async (args) => {
       const picked: Record<string, string> = {}
       for (const key of Object.keys(query ?? {})) {
         const value = args?.[key]
@@ -137,10 +165,10 @@ function buildMcpServer(shellPort: () => number | undefined): McpServer {
   }
 
   const registerPost = (tool: string, description: string, route: string, timeoutMs?: number) => {
-    server.registerTool(tool, {
+    addTool(tool, {
       title: tool,
       description,
-      inputSchema: { payload: z.record(z.string(), z.unknown()).describe('转发给剪辑引擎的完整参数对象') },
+      inputSchema: { payload: z.record(z.string(), z.unknown()).optional().describe('转发给接口的 JSON 参数对象（无参接口可省略）') },
     }, async (args) => {
       const payload = (args?.payload ?? {}) as Record<string, unknown>
       try {
@@ -200,9 +228,9 @@ function buildMcpServer(shellPort: () => number | undefined): McpServer {
   registerPost('xiaocong_project_save', '保存当前工程', '/digital-human-studio/project/save')
   registerPost('xiaocong_project_saveas', '当前工程另存为新工程', '/digital-human-studio/project/saveas')
 
-  server.registerTool('xiaocong_digital_human_create', {
+  addTool('xiaocong_digital_human_create', {
     title: 'xiaocong_digital_human_create',
-    description: '创建数字人口播任务（model 必须以 xdh- 开头，其余参数随 payload 转发）',
+    description: '创建数字人视频/音频/克隆任务（model 必须以 xdh- 开头，如 xdh-avatar-video / xdh-audio / xdh-avatar-clone / xdh-voice-clone，其余参数随 payload 转发）',
     inputSchema: {
       model: z.string().describe('数字人模型名，必须 xdh- 开头'),
       payload: z.record(z.string(), z.unknown()).describe('其余任务参数（文本/声音/形象等）'),
@@ -216,7 +244,7 @@ function buildMcpServer(shellPort: () => number | undefined): McpServer {
     }
   })
 
-  server.registerTool('xiaocong_image_create', {
+  addTool('xiaocong_image_create', {
     title: 'xiaocong_image_create',
     description: '创建生图任务（参数随 payload 转发，如 model/prompt/size），返回任务 id',
     inputSchema: { payload: z.record(z.string(), z.unknown()).describe('生图参数对象') },
@@ -227,6 +255,138 @@ function buildMcpServer(shellPort: () => number | undefined): McpServer {
       return text({ success: false, error: error instanceof Error ? error.message : String(error) })
     }
   })
+
+  // ── Voice / TTS / Audio / Digital Human / Upload ──────────────────────────
+  registerGet('xiaocong_voices_list', '列出全部可用配音音色（内置风格预设：热心老板/避坑提醒/稳重师傅/带看效果 + 已克隆音色 + 当前公司偏好音色）', '/digital-human-studio/voices', {
+    space: { name: 'space', description: '可选：公司 ID，不传则查当前公司', optional: true },
+  })
+
+  addTool('xiaocong_tts', {
+    title: 'xiaocong_tts',
+    description: '文字转配音（TTS）：传文案与音色（支持预设名如 warm_boss / 热心老板 / 避坑提醒 / 稳重师傅，或已克隆音色名/ID，支持自定义语气 instruction），直接合成 mp3 下载到本地并返回路径、公网音频地址与时长',
+    inputSchema: {
+      text: z.string().describe('要合成配音的口播文案'),
+      voice: z.string().optional().describe('可选：预设音色或克隆音色名/ID（如 warm_boss / 热心老板），不传用当前公司默认音色或热心老板'),
+      voice_id: z.string().optional().describe('可选：直接指定底层 voice_id'),
+      instruction: z.string().optional().describe('可选：语气与情绪指令（如「语速稍快、像实体店老板热情介绍」）'),
+      language: z.string().optional().describe('可选：语言代码，默认 zh'),
+      space: z.string().optional().describe('可选：公司 ID，音频落在该公司目录'),
+    },
+  }, async (args) => {
+    try {
+      return text(await post('/digital-human-studio/tts', (args ?? {}) as Record<string, unknown>, 120_000))
+    } catch (error) {
+      return text({ success: false, error: error instanceof Error ? error.message : String(error) })
+    }
+  })
+
+  registerGet('xiaocong_digital_human_resources', '列出所有已克隆的数字人形象（avatars）与音色（voices）资源库，供生成视频/配音选择', '/digital-human-studio/digital-human/resources')
+
+  addTool('xiaocong_digital_human_speak', {
+    title: 'xiaocong_digital_human_speak',
+    description: '一句话直出数字人口播视频：自动使用默认形象与默认音色生成配音并驱动数字人，一步返回任务与视频结果',
+    inputSchema: {
+      text: z.string().describe('口播文案内容'),
+    },
+  }, async (args) => {
+    try {
+      return text(await post('/digital-human-studio/digital-human/speak', { text: args?.text ?? '' }, 180_000))
+    } catch (error) {
+      return text({ success: false, error: error instanceof Error ? error.message : String(error) })
+    }
+  })
+
+  registerGet('xiaocong_music_list', '列出本机内置 BGM 垫乐库与剪辑引擎可用背景音乐路径', '/digital-human-studio/music', {
+    space: { name: 'space', description: '可选：公司 ID', optional: true },
+  })
+  registerGet('xiaocong_sfx_list', '列出本机可用音效库（转场/提示音/强调音等）及其本地路径', '/digital-human-studio/sfx')
+  registerGet('xiaocong_style_library', '查询数字人形象换装公共造型风格库', '/digital-human-studio/style-library')
+
+  addTool('xiaocong_upload_local', {
+    title: 'xiaocong_upload_local',
+    description: '把本机图片/音频/视频文件上传到公网对象存储，返回公网 HTTPS URL（克隆形象/音色或图生图前使用）',
+    inputSchema: {
+      path: z.string().describe('本机文件绝对路径（支持 png/jpg/webp/mp3/wav/m4a/mp4/mov 等，最大 200MB）'),
+    },
+  }, async (args) => {
+    try {
+      return text(await post('/digital-human-studio/upload/local', { path: args?.path ?? '' }, 120_000))
+    } catch (error) {
+      return text({ success: false, error: error instanceof Error ? error.message : String(error) })
+    }
+  })
+
+  // ── Engine / Batch Render / QC / Matte / Drafts / Maintenance ─────────────
+  registerPost('xiaocong_engine_start', '启动本机 Xiaocongcut 剪辑引擎（若离线时调用）', '/digital-human-studio/engine_start', 60_000)
+  registerPost('xiaocong_engine_stop', '停止本机 Xiaocongcut 剪辑引擎', '/digital-human-studio/engine_stop')
+  registerPost('xiaocong_render_batch', '提交批量渲染队列（多条配方一次排队出片），配合 xiaocong_render_batch_status 查进度', '/digital-human-studio/render_batch', 300_000)
+  registerPost('xiaocong_qc_video', '对成片做自动质检（检测黑帧、静音、音画异常、时长等）', '/digital-human-studio/qc', 120_000)
+  registerPost('xiaocong_matte_webm', '对人物视频做自动人像抠图，导出带透明通道的 WebM', '/digital-human-studio/matte_webm', 300_000)
+  registerPost('xiaocong_template_save', '把指定配方保存为可复用剪辑模板（payload 含 name、recipe）', '/digital-human-studio/templates/save')
+  registerGet('xiaocong_pack_options', '查询剪辑引擎支持的字幕样式、LUT 调色滤镜、贴图与 BGM 选项', '/digital-human-studio/pack_options')
+  registerGet('xiaocong_draft_list', '列出本机剪映草稿目录中的所有草稿', '/digital-human-studio/list_drafts')
+  registerPost('xiaocong_draft_create', '新建一个剪映草稿（payload 可传 width/height/fps）', '/digital-human-studio/create_draft')
+  registerPost('xiaocong_draft_save', '保存剪映草稿到目标目录（payload 含 draft_id、draft_folder）', '/digital-human-studio/save_draft', 120_000)
+  registerPost('xiaocong_fonts_install', '按文件名下载并安装扩展字体（payload 含 file，文件名从 xiaocong_fonts 获取）', '/digital-human-studio/fonts/install', 180_000)
+  registerPost('xiaocong_cache_clean', '清理本机剪辑渲染与转写缓存（payload 可传 max_gb / max_age_days / dry_run）', '/digital-human-studio/cache_clean')
+
+  // ── Works Copy / Cover / Import ───────────────────────────────────────────
+  registerPost('xiaocong_work_copy', '为成片一键生成抖音/小红书/视频号多平台标题、正文与话题标签（payload 含 id、space?、platforms?）', '/digital-human-studio/works/copy', 120_000)
+  registerPost('xiaocong_work_copy_revise', '按指令修改成片已生成的文案（payload 含 id、instruction、space?、platform?）', '/digital-human-studio/works/copy/revise', 120_000)
+  registerPost('xiaocong_work_cover', '为成片 AI 生成或重画封面图（payload 含 id、space?、prompt?）', '/digital-human-studio/works/copy/cover', 180_000)
+  registerPost('xiaocong_work_cover_frame', '从成片指定秒数抽帧作为封面（payload 含 id、at 秒数、apply 是否落库、space?）', '/digital-human-studio/works/cover-frame', 60_000)
+  registerPost('xiaocong_work_cover_text', '保存带花字的成片封面图（payload 含 id、image dataURL、space?）', '/digital-human-studio/works/cover-text', 60_000)
+
+  addTool('xiaocong_work_import', {
+    title: 'xiaocong_work_import',
+    description: '将本机已剪好的 mp4 视频导入指定公司的成片库，导入后可继续生成文案、封面、排期或一键发布',
+    inputSchema: {
+      path: z.string().describe('本机 mp4 视频绝对路径'),
+      space: z.string().optional().describe('可选：目标公司 ID，不传导入当前公司'),
+      name: z.string().optional().describe('可选：成片文件名或标题'),
+    },
+  }, async (args) => {
+    try {
+      return text(await post('/digital-human-studio/works/import', (args ?? {}) as Record<string, unknown>, 120_000))
+    } catch (error) {
+      return text({ success: false, error: error instanceof Error ? error.message : String(error) })
+    }
+  })
+
+  // ── Hotboard / Platform Crawl / Wordcloud / Monitor / Retro Review ────────
+  registerGet('xiaocong_hotboard', '查询当前公司的行业热榜与选题推荐', '/digital-human-studio/industry-hotboard', {
+    space: { name: 'space', description: '可选：公司 ID', optional: true },
+  }, 120_000)
+  registerPost('xiaocong_platform_media', '通过 MediaCrawler 发起社媒平台关键词搜索或对标视频采集（抖音/小红书等，payload 含 action/platform/keywords/space?）', '/digital-human-studio/platform-media', 180_000)
+  registerGet('xiaocong_platform_media_status', '查询社媒采集任务列表或单条采集进度', '/digital-human-studio/platform-media', {
+    space: { name: 'space', description: '可选：公司 ID', optional: true },
+    id: { name: 'id', description: '可选：采集任务 id', optional: true },
+  })
+  registerPost('xiaocong_comment_wordcloud', '对采集到的评论数据生成高频词云与用户痛点分析', '/digital-human-studio/comment-wordcloud', 180_000)
+  registerGet('xiaocong_account_monitor', '读取账号发布核对与作品互动监控数据', '/digital-human-studio/account-monitor', {
+    space: { name: 'space', description: '可选：公司 ID', optional: true },
+    account: { name: 'account', description: '可选：账号 bindingId', optional: true },
+    sync: { name: 'sync', description: '可选：传 1 触发同步刷新', optional: true },
+  }, 120_000)
+  registerGet('xiaocong_retro_review', '读取公司运营复盘报告与作品互动统计', '/digital-human-studio/retro-review', {
+    space: { name: 'space', description: '可选：公司 ID', optional: true },
+  }, 120_000)
+
+  // ── Publishing Accounts / Calendar / Packs / Publish Now ──────────────────
+  registerGet('xiaocong_accounts_list', '查询公司已授权的发布平台账号（抖音/小红书/视频号/快手）及发布任务总览', '/digital-human-studio/publication-management', {
+    space: { name: 'space', description: '可选：公司 ID', optional: true },
+    action: { name: 'action', description: '可选：overview（默认）/ tasks.list / tasks.get / pack.list / calendar.list', optional: true },
+    id: { name: 'id', description: '可选：查询单条 task/pack 时的 id', optional: true },
+  })
+  registerGet('xiaocong_publish_calendar_list', '查询公司的发布日历排期列表及可排期成片', '/digital-human-studio/publish-calendar', {
+    space: { name: 'space', description: '可选：公司 ID', optional: true },
+  })
+  registerPost('xiaocong_publish_calendar_update', '新增、修改或删除发布日历排期（payload 含 action: upsert/delete、space?、item 或 id）', '/digital-human-studio/publish-calendar')
+  registerGet('xiaocong_publish_packs_list', '查询公司的发布包列表', '/digital-human-studio/publish-packs', {
+    space: { name: 'space', description: '可选：公司 ID', optional: true },
+  })
+  registerPost('xiaocong_publish_packs_action', '保存、核查或删除发布包（payload 含 action: save/check/delete、space?、item/id/revision）', '/digital-human-studio/publish-packs')
+  registerPost('xiaocong_publish_now', '查询可发账号或一键立即发布排期成片到抖音/小红书/视频号（payload 含 action: accounts/fire/tasks/retry、space?、planId、bindingIds、showBrowser?）', '/digital-human-studio/publish-now', 120_000)
 
   // ── Company & brief tools ─────────────────────────────────────────────────
   const resolveCompanySpace = async (idInput?: string, nameInput?: string, includeKnowledge = false) => {
@@ -259,7 +419,7 @@ function buildMcpServer(shellPort: () => number | undefined): McpServer {
     return { matched, currentId, list }
   }
 
-  server.registerTool('xiaocong_company_brief', {
+  addTool('xiaocong_company_brief', {
     title: 'xiaocong_company_brief',
     description: '读取某家公司的完整档案（含文案底稿：身份/卖点/受众/口吻/禁忌/品牌事实/痛点/证据/CTA/关键词/样稿，以及剪辑视听规范：画幅时长/剪辑节奏/字幕花字调色/声音BGM/固定片头片尾，外加偏好音色、BGM 与知识库资料摘要）。支持按公司 ID 或公司名查询；都不传则返回当前公司档案。写口播、写文案、剪辑前必调。',
     inputSchema: {
@@ -292,7 +452,7 @@ function buildMcpServer(shellPort: () => number | undefined): McpServer {
     }
   })
 
-  server.registerTool('xiaocong_company_select', {
+  addTool('xiaocong_company_select', {
     title: 'xiaocong_company_select',
     description: '切换 Xiaocongseek 当前活动的公司空间（传公司 ID 或公司名）。切换后素材库、成片库与剪辑均默认落到该公司。',
     inputSchema: {
@@ -315,7 +475,7 @@ function buildMcpServer(shellPort: () => number | undefined): McpServer {
     }
   })
 
-  server.registerTool('xiaocong_company_brief_update', {
+  addTool('xiaocong_company_brief_update', {
     title: 'xiaocong_company_brief_update',
     description: '更新指定公司（或当前公司）的档案字段（文案：identity/business/audience/brand/pains/proof/cta/voice/tone/avoid/keywords/sample；剪辑规范：videoFormat/editStyle/visualStyle/audioStyle/outroTemplate）。',
     inputSchema: {
@@ -340,10 +500,12 @@ function buildMcpServer(shellPort: () => number | undefined): McpServer {
     }
   })
 
-  return server
+  return { server, toolCount }
 }
 
 export function apply(ctx: Context): void {
+  const bridgeToken = ensureBridgeToken()
+  const advertisedToolCount = buildMcpServer(() => undefined, bridgeToken).toolCount
   const state: XcyMcpState = { running: false, port: portFromEnv() }
   const transports = new Map<string, StreamableHTTPServerTransport>()
 
@@ -359,7 +521,7 @@ export function apply(ctx: Context): void {
     port: state.port,
     url: `http://127.0.0.1:${String(state.port)}${MCP_PATH}`,
     serverName: SERVER_NAME,
-    toolCount: 35,
+    toolCount: advertisedToolCount,
     ...(state.error ? { error: state.error } : {}),
     agents: AGENT_SPECS.map(spec => readAgentState(spec, `http://127.0.0.1:${String(state.port)}${MCP_PATH}`)),
   })
@@ -443,7 +605,7 @@ export function apply(ctx: Context): void {
           })
           // A stateless request owns its transport, so it owns a fresh McpServer
           // too: Protocol.connect rejects a second transport on one instance.
-          const connectionServer = buildMcpServer(() => shellWebServer?.port)
+          const { server: connectionServer } = buildMcpServer(() => shellWebServer?.port, bridgeToken)
           transport.onclose = () => {
             const id = transport?.sessionId
             if (id) transports.delete(id)

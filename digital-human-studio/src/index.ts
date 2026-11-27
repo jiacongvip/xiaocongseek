@@ -1,4 +1,4 @@
-import { createHash, createHmac, randomBytes } from 'node:crypto'
+import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
 import {
   IS_WIN,
   PATH_DELIMITER,
@@ -1892,7 +1892,39 @@ function authorizedPageHtml(returnUrl: string): string {
 </html>`
 }
 
+const MCP_BRIDGE_TOKEN_SYMBOL = Symbol.for('xiaocong.mcp.bridgeToken')
+
+/** Verify an in-process loopback request coming from the shell-owned xiaocong-mcp server. */
+function isMcpBridgeRequest(req: any): boolean {
+  const expected = (globalThis as Record<symbol, unknown>)[MCP_BRIDGE_TOKEN_SYMBOL]
+  if (typeof expected !== 'string' || expected.length < 32) return false
+  const remote = String(req?.socket?.remoteAddress || '')
+  if (remote && remote !== '127.0.0.1' && remote !== '::1' && remote !== '::ffff:127.0.0.1') return false
+  const raw = req?.headers?.['x-xiaocong-mcp-bridge']
+  const provided = Array.isArray(raw) ? String(raw[0] || '') : String(raw || '')
+  if (provided.length !== expected.length) return false
+  try {
+    return timingSafeEqual(Buffer.from(provided, 'utf8'), Buffer.from(expected, 'utf8'))
+  } catch {
+    return false
+  }
+}
+
 export async function apply(ctx: Context) {
+  const denyUnlessTrustedStudio = (req: any, res: any): boolean => {
+    if (isMcpBridgeRequest(req)) return false
+    const connection = ctx.get('connection') as { requestRejection?: (req: { headers: unknown }) => number | undefined } | undefined
+    if (!connection?.requestRejection) {
+      sendJson(res, 403, { success: false, error: '未授权' })
+      return true
+    }
+    const denied = connection.requestRejection({ headers: req.headers })
+    if (denied || !sameOrigin(req)) {
+      sendJson(res, denied || 403, { success: false, error: '未授权或来源无效' })
+      return true
+    }
+    return false
+  }
   // 宿主只扫 $DSH_HOME/skills，不会来插件目录里找；启动时铺一次，用户装上插件即有手法可用。
   installBundledSkillsOnBoot()
   const publicationSessionSalt=randomBytes(32)
@@ -4746,6 +4778,178 @@ export async function apply(ctx: Context) {
           sendJson(res, 400, { success: false, error: e?.message || '上传失败' })
         }
       }),
+      register('/digital-human-studio/upload/local', async (req, res) => {
+        if (req.method !== 'POST') { sendJson(res, 405, { success: false, error: 'method not allowed' }); return }
+        if (!sameOrigin(req)) { sendJson(res, 403, { success: false, error: 'origin not allowed' }); return }
+        const rawToken = await adoptShellNewApiToken()
+        if (!rawToken) { sendJson(res, 401, { success: false, error: '请先登录 XiaocongAPI' }); return }
+        try {
+          const body = await readJson(req)
+          const filePath = expandPath(String((body as any)?.path || ''))
+          if (!filePath || !existsSync(filePath)) throw new Error(`找不到本地文件：${filePath || '(空)'}`)
+          const bytes = readFileSync(filePath)
+          if (!bytes.length) throw new Error('文件为空')
+          if (bytes.length > UPLOAD_MAX_BYTES) throw new Error('文件超过 200MB 上限')
+          const ext = filePath.split('.').pop()?.toLowerCase() || ''
+          const contentType = ext === 'png' ? 'image/png'
+            : ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg'
+            : ext === 'webp' ? 'image/webp'
+            : ext === 'gif' ? 'image/gif'
+            : ext === 'mp3' ? 'audio/mpeg'
+            : ext === 'wav' ? 'audio/wav'
+            : ext === 'm4a' ? 'audio/mp4'
+            : ext === 'ogg' ? 'audio/ogg'
+            : ext === 'mp4' || ext === 'm4v' ? 'video/mp4'
+            : ext === 'mov' ? 'video/quicktime'
+            : ext === 'webm' ? 'video/webm'
+            : 'application/octet-stream'
+          const response = await fetch(`${validateBase(config.newApiBaseUrl)}/v1/xiaocong/uploads`, {
+            method: 'POST',
+            headers: {
+              authorization: `Bearer ${normalizeToken(rawToken)}`,
+              accept: 'application/json',
+              'content-type': contentType,
+              'x-file-name': encodeURIComponent(basename(filePath)),
+            },
+            body: bytes,
+            signal: AbortSignal.timeout(120_000),
+          })
+          const value = await response.json().catch(() => null) as any
+          const url = String(value?.data?.url || value?.url || '').trim()
+          if (!response.ok || value?.success === false || !/^https?:\/\//i.test(url)) {
+            throw new Error(String(value?.error || value?.message || '上传失败'))
+          }
+          sendJson(res, 200, {
+            success: true,
+            url,
+            key: value?.data?.key || '',
+            name: value?.data?.name || basename(filePath),
+            size: bytes.length,
+            contentType,
+          })
+        } catch (e: any) {
+          sendJson(res, 400, { success: false, error: e?.message || '上传本地文件失败' })
+        }
+      }),
+      register('/digital-human-studio/voices', async (req, res) => {
+        if (String(req.method || 'GET').toUpperCase() !== 'GET') {
+          sendJson(res, 405, { success: false, error: 'method not allowed' }); return
+        }
+        try {
+          const url = new URL(String(req.url || '/'), 'http://127.0.0.1')
+          const spaceQuery = String(url.searchParams.get('space') || '').trim()
+          const spaceId = isSpaceId(spaceQuery) ? spaceQuery : activeSpaceId
+          const space = spaceStore.spaces.find(item => item.id === spaceId) || currentSpace(spaceStore)
+          const lib = loadAssetLibrary()
+          sendJson(res, 200, {
+            success: true,
+            spaceId,
+            preferredVoiceId: space?.preferredVoiceId || '',
+            choices: voiceChoiceMenu(),
+            presets: MIXCUT_VOICES.map(item => ({
+              id: item.id,
+              name: item.name,
+              voiceId: item.voiceId,
+              instruction: item.instruction,
+            })),
+            cloned: lib.voices.map(publicAsset),
+          })
+        } catch (e: any) {
+          sendJson(res, 400, { success: false, error: e?.message || '读取音色列表失败' })
+        }
+      }),
+      register('/digital-human-studio/tts', async (req, res) => {
+        if (String(req.method || 'GET').toUpperCase() !== 'POST') {
+          sendJson(res, 405, { success: false, error: 'method not allowed' }); return
+        }
+        if (!sameOrigin(req)) { sendJson(res, 403, { success: false, error: 'origin not allowed' }); return }
+        try {
+          const body = await readJson(req)
+          const text = clipNarration(String((body as any)?.text || ''))
+          if (!text) throw new Error('缺少配音文案 text')
+          const spaceQuery = String((body as any)?.space || '').trim()
+          const spaceId = isSpaceId(spaceQuery) ? spaceQuery : activeSpaceId
+          const directVoiceId = String((body as any)?.voice_id || '').trim()
+          const wantedVoice = String((body as any)?.voice || '').trim()
+          const customInstruction = String((body as any)?.instruction || '').trim()
+          const language = String((body as any)?.language || 'zh').trim() || 'zh'
+          let voiceId = directVoiceId
+          let voiceName = wantedVoice || directVoiceId
+          let instruction = customInstruction
+          let modelType: 1 | 2 = Number((body as any)?.model_type) === 1 ? 1 : 2
+          let style = wantedVoice || directVoiceId
+          if (!voiceId) {
+            let resolved = resolveNarrationVoice(spaceId, wantedVoice)
+            if ('needChoice' in resolved) {
+              resolved = resolveNarrationVoice(spaceId, 'warm_boss')
+            }
+            if ('needClone' in resolved) {
+              throw new Error('还没有克隆音色，请先克隆声音或指定预设音色（如 warm_boss / 热心老板）')
+            }
+            if ('needChoice' in resolved) {
+              throw new Error(`未找到匹配音色，可选：${voiceChoiceMenu()}`)
+            }
+            voiceId = resolved.voiceId
+            voiceName = resolved.name
+            instruction = customInstruction || resolved.instruction
+            modelType = resolved.modelType
+            style = resolved.style
+          } else if (!instruction) {
+            instruction = '自然口播语气，清晰流畅，不要机械播音腔。'
+          }
+          const payload = await digitalHumanRequest('POST', '/v1/xiaocong/digital-human/tts', {
+            text,
+            voice_id: voiceId,
+            instruction,
+            model_type: modelType,
+            language,
+          }, 120_000)
+          const audioUrl = String(payload?.data?.audio_url || payload?.audio_url || '').trim()
+          if (!/^https?:\/\//i.test(audioUrl)) throw new Error('配音接口未返回音频地址')
+          const clip = await downloadNarrationAudio(audioUrl, join(spaceAssetRoot(spaceId), 'narration'))
+          sendJson(res, 200, {
+            success: true,
+            spaceId,
+            path: clip.path,
+            duration: clip.duration,
+            audio_url: audioUrl,
+            voice: voiceName,
+            voiceId,
+            style,
+            instruction,
+          })
+        } catch (e: any) {
+          sendJson(res, 400, { success: false, error: e?.message || '配音合成失败' })
+        }
+      }),
+      register('/digital-human-studio/music', async (req, res) => {
+        if (String(req.method || 'GET').toUpperCase() !== 'GET') {
+          sendJson(res, 405, { success: false, error: 'method not allowed' }); return
+        }
+        try {
+          const url = new URL(String(req.url || '/'), 'http://127.0.0.1')
+          const spaceQuery = String(url.searchParams.get('space') || '').trim()
+          const spaceId = isSpaceId(spaceQuery) ? spaceQuery : activeSpaceId
+          const space = spaceStore.spaces.find(item => item.id === spaceId) || currentSpace(spaceStore)
+          const engineBgm = await vcFetch('/xcy/bgm', undefined, 'GET').catch(() => ({ ok: false, data: null }))
+          sendJson(res, 200, {
+            success: true,
+            spaceId,
+            preferredMusic: space?.preferredMusic || '',
+            choices: musicChoiceMenu(),
+            presets: MIXCUT_MUSIC.map(item => ({
+              id: item.id,
+              name: item.name,
+              volume: item.volume,
+              ready: mixcutMusicReady(item),
+              path: mixcutMusicReady(item) ? mixcutMusicFile(item) : '',
+            })),
+            engineBgm: engineBgm.ok ? engineBgm.data : null,
+          })
+        } catch (e: any) {
+          sendJson(res, 400, { success: false, error: e?.message || '读取音乐列表失败' })
+        }
+      }),
       register('/digital-human-studio/spaces', async (req, res) => {
         const method = String(req.method || 'GET').toUpperCase()
         if (method === 'GET') {
@@ -5270,10 +5474,7 @@ export async function apply(ctx: Context) {
 
       register('/digital-human-studio/publication-management', async (req, res) => {
         res.setHeader?.('cache-control','no-store')
-        const connection=ctx.get('connection') as {requestRejection?:(req:{headers:unknown})=>number|undefined}|undefined
-        if(!connection?.requestRejection){sendJson(res,403,{success:false,error:'未授权'});return}
-        const denied=connection.requestRejection({headers:req.headers})
-        if(denied || !sameOrigin(req)){sendJson(res,denied || 403,{success:false,error:'未授权或来源无效'});return}
+        if(denyUnlessTrustedStudio(req, res)) return
         try{
           const method=String(req.method || 'GET').toUpperCase(),url=new URL(String(req.url || '/'),'http://127.0.0.1')
           if(method!=='GET' && method!=='POST'){sendJson(res,405,{success:false,error:'method not allowed'});return}
@@ -5295,10 +5496,7 @@ export async function apply(ctx: Context) {
 
       register('/digital-human-studio/publish-packs', async (req, res) => {
         res.setHeader?.('cache-control', 'no-store')
-        const connection = ctx.get('connection') as { requestRejection?: (req: { headers: unknown }) => number | undefined } | undefined
-        if (!connection?.requestRejection) { sendJson(res,403,{success:false,error:'未授权'});return }
-        const denied=connection.requestRejection({headers:req.headers})
-        if (denied || !sameOrigin(req)) { sendJson(res,denied || 403,{success:false,error:'未授权或来源无效'});return }
+        if (denyUnlessTrustedStudio(req, res)) return
         try {
           const url=new URL(String(req.url || '/'),'http://127.0.0.1')
           const method=String(req.method || 'GET').toUpperCase()
@@ -5328,11 +5526,7 @@ export async function apply(ctx: Context) {
 
       register('/digital-human-studio/publish-calendar', async (req, res) => {
         res.setHeader?.('cache-control', 'no-store')
-        const connection = ctx.get('connection') as { requestRejection?: (req: { headers: unknown }) => number | undefined } | undefined
-        if (!connection?.requestRejection) { sendJson(res, 403, { success: false, error: '未授权' }); return }
-        const rejection = connection.requestRejection({ headers: req.headers })
-        if (rejection) { sendJson(res, rejection, { success: false, error: '未授权' }); return }
-        if (!sameOrigin(req)) { sendJson(res, 403, { success: false, error: 'origin not allowed' }); return }
+        if (denyUnlessTrustedStudio(req, res)) return
         const method = String(req.method || 'GET').toUpperCase()
         if (method !== 'GET' && method !== 'POST') { sendJson(res, 405, { success: false, error: 'method not allowed' }); return }
         try {
@@ -5356,11 +5550,7 @@ export async function apply(ctx: Context) {
       // 现在发：列出可发账号 / 勾选后立即发送（复用自动发的安全链路）
       register('/digital-human-studio/publish-now', async (req, res) => {
         res.setHeader?.('cache-control', 'no-store')
-        const connection = ctx.get('connection') as { requestRejection?: (req: { headers: unknown }) => number | undefined } | undefined
-        if (!connection?.requestRejection) { sendJson(res, 403, { success: false, error: '未授权' }); return }
-        const rejection = connection.requestRejection({ headers: req.headers })
-        if (rejection) { sendJson(res, rejection, { success: false, error: '未授权' }); return }
-        if (!sameOrigin(req)) { sendJson(res, 403, { success: false, error: 'origin not allowed' }); return }
+        if (denyUnlessTrustedStudio(req, res)) return
         if (String(req.method || 'GET').toUpperCase() !== 'POST') { sendJson(res, 405, { success: false, error: 'method not allowed' }); return }
         if (!String(req.headers['content-type'] || '').startsWith('application/json')) { sendJson(res, 415, { success: false, error: 'application/json required' }); return }
         try {
@@ -5685,10 +5875,7 @@ export async function apply(ctx: Context) {
       // 成片 → 文案 + 封面：照自媒体工作台的思路，用当前默认模型写，用小葱 API 的生图模型画封面
       register('/digital-human-studio/works/copy', async (req, res) => {
         res.setHeader?.('cache-control', 'no-store')
-        const connection = ctx.get('connection') as { requestRejection?: (req: { headers: unknown }) => number | undefined } | undefined
-        if (!connection?.requestRejection) { sendJson(res, 403, { success: false, error: '未授权' }); return }
-        const denied = connection.requestRejection({ headers: req.headers })
-        if (denied || !sameOrigin(req)) { sendJson(res, denied || 403, { success: false, error: '未授权或来源无效' }); return }
+        if (denyUnlessTrustedStudio(req, res)) return
         if (String(req.method || 'GET').toUpperCase() !== 'POST') { sendJson(res, 405, { success: false, error: 'method not allowed' }); return }
         try {
           const body = await readJson(req)
@@ -5744,10 +5931,7 @@ export async function apply(ctx: Context) {
       // 文案改稿：用户说一句「标题再短一点」，模型只改它提到的字段
       register('/digital-human-studio/works/copy/revise', async (req, res) => {
         res.setHeader?.('cache-control', 'no-store')
-        const connection = ctx.get('connection') as { requestRejection?: (req: { headers: unknown }) => number | undefined } | undefined
-        if (!connection?.requestRejection) { sendJson(res, 403, { success: false, error: '未授权' }); return }
-        const denied = connection.requestRejection({ headers: req.headers })
-        if (denied || !sameOrigin(req)) { sendJson(res, denied || 403, { success: false, error: '未授权或来源无效' }); return }
+        if (denyUnlessTrustedStudio(req, res)) return
         if (String(req.method || 'GET').toUpperCase() !== 'POST') { sendJson(res, 405, { success: false, error: 'method not allowed' }); return }
         try {
           const body = await readJson(req)
@@ -5783,10 +5967,7 @@ export async function apply(ctx: Context) {
       // 只重画封面：文案不动，画面换一张
       register('/digital-human-studio/works/copy/cover', async (req, res) => {
         res.setHeader?.('cache-control', 'no-store')
-        const connection = ctx.get('connection') as { requestRejection?: (req: { headers: unknown }) => number | undefined } | undefined
-        if (!connection?.requestRejection) { sendJson(res, 403, { success: false, error: '未授权' }); return }
-        const denied = connection.requestRejection({ headers: req.headers })
-        if (denied || !sameOrigin(req)) { sendJson(res, denied || 403, { success: false, error: '未授权或来源无效' }); return }
+        if (denyUnlessTrustedStudio(req, res)) return
         if (String(req.method || 'GET').toUpperCase() !== 'POST') { sendJson(res, 405, { success: false, error: 'method not allowed' }); return }
         try {
           const body = await readJson(req)
@@ -5818,10 +5999,7 @@ export async function apply(ctx: Context) {
       // 帧 + 大字合成封面：前端 canvas 合成后传 dataURL，落 covers/<id>-cover.jpg
       register('/digital-human-studio/works/cover-text', async (req, res) => {
         res.setHeader?.('cache-control', 'no-store')
-        const connection = ctx.get('connection') as { requestRejection?: (req: { headers: unknown }) => number | undefined } | undefined
-        if (!connection?.requestRejection) { sendJson(res, 403, { success: false, error: '未授权' }); return }
-        const denied = connection.requestRejection({ headers: req.headers })
-        if (denied || !sameOrigin(req)) { sendJson(res, denied || 403, { success: false, error: '未授权或来源无效' }); return }
+        if (denyUnlessTrustedStudio(req, res)) return
         if (String(req.method || 'GET').toUpperCase() !== 'POST') { sendJson(res, 405, { success: false, error: 'method not allowed' }); return }
         try {
           const body = await readJson(req)
@@ -5851,10 +6029,7 @@ export async function apply(ctx: Context) {
       // 取帧封面：预览 / 确认。apply=false 只抽帧不落库，apply=true 写进这条成片的 copy.coverUrl。
       register('/digital-human-studio/works/cover-frame', async (req, res) => {
         res.setHeader?.('cache-control', 'no-store')
-        const connection = ctx.get('connection') as { requestRejection?: (req: { headers: unknown }) => number | undefined } | undefined
-        if (!connection?.requestRejection) { sendJson(res, 403, { success: false, error: '未授权' }); return }
-        const denied = connection.requestRejection({ headers: req.headers })
-        if (denied || !sameOrigin(req)) { sendJson(res, denied || 403, { success: false, error: '未授权或来源无效' }); return }
+        if (denyUnlessTrustedStudio(req, res)) return
         if (String(req.method || 'GET').toUpperCase() !== 'POST') { sendJson(res, 405, { success: false, error: 'method not allowed' }); return }
         try {
           const body = await readJson(req)
@@ -5907,15 +6082,24 @@ export async function apply(ctx: Context) {
         }
       }),
 
-      // 导入剪映剪好的成品（mp4 原样上传）
+      // 导入剪映剪好的成品（支持二进制原样上传，也支持 JSON { path, space?, name? } 从本机路径导入）
       register('/digital-human-studio/works/import', async (req, res) => {
         res.setHeader?.('cache-control', 'no-store')
-        const connection = ctx.get('connection') as { requestRejection?: (req: { headers: unknown }) => number | undefined } | undefined
-        if (!connection?.requestRejection) { sendJson(res, 403, { success: false, error: '未授权' }); return }
-        const denied = connection.requestRejection({ headers: req.headers })
-        if (denied || !sameOrigin(req)) { sendJson(res, denied || 403, { success: false, error: '未授权或来源无效' }); return }
+        if (denyUnlessTrustedStudio(req, res)) return
         if (String(req.method || 'GET').toUpperCase() !== 'POST') { sendJson(res, 405, { success: false, error: 'method not allowed' }); return }
         try {
+          const ct = String(req.headers['content-type'] || '')
+          if (ct.startsWith('application/json')) {
+            const payload = await readJson(req)
+            const space = requireCalendarSpace(spaceStore, (payload as any)?.space || activeSpaceId)
+            const filePath = expandPath(String((payload as any)?.path || ''))
+            if (!filePath || !existsSync(filePath)) throw new Error(`找不到视频文件：${filePath || '(空)'}`)
+            const fileName = String((payload as any)?.name || basename(filePath) || 'import.mp4').trim()
+            const bytes = readFileSync(filePath)
+            const item = importExport(space, fileName, bytes)
+            sendJson(res, 200, { success: true, spaceId: space, item })
+            return
+          }
           const space = requireCalendarSpace(spaceStore, req.headers['x-space'])
           let fileName = String(req.headers['x-file-name'] || 'import.mp4').trim()
           try { fileName = decodeURIComponent(fileName) } catch { /* keep raw */ }
