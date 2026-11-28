@@ -8,10 +8,19 @@
 import { execFileSync } from 'node:child_process'
 import { accessSync, constants, existsSync, readdirSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { delimiter, join, resolve } from 'node:path'
+import { delimiter, isAbsolute, join, relative, resolve, sep } from 'node:path'
 
 export const IS_WIN = process.platform === 'win32'
 export const IS_MAC = process.platform === 'darwin'
+
+/** 跨平台路径包含校验（兼容 Windows 反斜杠与盘符大小写，避免 startsWith(root + '/') 误杀）。 */
+export function isPathInside(root: string, target: string, allowSame = false): boolean {
+  const base = resolve(root)
+  const full = resolve(target)
+  const rel = relative(base, full)
+  if (!rel) return allowSame
+  return rel !== '..' && !rel.startsWith(`..${sep}`) && !rel.startsWith('../') && !isAbsolute(rel)
+}
 
 /** venv 里的 Python 解释器：Windows 是 .venv/Scripts/python.exe，其它平台是 .venv/bin/python。 */
 export function venvPython(root: string): string {

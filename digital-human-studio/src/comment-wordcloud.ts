@@ -3,7 +3,7 @@
  * Local-only; no platform crawl; strips author/PII from stored analysis inputs/outputs.
  */
 import { spawn, type ChildProcess } from 'node:child_process'
-import { venvPythonCandidates } from './platform.js'
+import { isPathInside, venvPythonCandidates } from './platform.js'
 import { defaultMcRoot } from './mediacrawler-adapter.js'
 import {
   existsSync,
@@ -249,7 +249,7 @@ export function parseCommentImport(input: {
 export function assertSafeOutPath(spaceId: string, filePath: string): string {
   const root = resolve(wordcloudJobsRoot(spaceId))
   const real = resolve(filePath)
-  if (real !== root && !real.startsWith(root + '/')) {
+  if (!isPathInside(root, real, true)) {
     throw Object.assign(new Error('路径越界：必须落在本公司 comment-wordcloud-jobs 下'), {
       code: 'path_escape',
     })

@@ -1,5 +1,14 @@
 import { homedir } from 'node:os'
-import { join, isAbsolute } from 'node:path'
+import { join, isAbsolute, relative, resolve, sep } from 'node:path'
+
+/** Cross-platform path containment check (handles Windows backslashes & drive case). */
+export function isInsideDir(root: string, file: string, allowSame = false): boolean {
+  const base = resolve(root)
+  const target = resolve(file)
+  const rel = relative(base, target)
+  if (!rel) return allowSame
+  return rel !== '..' && !rel.startsWith(`..${sep}`) && !rel.startsWith('../') && !isAbsolute(rel)
+}
 
 /** Resolve on each call so tests can set process.env.HOME before exercising the API. */
 export function pluginRoot() {
@@ -17,9 +26,9 @@ export function spaceRoot(spaceId: string) {
   return join(pluginRoot(), 'spaces', spaceId)
 }
 export function assertInside(root: string, file: string) {
-  const base = join(root)
-  const target = join(file)
+  const base = resolve(root)
+  const target = resolve(file)
   if (!isAbsolute(target)) throw new Error('拒绝相对路径逃逸')
-  if (!(target === base || target.startsWith(base.endsWith('/') ? base : base + '/'))) throw new Error('资源不属于当前插件隔离目录')
+  if (!isInsideDir(base, target, true)) throw new Error('资源不属于当前插件隔离目录')
   return target
 }

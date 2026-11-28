@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, renameSync, unlinkS
 import { spawn } from 'node:child_process'
 import { dirname, join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { isSpaceId, spaceRoot } from './paths.js'
+import { isInsideDir, isSpaceId, spaceRoot } from './paths.js'
 import { resolveRuntimePython, spawnRuntimeEnv } from './runtime.js'
 import { assertPublishAllowed } from './auth.js'
 import { assertQuotaAvailable, recordAttempt } from './quota.js'
@@ -71,7 +71,7 @@ export async function prepareTask(space: string, input: {
   const root = realpathSync(spaceRoot(space))
   const video = realpathSync(input.videoPath)
   const cover = realpathSync(input.coverPath)
-  if (!video.startsWith(root + '/') || !cover.startsWith(root + '/')) throw new Error('媒体必须位于本公司发布插件隔离目录')
+  if (!isInsideDir(root, video, false) || !isInsideDir(root, cover, false)) throw new Error('媒体必须位于本公司发布插件隔离目录')
   const videoHash = await sha256(video)
   const coverHash = await sha256(cover)
   const snapshot: Snapshot = {
@@ -239,7 +239,11 @@ function explainAdapterFailure(log: string): string {
 function runExecutor(payload: Record<string, unknown>, python: string) {
   return new Promise<any>((resolve, reject) => {
     const script = join(pluginRoot(), 'publishing', 'executor.py')
-    const child = spawn(python, [script], { stdio: ['pipe', 'pipe', 'pipe'], env: spawnRuntimeEnv({ ...process.env, PYTHONPATH: '' }) })
+    const child = spawn(python, [script], {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      windowsHide: true,
+      env: spawnRuntimeEnv({ ...process.env, PYTHONPATH: '', PYTHONUTF8: '1', PYTHONIOENCODING: 'utf-8' }),
+    })
     let out = '', err = ''
     const timer = setTimeout(() => { child.kill('SIGKILL'); reject(new Error('executor timeout')) }, payload.mode === 'dry-run' ? 15000 : 15 * 60 * 1000)
     child.stdout.on('data', (d: Buffer) => { out += d; if (out.length > 1_000_000) child.kill('SIGKILL') })

@@ -7,7 +7,7 @@
  * - Reuses original MediaCrawler saved login (browser_data + .douyin_cookies.txt) via sidecar.
  */
 import { spawn, type ChildProcess } from 'node:child_process'
-import { venvPythonCandidates } from './platform.js'
+import { isPathInside, venvPythonCandidates } from './platform.js'
 import {
   existsSync,
   mkdirSync,
@@ -1096,7 +1096,7 @@ function listMediaFiles(saveDataPath: string, platform: McPlatform): string[] {
         if (!MEDIA_EXT.has(ext)) continue
         if (st.size <= 0 || st.size > MAX_IMPORT_BYTES) continue
         const resolved = resolve(p)
-        if (!resolved.startsWith(resolve(saveDataPath) + '/')) continue
+        if (!isPathInside(saveDataPath, resolved, false)) continue
         out.push(resolved)
       }
     }

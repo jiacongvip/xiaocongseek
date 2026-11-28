@@ -5,6 +5,7 @@ import {
   engineStartCommand,
   findBundledPython,
   findMediaTool,
+  isPathInside,
   resolveEngineVenvPython,
   runtimeBin,
   systemPythonNames,
@@ -4723,7 +4724,7 @@ export async function apply(ctx: Context) {
           if (!relative.startsWith(expectedPrefix) || relative.includes('..')) throw new Error('非法资源路径')
           const root = assetRoot(space)
           const absolute = resolve(root, relative)
-          if (!absolute.startsWith(resolve(root) + '/')) throw new Error('非法资源路径')
+          if (!isPathInside(root, absolute, false)) throw new Error('非法资源路径')
           if (!existsSync(absolute)) { sendJson(res, 404, { success: false, error: '资源文件不存在' }); return }
           const ext = absolute.split('.').pop()?.toLowerCase() || ''
           const mime = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : ext === 'gif' ? 'image/gif'

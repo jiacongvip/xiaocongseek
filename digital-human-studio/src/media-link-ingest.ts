@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url'
 import { randomUUID } from 'node:crypto'
 import { addStudioMaterial, isMaterialSlot, type MaterialSlot, type StudioMaterial } from './studio-materials.js'
 import { isSpaceId, spaceAssetRoot } from './spaces.js'
+import { isPathInside } from './platform.js'
 
 export const MEDIA_INGEST_BLOCKED_REASON =
   'MediaCrawler 为「非商业学习许可证 1.1」，禁止未经书面授权的商业用途；且其下载依赖 CDP/Playwright 登录态与浏览器内签名，不属于可商用公开直链 CLI。本工具不会调用 MediaCrawler，也不会读取 cookies/login 缓存。'
@@ -172,7 +173,7 @@ export function classifyMediaLink(raw: string): UrlClass {
 function safeFixturePath(name: string): string {
   const root = mediaIngestFixturesDir()
   const abs = resolve(join(root, name))
-  if (!abs.startsWith(resolve(root) + '/') && abs !== resolve(root)) {
+  if (!isPathInside(root, abs, true)) {
     throw Object.assign(new Error('fixture 路径越界'), { code: 'fixture_escape' })
   }
   if (!existsSync(abs)) throw Object.assign(new Error(`找不到 fixture: ${name}`), { code: 'fixture_missing' })
