@@ -25,16 +25,22 @@ description: 内置 341 种 HTML Canvas/SVG 代码动画风格提示词库与逐
   - 做竖屏口播插片时传 `orientation="vertical"`（`1080×1920`）；横屏片头/科普传 `orientation="horizontal"`（`1920×1080`）。
 - 若需要贴合客户品牌，先读公司档案（`dh_get_brief` / `xiaocong_company_brief`）拿到真实产品名、卖点、数字和禁忌。
 
-### 第 3 步：写出完整单文件 `index.html`
+### 第 3 步：写出完整单文件 `index.html`（防丑硬规范）
 - **自包含**：只用原生 HTML + CSS + JS + Canvas/SVG，不引用外网 CDN/外链图片/外链字体（中文直接用系统黑体/宋体回退栈）。
 - **必须确定性渲染**：
   1. 暴露全局 `window.draw = draw`（以及 `window.__draw = draw`）和 `window.__T_END = 总秒数`；
   2. 所有动画位置/透明度/缩放完全由参数 `t`（秒）纯函数算出，随机必须用带种子的 PRNG（如 `mulberry32`），禁止 `Math.random()`；
   3. 读取 `new URLSearchParams(location.search).get('t')`：带 `?t=秒` 时只执行 `draw(t)` 不启动 `requestAnimationFrame` 循环；
-  4. **竖屏适配**：竖屏口播插片画布设为 `1080×1920`（避开顶部 14% 和底部 22% 字幕/标题安全区），字体放大到手机竖屏一眼看清。
+- **防丑排版与安全边距（竖屏 `1080×1920` 必守）**：
+  1. **严禁贴边裁字**：左右安全边距严格 ≥ `72px`（所有文字、标题、卡片 X 落在 `72 ~ 1008` 之内），顶部留白 ≥ `180px`；
+  2. **底部字幕安全区**：底部预留 ≥ `380px`（`Y ≤ 1540`）纯干净背景给语音字幕，**不要在动画底部再多写一行重复的总结小字**；
+  3. **一屏只讲 1 个焦点**：主标题 `64~96px`、卡片正文 ≥ `32px`；每 2~4 秒切 1 个干净镜头，**严禁凭空裸写黑底聊天框或把 5 条以上小字硬塞一屏**；严格还原所选风格的配色、底纹/网格/纸纹质感与动效缓动。
 
-### 第 4 步：逐帧渲染成 MP4 / 透明 WebM（并可选拼进口播）
+### 第 4 步：逐帧渲染成 MP4 / 透明 WebM + 配套字幕规范
 - 调用 `dh_render_code_anim`（外部 MCP 为 `xiaocong_anim_render`）：
   - 传入 `html`（或本地 `html_path`）、`width`（竖屏 `1080` / 横屏 `1920`）、`height`（竖屏 `1920` / 横屏 `1080`）、`fps`（默认 `30`）、`duration`（秒）。
   - 若要把动画透明叠在人物旁边，传 `transparent: true` 输出带 Alpha 通道的 `.webm`。
   - 传 `import_to_works: true`（配 `title`）可直接登记进当前公司成片库；也可直接把返回的 `output` MP4 路径送入 `dh_render_recipe` / `dh_add_video` 拼进口播视频中段（记得把插片轨音量设为 0，保持原口播人声不断）。
+- **字幕搭配红线（极重要！）**：
+  - **全片代码动画 / MG 信息图**：合配音加字幕时必须用 `subtitles.style: "anim_clean"`（深色底，小号单行居中细白字）或 `"anim_pill"`（浅色/纸纹/复杂底，带柔黑半透明底条）；**严禁套用 `trendy_koubo` / `trendy_red` / `trendy_gold` / `trendy_cyan` 错落大花字**（那是给真人/数字人大头口播用的，叠在代码动画上会撞色且喧宾夺主）。
+  - **真人/数字人 + 代码动画混剪**：真人段可用网感口播大花字；切到代码动画插片那几秒，字幕应降级为 `anim_clean`/`anim_pill` 或隐藏外挂字幕。

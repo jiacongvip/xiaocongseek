@@ -9987,7 +9987,7 @@ export async function apply(ctx: Context) {
         defineTool({
           name: 'dh_list_code_anim_styles',
           description:
-            'Digital Human Studio: 检索内置的 341 种 HTML Canvas/SVG 代码动画风格提示词库（支持按关键词、系列 AG/M/K/Z/H/L/V/X/R/O 或精选筛选）。默认返回精选高频款或最匹配的前 24 条；选定编号后调用 dh_get_code_anim_style 获取完整提示词。',
+            'Digital Human Studio: 检索内置的 341 种 HTML Canvas/SVG 代码动画视觉风格库（10 大系列 AG/M/K/Z/H/L/V/X/R/O）。当用户问「有几个风格 / 有哪些风格 / 动画风格」时必调此工具，不要只查配音音色；选定编号后调用 dh_get_code_anim_style 获取完整提示词与安全边距/字幕规范。',
           parameters: {
             query: { type: 'string', description: '可选：按关键词检索（如「对比」「流程」「水墨」「剪纸」「黑板」「霓虹」「数据」）' },
             series: { type: 'string', description: '可选：按系列筛选（L=商业信息图 / M=动态叙事 / H=现成版式 / K=卡通手绘 / Z=中国风 / AG=代码样片 / V=MG动效 / X=code-video / R=赛博 / O=奥斯卡98部）' },
@@ -10014,7 +10014,7 @@ export async function apply(ctx: Context) {
         defineTool({
           name: 'dh_get_code_anim_style',
           description:
-            'Digital Human Studio: 读取指定代码动画风格（如 L42、Z5、B6、H1）的完整提示词原文与画幅规范。写 HTML 代码动画前必须先调此工具获取完整做法。',
+            'Digital Human Studio: 读取指定代码动画风格（如 L42、Z5、B6、H1）的完整视觉提示词、横竖屏安全边距规范（竖屏左右 ≥72px、底部留 ≥380px 给字幕）与配套字幕规范。写 HTML 代码动画前必须先调此工具，严禁凭空裸写黑底聊天框。',
           parameters: {
             id: { type: 'string', required: true, description: '风格编号（如 L42、Z5、B6、H1）或风格名称' },
             orientation: { type: 'string', description: '可选：vertical（1080×1920 竖屏口播插片）/ horizontal（1920×1080 横屏）/ auto' },
@@ -10036,7 +10036,7 @@ export async function apply(ctx: Context) {
         defineTool({
           name: 'dh_render_code_anim',
           description:
-            'Digital Human Studio: 将确定性 HTML Canvas/SVG 代码动画（实现 window.draw(t) 或 ?t=秒）通过本机 Chromium + ffmpeg 无损逐帧渲染为 MP4（或 transparent=true 导出透明通道 WebM）。支持直接入当前公司成片库或拼进口播视频中段。',
+            'Digital Human Studio: 将确定性 HTML Canvas/SVG 代码动画（实现 window.draw(t) 或 ?t=秒）通过本机 Chromium + ffmpeg 无损逐帧渲染为 MP4（或 transparent=true 导出透明通道 WebM）。注意：给代码动画合配音加字幕时请用 subtitles.style="anim_clean"（深色底）或 "anim_pill"（浅色底），严禁套用 trendy_koubo 错落大花字。',
           parameters: {
             html: { type: 'string', description: '完整单文件 HTML 代码（与 html_path 二选一）' },
             html_path: { type: 'string', description: '本地 HTML 文件绝对路径（与 html 二选一）' },

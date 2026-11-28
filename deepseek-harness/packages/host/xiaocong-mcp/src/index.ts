@@ -218,8 +218,8 @@ function buildMcpServer(shellPort: () => number | undefined, bridgeToken: string
   registerGet('xiaocong_srt_export', '导出当前工程字幕为 SRT', '/digital-human-studio/srt_export')
 
   // ── Mutating tools ────────────────────────────────────────────────────────
-  registerPost('xiaocong_trendy_koubo', '一键按「网感口播」模板（高级红 trendy_red / 黑金杂志 trendy_gold / 极简白青 trendy_cyan）直出 mp4：支持前 5 秒双行反色大标题、思源粗宋中英双语错落字幕、关键词放大厚描边、金句缩放、提示音与 BGM，返回 task_id', '/digital-human-studio/trendy_koubo', 300_000)
-  registerPost('xiaocong_render', '发起一次渲染（按当前工程与参数出片），返回 task_id', '/digital-human-studio/render', 300_000)
+  registerPost('xiaocong_trendy_koubo', '【仅用于真人/数字人口播视频】一键按「网感口播」模板（高级红 trendy_red / 黑金杂志 trendy_gold / 极简白青 trendy_cyan）直出 mp4：支持前 5 秒双行反色大标题、思源粗宋中英双语错落大花字、关键词放大厚描边、金句缩放与 BGM。注意：若主画面是代码动画/MG信息图/UI演示，切勿使用本工具的大花字，请改用 xiaocong_render 并设 subtitles.style="anim_clean" 或 "anim_pill"', '/digital-human-studio/trendy_koubo', 300_000)
+  registerPost('xiaocong_render', '发起一次渲染（按 recipe 配方或当前工程出片，返回 task_id）。字幕样式支持：anim_clean（代码动画深色底专用极简细白字）、anim_pill（代码动画浅色/复杂底专用柔黑底条）、douyin_bottom、bar_bottom、keyword、karaoke、trendy_red/gold/cyan', '/digital-human-studio/render', 300_000)
   registerPost('xiaocong_render_cancel', '取消渲染任务', '/digital-human-studio/render_cancel')
   registerPost('xiaocong_transcribe', '对本地视频做语音转写生成字幕（词级时间轴）', '/digital-human-studio/transcribe', 300_000)
   registerPost('xiaocong_preview_range', '渲染指定时间区间的预览', '/digital-human-studio/preview_range', 300_000)
@@ -257,7 +257,7 @@ function buildMcpServer(shellPort: () => number | undefined, bridgeToken: string
   })
 
   // ── Voice / TTS / Audio / Digital Human / Upload ──────────────────────────
-  registerGet('xiaocong_voices_list', '列出全部可用配音音色（内置风格预设：热心老板/避坑提醒/稳重师傅/带看效果 + 已克隆音色 + 当前公司偏好音色）', '/digital-human-studio/voices', {
+  registerGet('xiaocong_voices_list', '列出全部可用配音音色（4 种预设音色：热心老板/避坑提醒/稳重师傅/带看效果 + 已克隆音色 + 当前公司偏好音色）。注意：本工具仅查「配音音色」，若用户问「有几个风格/视觉风格/动画风格」请调 xiaocong_anim_styles_list', '/digital-human-studio/voices', {
     space: { name: 'space', description: '可选：公司 ID，不传则查当前公司', optional: true },
   })
 
@@ -317,20 +317,20 @@ function buildMcpServer(shellPort: () => number | undefined, bridgeToken: string
   })
 
   // ── Code Animation (341 Built-in Styles + Deterministic HTML -> MP4) ──────
-  registerGet('xiaocong_anim_styles_list', '检索内置 341 种 HTML Canvas/SVG 代码动画风格提示词库（支持按 query 关键词、series 系列 L/M/H/K/Z/AG/V/X/R/O 或 featured 精选筛选）', '/digital-human-studio/code-anim/styles', {
+  registerGet('xiaocong_anim_styles_list', '检索内置 341 种 HTML Canvas/SVG 代码动画风格库（10 大系列 L/M/H/K/Z/AG/V/X/R/O，含 193 张参考静帧）。当用户问「有几个风格 / 有哪些风格 / 动画风格」时必调此工具，不要只回答 4 种配音音色！支持按 query 关键词、series 系列或 featured=1 口播精选筛选', '/digital-human-studio/code-anim/styles', {
     query: { name: 'query', description: '可选：关键词检索（如 对比/流程/水墨/剪纸/黑板/霓虹/数据）', optional: true },
     series: { name: 'series', description: '可选：系列代码（L/M/H/K/Z/AG/V/X/R/O）', optional: true },
     featured: { name: 'featured', description: '可选：传 1 只看口播高频精选', optional: true },
     hasStill: { name: 'hasStill', description: '可选：传 1 只看带静帧预览图的风格', optional: true },
     limit: { name: 'limit', description: '可选：返回条数（默认 24，最大 100）', optional: true },
   })
-  registerGet('xiaocong_anim_style_get', '读取指定代码动画风格（如 L42、Z5、B6、H1）的完整提示词与横竖屏画幅规范', '/digital-human-studio/code-anim/style', {
+  registerGet('xiaocong_anim_style_get', '读取指定代码动画风格（如 L42、Z5、B6、H1）的完整视觉提示词、横竖屏安全边距规范与配套字幕规范。写 HTML 代码动画前必须先调本工具，严禁凭空裸写廉价黑底聊天框', '/digital-human-studio/code-anim/style', {
     id: { name: 'id', description: '风格编号（如 L42、Z5、B6、H1）或风格名称' },
-    orientation: { name: 'orientation', description: '可选：vertical（1080×1920 竖屏口播）/ horizontal（1920×1080 横屏）/ auto', optional: true },
+    orientation: { name: 'orientation', description: '可选：vertical（1080×1920 竖屏，自动返回安全边距与底部字幕区规范）/ horizontal（1920×1080 横屏）/ auto', optional: true },
   })
   addTool('xiaocong_anim_render', {
     title: 'xiaocong_anim_render',
-    description: '将确定性 HTML Canvas/SVG 代码动画（实现 window.draw(t) 或 ?t=秒）通过本机 Chromium + ffmpeg 无损逐帧渲成 MP4（或 transparent=true 导出透明底 WebM）',
+    description: '将确定性 HTML Canvas/SVG 代码动画（实现 window.draw(t) 或 ?t=秒）通过本机 Chromium + ffmpeg 无损逐帧渲成 MP4（或 transparent=true 导出透明底 WebM）。规范：竖屏务必用 1080×1920、左右留 ≥72px 安全边距防裁字、底部留 ≥380px 给字幕；后续合配音加字幕请用 xiaocong_render 设 subtitles.style="anim_clean"（深色底）或 "anim_pill"（浅色底），严禁套用 trendy_koubo 错落大花字',
     inputSchema: {
       html: z.string().optional().describe('完整单文件 HTML 代码（与 html_path 二选一）'),
       html_path: z.string().optional().describe('本机 HTML 文件绝对路径（与 html 二选一）'),

@@ -89,6 +89,19 @@ SUB_STYLES: dict[str, dict] = {
         'unsung': '&H00FFFFFF',
         'font': 'Noto Sans SC',
     },
+    'anim_clean': {
+        'label': '动画极简 · 细白字',
+        'desc': '专为代码动画/MG信息图设计：小号居中单行无花字、细描边柔阴影，不抢画面视觉重心（适合深色底动画）',
+        'size': 0.025, 'color': '&H00F5F7FA', 'outline': 2, 'bold': 0, 'shadow': 1,
+        'font': 'Lantinghei SC Demibold',
+    },
+    'anim_pill': {
+        'label': '动画极简 · 柔黑底条',
+        'desc': '专为代码动画/MG信息图设计：小号居中单行 + 45% 柔黑半透明底条，浅色/纸纹/复杂底动画同样清晰高级',
+        'size': 0.024, 'color': '&H00FFFFFF', 'outline': 1, 'boxed_outline': 1, 'bold': 0,
+        'box': 1, 'back': '&H780D1117', 'shadow': 0,
+        'font': 'Lantinghei SC Demibold',
+    },
     # 旧样式，保留兼容（v2 配方可能写的是这两个）
     'clean_center': {
         'label': '无描边居中',
@@ -158,8 +171,8 @@ def resolve_style(name: str | None) -> dict:
 
 
 def style_list() -> list[dict]:
-    """给接口/界面用：网感口播 + 常用主推 + 兼容款。"""
-    primary = ('trendy_red', 'trendy_gold', 'trendy_cyan', 'douyin_bottom', 'bar_bottom', 'keyword', 'karaoke')
+    """给接口/界面用：网感口播 + 动画极简 + 常用主推 + 兼容款。"""
+    primary = ('trendy_red', 'trendy_gold', 'trendy_cyan', 'anim_clean', 'anim_pill', 'douyin_bottom', 'bar_bottom', 'keyword', 'karaoke')
     out = []
     for key, st in SUB_STYLES.items():
         out.append({
@@ -444,8 +457,8 @@ def build_subtitles(segments: list[dict], canvas_w: int, canvas_h: int,
     st = resolve_style(style)
     boxed = bool(st.get('box'))
     font_size = max(24, int(float(canvas_h) * float(st['size'])))
-    # 底条自己画，字就用普通描边（厚 3px），别再用 ASS 的 BorderStyle=3
-    outline = 3 if boxed else int(st.get('outline') or 0)
+    # 底条自己画，默认厚 3px 描边；anim_pill 等极简款可通过 boxed_outline 用细边
+    outline = int(st['boxed_outline']) if (boxed and 'boxed_outline' in st) else (3 if boxed else int(st.get('outline') or 0))
     shadow = 0 if st.get('shadow') == 0 else 1
 
     # 关键词：显式 spans / 单条 seg.keyword 优先，其次是 highlight.mode / 样式本身

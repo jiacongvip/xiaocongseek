@@ -154,10 +154,13 @@ export function getCodeAnimStyle(idOrQuery: string, orientation: 'vertical' | 'h
   const stillAbs = found.stillPath ? resolve(STYLES_ROOT, found.stillPath) : ''
   const aspectHint =
     orientation === 'vertical'
-      ? '【竖屏口播适配要求】请将 canvas / 视口画幅改为 1080×1920（9:16 竖屏）并做纵向居中构图适配；严格保留本风格的配色、字体质感、图形语言与动效语法；必须暴露全局 window.draw(t)（t 为秒）与 window.__T_END = 总秒数，且支持 ?t=秒 静态定位与确定性渲染。'
+      ? '【竖屏口播适配要求】画幅 1080×1920（9:16 竖屏）；左右安全边距严格 ≥ 72px（所有文字与卡片 X 坐标落在 72~1008 内，严禁贴边裁字）；顶部留白 ≥ 180px；底部预留 ≥ 380px（Y ≤ 1540）作语音字幕区，不要在动画底部再写重复的小总结句；主标题 64~96px、卡片正文 ≥ 32px，每 2~4 秒只聚焦 1 个视觉重点（严禁一屏塞 5 条以上小字聊天框/密表格）；严格保留本风格的配色、底纹质感与动效语法；必须暴露全局 window.draw(t)（t 为秒）与 window.__T_END = 总秒数，支持 ?t=秒 定位。'
       : orientation === 'horizontal'
-        ? '【横屏适配要求】画幅 1920×1080（16:9）；必须暴露全局 window.draw(t)（t 为秒）与 window.__T_END = 总秒数，且支持 ?t=秒 静态定位与确定性渲染。'
-        : '【渲染规范】必须输出完整单文件 HTML（无外部网络依赖），暴露全局 window.draw(t)（t 为秒）与 window.__T_END = 总秒数，并支持 ?t=秒 定位（若做竖屏口播插片请用 1080×1920，横屏请用 1920×1080）。'
+        ? '【横屏适配要求】画幅 1920×1080（16:9）；左右安全边距 ≥ 96px，底部预留 ≥ 160px 字幕安全区；每屏聚焦 1 个核心视觉块，严格保留本风格配色与材质；必须暴露全局 window.draw(t)（t 为秒）与 window.__T_END = 总秒数，支持 ?t=秒 定位。'
+        : '【渲染规范】必须输出完整单文件 HTML（无外部网络依赖），竖屏用 1080×1920（左右边距 ≥ 72px、底部留白 ≥ 380px 给字幕），横屏用 1920×1080（左右边距 ≥ 96px）；主标题大字清晰、严禁贴边裁字或堆砌小字；暴露全局 window.draw(t)（t 为秒）与 window.__T_END = 总秒数，并支持 ?t=秒 定位。'
+
+  const subtitleGuideline =
+    '【配套字幕规范】代码动画本身已有高密度标题与图形，后续配音合片时务必用 xiaocong_render 并设 subtitles.style="anim_clean"（深色底动画）或 "anim_pill"（浅色/纸纹/复杂底动画，带柔黑底条），保持小号单行居中克制风格；严禁对代码动画套用 trendy_koubo / trendy_red / trendy_gold / trendy_cyan 错落大花字（那是给真人/数字人大头口播用的，叠在动画上会撞色且喧宾夺主）。若动画本身已带完整同步大字，也可直接不叠外挂字幕。'
 
   return {
     success: true,
@@ -173,6 +176,7 @@ export function getCodeAnimStyle(idOrQuery: string, orientation: 'vertical' | 'h
     stillUrl: found.stillPath ? `/digital-human-studio/code-anim/still?path=${encodeURIComponent(found.stillPath)}` : '',
     stillFilePath: stillAbs && existsSync(stillAbs) ? stillAbs : '',
     aspectHint,
+    subtitleGuideline,
     prompt,
   }
 }
@@ -360,6 +364,7 @@ export async function renderCodeAnimHtml(opts: {
   transparent?: boolean
   mode?: string
   sizeBytes?: number
+  subtitleTip?: string
   error?: string
 }> {
   const workDir = opts.workDir || join(homedir(), '.xiaocongcut', 'code-anim')
@@ -581,6 +586,8 @@ export async function renderCodeAnimHtml(opts: {
       transparent,
       mode,
       sizeBytes: statSync(outPath).size,
+      subtitleTip:
+        '给代码动画合配音加字幕时，请用 xiaocong_render 并设 subtitles.style="anim_clean"（深色底）或 "anim_pill"（浅色/复杂底），保持小号居中单行无花字；严禁套用 trendy_koubo / trendy_red / trendy_gold / trendy_cyan 错落大花字。',
     }
   } catch (e: any) {
     return {
